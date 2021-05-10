@@ -12,8 +12,10 @@ import {
   TouchableHighlight,
 } from "react-native";
 import stocks from "../constants";
-import { Menu } from "react-native-paper";
+import { Menu, ActivityIndicator, Colors } from "react-native-paper";
+
 import axios from 'axios'
+// import LoadingOverlay from 'react-loading-overlay';
 // const A = require('../constants/CompanyDeets/A.json');
 // const B = require('../constants/CompanyDeets/B.json');
 // const C = require('../constants/CompanyDeets/C.json');
@@ -44,19 +46,29 @@ import axios from 'axios'
 import Autocomplete from "react-native-autocomplete-input";
 
 const height = Dimensions.get("screen").height;
+
 // let companySymbol
+var p
 function FirstScreen() {
   const [symbols, setSymbols] = useState();
   const navigation = useNavigation();
   const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
   const [price, setPrice] = useState([])
+  const [loader, setloader] = useState(false)
+  // showLoader = () => {
+  //   setloader(true);
+  // };
   
+
   const StockName = async (name) => {
-    let url = 'http://localhost:3000'
-    let Name = JSON.stringify(name)
+    
+    // let url = 'http://localhost:3000'
+    //let Name = JSON.stringify(name)
+    // console.log('uid', userid)
     let request = JSON.stringify({
-      stock : name,
+      // userid : userid,
+      stock : name
     })
     const options = {
       method: "POST",
@@ -66,17 +78,23 @@ function FirstScreen() {
       },
       body: request
     };
-    // console.log("name: "+ options.body.stock)
+    // console.log('uid', userid)
+    // console.log("name: "+ options.body)
     const response = await fetch('http://127.0.0.1:3000/getStockName', options)
     const json = await response.json();
-    console.log(json)
-    // setPrice(json.price)
-    var p = json.price
-    setPrice(p)
+    console.log("json: ",json)
+    setPrice(json.price)
+    p = json.price
+    // await fetch('http://127.0.0.1:3000/getData')
+    // setloader(true)
+    // setloader(false)
   }
+
   useEffect(()=>{
-    console.log(price)
-  })
+    // console.log("p: ", p)
+    // setPrice(p)
+    //console.log("price: ", price)
+  }, [price])
 
   function renderHeader(navigation) {
     return (
@@ -125,7 +143,7 @@ function FirstScreen() {
       </View>
     );
   }
-  
+  //Dimensions.get("window").width
   function StalkHeader() {
     return (
       <View
@@ -185,11 +203,12 @@ function FirstScreen() {
 
   // console.log("query: "+query)
   return (
+    
     <SafeAreaView
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
       {renderHeader(navigation)}
-      {/* {StalkHeader()} */}
+      
 
       <View
         style={{ flex: 3, padding: 10, width: Dimensions.get("window").width }}
@@ -202,16 +221,28 @@ function FirstScreen() {
           renderItem={({ item, index }) => (
             <Menu.Item
               key={index}
-              onPress={() => {
+              onPress={async () => {
                 setQuery(item.symbol);
                 setData([])
                 //* to send company name to next screen
-                navigation.navigate("SetAlert", {
-                  otherParam: item.symbol,
-                  price : '$'+price
-                })
-                // console.log("query: "+query)
-                StockName(item.symbol)
+                // navigation.navigate("SetAlert")
+                // setTimeout(await StockName(item.symbol), 5000);
+                await StockName(item.symbol)
+                console.log("price: ", p)
+                if(p == 'Stock price not available'){
+                  // navigation.navigate("SetAlert", {
+                  //   otherParam: item.symbol,
+                  //   price : p
+                  // })
+                  alert(p)
+                }else{
+                  // <ActivityIndicator animating={true} color={Colors.red800} />
+                  navigation.navigate("SetAlert", {
+                    otherParam: item.symbol,
+                    price : '$'+p
+                  })
+                }
+                
               }}
               title={
                 <Text style={{ fontWeight: "bold" }}>
@@ -237,20 +268,31 @@ function FirstScreen() {
 
           autoCapitalize="characters"
         />
-        <Text
-          placeholder='abc'
-          style={{
-            fontWeight: "400",
-            marginTop: 4,
-            // color: "#c6c8c9",
-            color: "#000",
-            textAlign: "center",
-          }}
-        >
-          last closed at ${price}
-        </Text>
+        { p = 'Stock price not available' 
+        ? <Text
+            placeholder='abc'
+            style={{
+              fontWeight: "400",
+              marginTop: 4,
+              color: "#c6c8c9",
+              textAlign: "center",
+            }}
+          >
+            last closed at $567.99
+          </Text>
+        : <Text
+            placeholder='abc'
+            style={{
+              fontWeight: "400",
+              marginTop: 4,
+              color: "#000",
+              textAlign: "center",
+            }}
+          >
+          las closed at ${price}
+          </Text>}
       </View>
-    </SafeAreaView>
+    </SafeAreaView> 
   );
 }
 
