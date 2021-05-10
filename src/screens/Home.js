@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import * as Notifications from 'expo-notifications'
-import { StyleSheet, SafeAreaView, View, Text, Dimensions, Button, TouchableOpacity, TouchableHighlight } from 'react-native'
+import { StyleSheet, SafeAreaView, View, Text, Dimensions, Button, TouchableOpacity, TouchableHighlight, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { IEXClient } from 'iex-api'
 import { NavigationContainer,useNavigation } from '@react-navigation/native';
@@ -68,10 +68,39 @@ function renderHeader(navigation){
         </View>
     )
 }
-function Content1(navigation, otherParam, price, trigger){
+function Content1(navigation, otherParam, price, trigger, stockDetails){
+
+  const StockSect = ({card, index}) => {
+    // const [check1,setCheck1] =useState(parentState);
+    // useEffect(()=>{
+    //     setCheck1(parentState);
+    // },[parentState]);
+    return(
+      <View style={{flex:2, width:(Dimensions.get('window').width - (0.1*(Dimensions.get('window').width))), height:50}}>
+        <TouchableOpacity  style={{flexDirection:'row' ,width: '100%', height: 60, marginLeft:'5%' ,borderBottomWidth :1,borderBottomColor: '#e2e3e4', alignItems:'left'}}
+            onPress= {() => {
+                navigation.navigate('StockScreenBluePrint',{
+                    otherParam: card.stockname,
+                    price: card.stockpricewhenuseraddedit,
+                    trigger: card.triggerPrice
+                })
+            }}
+        >
+          <View style={{width:'80%'}}>
+              <Text style={{fontSize:17}}>{card.stockname}</Text>
+              <Text style={{marginTop:4,fontSize:14,color:'#6a6e70', fontWeight:'500'}}>{card.stockpricewhenuseraddedit}</Text> 
+          </View> 
+          <TouchableHighlight  style={styles.Button} onPress={()=> console.log("Button Tapped")} underlayColor='#fff'>
+              <Text style={styles.ButtonText}>${card.triggerPrice}</Text>
+          </TouchableHighlight>   
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
     return(
         //flex:10,
-        <View style={{flex:2, width:(Dimensions.get('window').width - (0.1*(Dimensions.get('window').width))), height:50}}>
+        <View style={{flex:5, width:(Dimensions.get('window').width - (0.1*(Dimensions.get('window').width))), height:50}}>
             {/* <Ionicons name="settings-outline" size={24} color="black" style={{padding: 10}}/> */}
             <View  style={{width: '100%', height: 50, marginTop:50, marginLeft:'5%' ,alignItems:'left'}}>
                 <Text style={{fontSize:25}}>
@@ -79,7 +108,12 @@ function Content1(navigation, otherParam, price, trigger){
                     <Text style={{fontWeight:'400'}}>LIST</Text>
                 </Text>
             </View>
-            <TouchableOpacity  style={{flexDirection:'row' ,width: '100%', height: 60, marginLeft:'5%' ,borderBottomWidth :1,borderBottomColor: '#e2e3e4', alignItems:'left'}}
+            {/* <ScrollView style={{flex: 2}}> */}
+            {stockDetails.map((item,index)=>(
+              <StockSect card={item} index={index} key={index}/>
+            ))}
+            {/* </ScrollView> */}
+            {/* <TouchableOpacity  style={{flexDirection:'row' ,width: '100%', height: 60, marginLeft:'5%' ,borderBottomWidth :1,borderBottomColor: '#e2e3e4', alignItems:'left'}}
                 onPress= {() => {
                     navigation.navigate('StockScreenBluePrint',{
                         otherParam: otherParam,
@@ -109,7 +143,7 @@ function Content1(navigation, otherParam, price, trigger){
                     </TouchableHighlight>
                 }
                   
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     )
 }
@@ -188,7 +222,7 @@ function Home({route}) {
       firebase.app(); // if already initialized, use that one
     }
     const auth = firebase.auth()
-    var userid
+    let userid
     // You can await here
     async function fetchData() {
       let data
@@ -201,7 +235,7 @@ function Home({route}) {
             userid = firebaseUser.uid;
             console.log('uid', userid)
             let request = JSON.stringify({
-                userid: userid,
+              userid: userid,
             })
             const options = {
                 method: "POST",
@@ -215,20 +249,35 @@ function Home({route}) {
             // const response = await fetch('http://127.0.0.1:3000/getData', options)
             // const json = await response.json();
             // data = json.data
-            await fetch('http://127.0.0.1:3000/getData', options)
-            .then( (response) => response.json)
-            .then( (json) => {
-              console.log('response')
-              data = json.data
-              setStockDetails(data)
-            })
+            let response = await fetch('http://127.0.0.1:3000/getData', options)
+            const json = await response.json();
+            console.log(json.data)
+            const stocksArray = []
+            if (json.data.length != 0)
+            {
+              for(var i=0; i<json.data.length ; i++)
+              {
+                // console.log("name: "+ json.data[i].stockname)
+                stocksArray.push({
+                  stockname: json.data[i].stockname,
+                  stockpricewhenuseraddedit: json.data[i].stockpricewhenuseraddedit,
+                  triggerPrice: json.data[i].triggerPrice,
+                  userId: json.data[i].userId
+                })
+              }
+            }
+            // console.log(stocksArray)
+            setStockDetails(stocksArray)
             
-            // console.log(json.data[2].stockname)
+            // console.log('stockDetails: ' + stockDetails[1].stockname)
+            //* the array from backend is coming properly
+            // ToDo map that array in content2 function to display all the stocks
+            // console.log("data: " + json.data[2].stockname)
           } else {
             console.log('user is not signed in')
           }
         })
-        setStockDetails(data)
+        // setStockDetails(data)
       })
       .catch((error) => {
         var errorCode = error.code;
@@ -239,8 +288,9 @@ function Home({route}) {
     
     fetchData()
     console.log("useeffect")
-    console.log('data: ', stockDetails)
+    // console.log('data: ', stockDetails)
 
+    
     //* FOR NOTIFICATION
     // registerForPushNotificationsAsync().then(token => setExpoPushToken(token))
     // notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -257,12 +307,17 @@ function Home({route}) {
     const navigation = useNavigation();
     const { otherParam, price, trigger } = route.params;
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
+      
         {renderHeader(navigation)}
-        {Content1(navigation, otherParam, price, trigger)}
+        
+        {Content1(navigation, otherParam, price, trigger, stockDetails)}
+        
         {Content2()} 
+        
         {Content3(navigation)}
-      </View>
+        
+      </SafeAreaView>
     )
 }
 
