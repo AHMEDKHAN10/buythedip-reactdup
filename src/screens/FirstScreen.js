@@ -9,23 +9,13 @@ import {
 import stocks from '../constants'
 import { Menu } from 'react-native-paper'
 import Autocomplete from 'react-native-autocomplete-input'
-<<<<<<< HEAD
-
-const height = Dimensions.get('screen').height
-
-=======
 const height = Dimensions.get('screen').height
 const API = 'http://127.0.0.1:3000/'
->>>>>>> 8148cdca915e36c85aa9950714c14a79ec894eb7
 function FirstScreen () {
   const navigation = useNavigation()
   const [query, setQuery] = useState('')
   const [data, setData] = useState([])
   const [price, setPrice] = useState([])
-<<<<<<< HEAD
-=======
-
->>>>>>> 8148cdca915e36c85aa9950714c14a79ec894eb7
   const StockName = async (name) => {
     const request = JSON.stringify({
       stock: name
@@ -38,14 +28,8 @@ function FirstScreen () {
       },
       body: request
     }
-<<<<<<< HEAD
-    const response = await fetch('http://127.0.0.1:3000/getStockName', options)
-    const json = await response.json()
-    console.log('json: ', json)
-=======
     const response = await fetch(API + 'getStockName', options)
     const json = await response.json()
->>>>>>> 8148cdca915e36c85aa9950714c14a79ec894eb7
     setPrice(json.price)
   }
 
@@ -119,19 +103,9 @@ function FirstScreen () {
   }, [query])
 
   return (
-<<<<<<< HEAD
-    <SafeAreaView
-      style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-    >
-      {renderHeader(navigation)}
-      <View
-        style={{ flex: 3, padding: 10, width: Dimensions.get('window').width }}
-      >
-=======
     <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       {renderHeader(navigation)}
       <View style={{ flex: 3, padding: 10, width: Dimensions.get('window').width }}>
->>>>>>> 8148cdca915e36c85aa9950714c14a79ec894eb7
        <Autocomplete
          data={data}
           defaultValue={query}
@@ -143,10 +117,7 @@ function FirstScreen () {
               onPress={async () => {
                 setQuery(item.symbol)
                 setData([])
-<<<<<<< HEAD
-=======
                 //* to send company name to next screen
->>>>>>> 8148cdca915e36c85aa9950714c14a79ec894eb7
                 await StockName(item.symbol)
                 console.log('price: ', price)
                 if (price === 'Stock price not available') {
