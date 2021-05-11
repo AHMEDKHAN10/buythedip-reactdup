@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import config from '../../config'
 import {
   StyleSheet,
   SafeAreaView,
@@ -90,14 +91,14 @@ function SetAlert ({ route }) {
       return
     }
     const firebaseConfig = {
-      apiKey: 'AIzaSyD6f14ph0RzjoUn673MPGri_NxOkPEvccs',
-      authDomain: 'diplist-a1ba9.firebaseapp.com',
-      databaseURL: 'https://diplist-a1ba9-default-rtdb.firebaseio.com',
-      projectId: 'diplist-a1ba9',
-      storageBucket: 'diplist-a1ba9.appspot.com',
-      messagingSenderId: '810287966234',
-      appId: '1:810287966234:web:ae2658a0efedbefda789a3',
-      measurementId: 'G-6VETDDQM22'
+      apiKey: config.Firebase_ApiKey,
+      authDomain: config.Firebase_AuthDomain,
+      databaseURL: config.Firebase_DatabaseURL,
+      projectId: config.Firebase_ProjectId,
+      storageBucket: config.Firebase_StorageBucket,
+      messagingSenderId: config.Firebase_messagingSenderId,
+      appId: config.Firebase_AppId,
+      measurementId: config.Firebase_MeasurementId
     }
     // Initialize Firebase
     if (!firebase.apps.length) {
@@ -143,7 +144,7 @@ function SetAlert ({ route }) {
       },
       body: request
     }
-    const response = await fetch('http://127.0.0.1:3000/getTrigger', options)
+    const response = await fetch(config.API_URL + '/getTrigger', options)
     const json = await response.json()
     console.log(json)
   }
