@@ -29,8 +29,6 @@ function FirstScreen () {
       },
       body: request
     }
-    // console.log('uid', userid)
-    // console.log("name: "+ options.body)
     const response = await fetch('http://127.0.0.1:3000/getStockName', options)
     const json = await response.json()
     console.log('json: ', json)
