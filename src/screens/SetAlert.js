@@ -6,21 +6,15 @@ import {
     View, Text, 
     TextInput, 
     Dimensions, 
-    Button, 
-    ScrollView,
     KeyboardAvoidingView,
-    TouchableOpacity, 
     Platform, 
     TouchableWithoutFeedback,
     TouchableHighlight, 
     Keyboard,
-    // Switch
 } from 'react-native'
 import Constants from 'expo-constants'
 import * as Notifications from 'expo-notifications'
-import KeyboardListener from 'react-native-keyboard-listener';
 import { AntDesign } from '@expo/vector-icons';
-import { useFonts } from 'expo-font';
 import Switch from 'react-native-switch-pro'
 import * as firebase from 'firebase';
 
