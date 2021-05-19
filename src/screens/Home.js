@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import * as firebase from 'firebase'
 import config from '../../config'
+
 function renderHeader (navigation) {
   return (
     // flex:1,

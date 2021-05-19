@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Routes from './src/routes'
 import SplashScreen from './src/screens/SplashScreen'
+import 'react-native-gesture-handler'
 
 export default function App () {
   const [loading, setLoading] = useState(true)
