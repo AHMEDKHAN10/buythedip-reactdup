@@ -3,6 +3,7 @@
 ## Installation
 
 If you have not installed the expo CLI already globally
+
 ```
 sudo npm install -g expo-cli
 ```
@@ -27,3 +28,4 @@ Start up the bundler UI at http://localhost:19002/ where you can start in web br
 expo start
 ```
 
+## add .env file
