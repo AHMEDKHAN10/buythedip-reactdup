@@ -13,41 +13,42 @@ import {
   TouchableHighlight,
   Keyboard
 } from 'react-native'
-import Constants from 'expo-constants'
+// import Constants from 'expo-constants'
 import * as Notifications from 'expo-notifications'
 import { AntDesign } from '@expo/vector-icons'
 import Switch from 'react-native-switch-pro'
 import * as firebase from 'firebase'
+import registerForPushNotificationsAsync from '../services/pushNotification'
 
-async function registerForPushNotificationsAsync () {
-  let token
-  if (Constants.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync()
-    let finalStatus = existingStatus
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync()
-      finalStatus = status
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!')
-      return
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data
-    console.log(token)
-  } else {
-    alert('Must use physical device for Push Notifications')
-  }
+// async function registerForPushNotificationsAsync () {
+//   let token
+//   if (Constants.isDevice) {
+//     const { status: existingStatus } = await Notifications.getPermissionsAsync()
+//     let finalStatus = existingStatus
+//     if (existingStatus !== 'granted') {
+//       const { status } = await Notifications.requestPermissionsAsync()
+//       finalStatus = status
+//     }
+//     if (finalStatus !== 'granted') {
+//       alert('Failed to get push token for push notification!')
+//       return
+//     }
+//     token = (await Notifications.getExpoPushTokenAsync()).data
+//     console.log(token)
+//   } else {
+//     alert('Must use physical device for Push Notifications')
+//   }
 
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C'
-    })
-  }
-  return token
-}
+//   if (Platform.OS === 'android') {
+//     Notifications.setNotificationChannelAsync('default', {
+//       name: 'default',
+//       importance: Notifications.AndroidImportance.MAX,
+//       vibrationPattern: [0, 250, 250, 250],
+//       lightColor: '#FF231F7C'
+//     })
+//   }
+//   return token
+// }
 
 // eslint-disable-next-line react/prop-types
 function SetAlert ({ route }) {
@@ -66,8 +67,9 @@ function SetAlert ({ route }) {
     //* printing the company name getting from the previous screen
     // console.log('name in setalert: ' + otherParam)
     // console.log('price in setalert: ' + price)
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token))
-
+    // registerForPushNotificationsAsync().then(token => setExpoPushToken(token))
+    const token = registerForPushNotificationsAsync()
+    setExpoPushToken(token)
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification)
     })
