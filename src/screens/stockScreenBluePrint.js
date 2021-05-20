@@ -1,4 +1,4 @@
-import Constants from 'expo-constants'
+// import Constants from 'expo-constants'
 import * as Notifications from 'expo-notifications'
 import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native'
@@ -17,6 +17,9 @@ import {
 
 import { AntDesign } from '@expo/vector-icons'
 import Switch from 'react-native-switch-pro'
+// import PushNotification from '../services/pushNotification'
+import registerForPushNotificationsAsync from '../services/pushNotification'
+// import PushNotification from 'react-native-push-notification'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -27,7 +30,7 @@ Notifications.setNotificationHandler({
 })
 
 // eslint-disable-next-line react/prop-types
-function SetAlert ({ route }) {
+function stockScreenBluePrint ({ route }) {
   const [isEnabled, setIsEnabled] = useState(false)
   const navigation = useNavigation()
   // eslint-disable-next-line react/prop-types
@@ -40,10 +43,8 @@ function SetAlert ({ route }) {
   const responseListener = useRef()
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => {
-      setExpoPushToken(token)
-    })
-
+    const token = registerForPushNotificationsAsync()
+    setExpoPushToken(token)
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification)
@@ -59,37 +60,6 @@ function SetAlert ({ route }) {
       Notifications.removeNotificationSubscription(responseListener.current)
     }
   }, [])
-
-  async function registerForPushNotificationsAsync () {
-    let token
-    if (Constants.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync()
-      let finalStatus = existingStatus
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync()
-        finalStatus = status
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!')
-        return
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data
-      console.log('token' + token)
-    } else {
-      alert('Must use physical device for Push Notifications')
-    }
-
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C'
-      })
-    }
-    return token
-  }
-
   async function schedulePushNotification () {
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -199,7 +169,8 @@ function SetAlert ({ route }) {
   )
 }
 
-export default SetAlert
+export default stockScreenBluePrint
+
 const styles = StyleSheet.create({
   container: {
     flex: 1
