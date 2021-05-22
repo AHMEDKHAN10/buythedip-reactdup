@@ -24,7 +24,8 @@ import registerForPushNotificationsAsync from '../services/pushNotification'
 function SetAlert ({ route }) {
   const navigation = useNavigation()
   // eslint-disable-next-line react/prop-types
-  // const { otherParam, price } = route.params
+  const { stockName, price } = route.params
+  // eslint-disable-next-line react/prop-types
   const [isEnabled, setIsEnabled] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const [expoPushToken, setExpoPushToken] = useState('')
@@ -34,10 +35,6 @@ function SetAlert ({ route }) {
   const responseListener = useRef()
 
   useEffect(() => {
-    //* printing the company name getting from the previous screen
-    // console.log('name in setalert: ' + otherParam)
-    // console.log('price in setalert: ' + price)
-    // registerForPushNotificationsAsync().then(token => setExpoPushToken(token))
     const token = registerForPushNotificationsAsync()
     setExpoPushToken(token)
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -106,7 +103,9 @@ function SetAlert ({ route }) {
 
     const request = JSON.stringify({
       userid: userid,
-      trigger: textInput
+      trigger: textInput,
+      stockName,
+      price
     })
     const options = {
       method: 'POST',
