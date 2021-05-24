@@ -10,6 +10,7 @@ import {
 import { Camera } from 'expo-camera'
 import { AntDesign } from '@expo/vector-icons'
 import Switch from 'react-native-switch-pro'
+import FaceId from '../services/faceid'
 
 function renderHeader (navigation) {
   return (
@@ -30,12 +31,7 @@ function Content2 () {
   const [isEnabled, setIsEnabled] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const [hasPermission, setHasPermission] = useState(null)
-  // const [faces, setFaces] = useState([])
 
-  // const faceDetected = ({ faces }) => {
-  //   setFaces({ faces })
-  //   console.log('faces: ' + { faces })
-  // }
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync()
@@ -43,41 +39,14 @@ function Content2 () {
     })()
   }, [])
 
-  // const faceDetector = () => {
-  //   console.log('in face detector')
-  //   return (
-  //       <Camera
-  //       style={{ flex: 1 }}
-  //       type='front'
-  //       // ... other props
-  //       onFacesDetected={faceDetected}
-  //       faceDetectorSettings={{
-  //         mode: FaceDetector.Constants.Mode.fast,
-  //         detectLandmarks: FaceDetector.Constants.Landmarks.none,
-  //         runClassifications: FaceDetector.Constants.Classifications.none,
-  //         minDetectionInterval: 100,
-  //         tracking: true
-  //       }}
-  //     >
-  //       <View
-  //         style={{
-  //           flex: 1,
-  //           backgroundColor: 'transparent',
-  //           flexDirection: 'row'
-  //         }}>
-  //         <Text style= {{ top: 200 }}> is {faces} </Text>
-  //       </View>
-  //     </Camera>
-  //   )
-  // }
-
   const toggleSwitch = async () => {
     setIsEnabled(previousState => !previousState)
     console.log('toggle switch')
     console.log('isenabled: ' + isEnabled)
     if (!isEnabled) {
       console.log('enabled')
-      // faceDetector()
+      FaceId()
+      // console.log('faceid')
     } else {
       console.log('not enabled')
     }

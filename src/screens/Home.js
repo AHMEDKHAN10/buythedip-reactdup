@@ -9,8 +9,9 @@ import config from '../../config'
 function renderHeader (navigation) {
   return (
     // flex:1,
-    <View style = {{ flex: 1, alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: 50, marginTop: 50 }}>
-      <Ionicons name="settings-outline" size={24} color="black" style={{ paddingTop: 10, paddingLeft: 35, width: '40%' }}
+    <View style={{ flex: 1, alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: 50, marginTop: 50 }}>
+      <Ionicons
+        name='settings-outline' size={24} color='black' style={{ paddingTop: 10, paddingLeft: 35, width: '40%' }}
         onPress={() => {
           navigation.navigate('Settings')
         }}
@@ -27,8 +28,9 @@ function StockList (navigation, stockDetails) {
   const StockSect = ({ card, index }) => {
     return (
       <View style={{ flex: 2, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 50 }}>
-        <TouchableOpacity style = {{ flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}
-          onPress= {() => {
+        <TouchableOpacity
+          style={{ flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}
+          onPress={() => {
             navigation.navigate('StockScreenBluePrint', {
               // eslint-disable-next-line react/prop-types
               otherParam: card.stockname,
@@ -41,25 +43,25 @@ function StockList (navigation, stockDetails) {
         >
           <View style={{ width: '80%' }}>
             <Text style={{ fontSize: 17 }}>
-            {
-              // eslint-disable-next-line react/prop-types
-              card.stockname
-            }
+              {
+                // eslint-disable-next-line react/prop-types
+                card.stockname
+              }
             </Text>
             <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>
-            {
-              // eslint-disable-next-line react/prop-types
-              card.stockpricewhenuseraddedit
-            }
+              {
+                // eslint-disable-next-line react/prop-types
+                card.stockpricewhenuseraddedit
+              }
             </Text>
           </View>
           <TouchableHighlight style={styles.Button} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-              <Text style={styles.ButtonText}>$
+            <Text style={styles.ButtonText}>$
               {
                 // eslint-disable-next-line react/prop-types
                 card.triggerPrice
               }
-              </Text>
+            </Text>
           </TouchableHighlight>
         </TouchableOpacity>
       </View>
@@ -76,7 +78,7 @@ function StockList (navigation, stockDetails) {
         </Text>
       </View>
       {stockDetails.map((item, index) => (
-        <StockSect card={item} index={index} key={index}/>
+        <StockSect card={item} index={index} key={index} />
       ))}
     </View>
   )
@@ -94,27 +96,27 @@ function StockMarketsSect () {
           <Text style={{ fontSize: 17 }}>DJIA</Text>
           <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>Last closed $29,891</Text>
         </View>
-        <TouchableOpacity style={styles.ButtonSet} onPress={ () => console.log('Button Tapped')} underlayColor='#fff'>
+        <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
           <Text style={styles.ButtonSetText}>Set</Text>
         </TouchableOpacity>
       </View>
       <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}>
-          <View style={{ width: '50%' }}>
-              <Text style={{ fontSize: 17 }}>NASDAQ</Text>
-              <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>Last closed $30,000</Text>
-          </View>
-          <TouchableOpacity style={styles.ButtonSet} onPress={ () => console.log('Button Tapped')} underlayColor='#fff'>
-              <Text style={styles.ButtonSetText}>Set</Text>
-          </TouchableOpacity>
+        <View style={{ width: '50%' }}>
+          <Text style={{ fontSize: 17 }}>NASDAQ</Text>
+          <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>Last closed $30,000</Text>
+        </View>
+        <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+          <Text style={styles.ButtonSetText}>Set</Text>
+        </TouchableOpacity>
       </View>
       <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}>
-          <View style={{ width: '50%' }}>
-              <Text style={{ fontSize: 17 }}>S&P 500</Text>
-              <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>Last closed $15,029</Text>
-          </View>
-          <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-              <Text style={styles.ButtonSetText}>Set</Text>
-          </TouchableOpacity>
+        <View style={{ width: '50%' }}>
+          <Text style={{ fontSize: 17 }}>S&P 500</Text>
+          <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>Last closed $15,029</Text>
+        </View>
+        <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+          <Text style={styles.ButtonSetText}>Set</Text>
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -123,7 +125,7 @@ function AddAtockBtn (navigation) {
   return (
     <View style={{ flex: 1, width: (Dimensions.get('window').width), height: 50, alignContent: 'center', alignItems: 'center' }}>
       <TouchableHighlight style={styles.ButtonAddStock} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
-          <Text style={styles.ButtonAddStockText}>Add Stock</Text>
+        <Text style={styles.ButtonAddStockText}>Add Stock</Text>
       </TouchableHighlight>
     </View>
   )
@@ -154,10 +156,7 @@ function Home ({ route }) {
       firebase.app() // if already initialized, use that one
     }
     const auth = firebase.auth()
-    // let userid
-    // You can await here
     async function fetchData () {
-      // let data
       console.log('fetchdata')
       firebase.auth().signInAnonymously()
         .then(() => {
@@ -177,7 +176,8 @@ function Home ({ route }) {
                 },
                 body: request
               }
-              const response = await fetch(config.API_URL + '/getData', options)
+              const response = await fetch(config.API_URL + 'getData', options)
+              console.log('useeffect')
               const json = await response.json()
               console.log(json.data)
               const stocksArray = []
@@ -205,7 +205,6 @@ function Home ({ route }) {
         })
     }
     fetchData()
-    console.log('useeffect')
   }, [])
   const navigation = useNavigation()
   return (

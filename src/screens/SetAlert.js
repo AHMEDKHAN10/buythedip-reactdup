@@ -115,7 +115,7 @@ function SetAlert ({ route }) {
       },
       body: request
     }
-    const response = await fetch(config.API_URL + '/getTrigger', options)
+    const response = await fetch(config.API_URL + 'getTrigger', options)
     const json = await response.json()
     console.log(json)
   }
