@@ -13,7 +13,6 @@ const firebaseConfig = {
 }
 
 async function StoreFirebase () {
-  console.log(firebaseConfig)
   if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig)
   } else {

@@ -9,9 +9,9 @@ import {
 import stocks from '../constants'
 import { Menu } from 'react-native-paper'
 import Autocomplete from 'react-native-autocomplete-input'
-import config from '../../config'
+import configg from '../../config'
 const height = Dimensions.get('screen').height
-
+// * localhost api http://127.0.0.1:3000/
 function FirstScreen () {
   const navigation = useNavigation()
   const [query, setQuery] = useState('')
@@ -30,8 +30,8 @@ function FirstScreen () {
       },
       body: request
     }
-    console.log(config.API_URL + 'getStockName')
-    const response = await fetch(config.API_URL + 'getStockName', options)
+    console.log(configg.API_URL)
+    const response = await fetch(configg.API_URL + 'getStockName', options)
     const json = await response.json()
     setPrice(json.price)
   }

@@ -36,6 +36,7 @@ function SetAlert ({ route }) {
   useEffect(() => {
     const token = registerForPushNotificationsAsync()
     setExpoPushToken(token)
+    console.log('token: ' + token)
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification)
     })

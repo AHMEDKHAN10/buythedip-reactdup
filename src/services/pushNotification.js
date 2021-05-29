@@ -5,6 +5,7 @@ import {
 } from 'react-native'
 
 async function registerForPushNotificationsAsync () {
+  console.log('in registerpushnotification')
   if (!Constants.isDevice) {
     // ideally we should throw an Error then give alerts when they are caught
     alert('Must use physical device for push notifications')
@@ -29,6 +30,7 @@ async function registerForPushNotificationsAsync () {
       lightColor: '#FF231F7C'
     })
   }
+  console.log('token in registerpushnotification: ' + token)
   return token
 }
 
