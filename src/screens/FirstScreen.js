@@ -30,6 +30,7 @@ function FirstScreen () {
       },
       body: request
     }
+    console.log(config.API_URL + 'getStockName')
     const response = await fetch(config.API_URL + 'getStockName', options)
     const json = await response.json()
     setPrice(json.price)

@@ -13,11 +13,10 @@ import {
   TouchableHighlight,
   Keyboard
 } from 'react-native'
-// import Constants from 'expo-constants'
 import * as Notifications from 'expo-notifications'
 import { AntDesign } from '@expo/vector-icons'
 import Switch from 'react-native-switch-pro'
-import * as firebase from 'firebase'
+import firebaseuser from '../firebase/firebaseconfig'
 import registerForPushNotificationsAsync from '../services/pushNotification'
 
 // eslint-disable-next-line react/prop-types
@@ -59,46 +58,8 @@ function SetAlert ({ route }) {
       alert('Please Enter details')
       return
     }
-    const firebaseConfig = {
-      apiKey: config.Firebase_ApiKey,
-      authDomain: config.Firebase_AuthDomain,
-      databaseURL: config.Firebase_DatabaseURL,
-      projectId: config.Firebase_ProjectId,
-      storageBucket: config.Firebase_StorageBucket,
-      messagingSenderId: config.Firebase_messagingSenderId,
-      appId: config.Firebase_AppId,
-      measurementId: config.Firebase_MeasurementId
-    }
-    // Initialize Firebase
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig)
-    } else {
-      firebase.app() // if already initialized, use that one
-    }
-    const auth = firebase.auth()
-    let userid
-    await firebase.auth().signInAnonymously()
-      .then(() => {
-        console.log('anonymous user signed in')
-        auth.onAuthStateChanged(firebaseUser => {
-          if (firebaseUser) {
-            userid = firebaseUser.uid
-            console.log('uid', userid)
-          } else {
-            console.log('user is not signed in')
-          }
-        })
-      })
-      .catch((error) => {
-        const errorCode = error.code
-        const errorMessage = error.message
-        console.log(errorCode + ': ' + errorMessage)
-      })
-    // navigation.navigate('Home', {
-    //   otherParam: otherParam,
-    //   price: price,
-    //   trigger: textInput
-    // })
+    const userid = await firebaseuser()
+    // console.log('user id in setalert: ' + userid)
     navigation.navigate('Home')
 
     const request = JSON.stringify({

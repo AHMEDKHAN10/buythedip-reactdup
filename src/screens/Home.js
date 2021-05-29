@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
-import * as firebase from 'firebase'
+import firebaseuser from '../firebase/firebaseconfig'
 import config from '../../config'
 
 function renderHeader (navigation) {
@@ -139,70 +138,43 @@ function Home ({ route }) {
   const [stockDetails, setStockDetails] = useState([])
   useEffect(() => {
     sleep(3000)
-    const firebaseConfig = {
-      apiKey: config.Firebase_ApiKey,
-      authDomain: config.Firebase_AuthDomain,
-      databaseURL: config.Firebase_DatabaseURL,
-      projectId: config.Firebase_ProjectId,
-      storageBucket: config.Firebase_StorageBucket,
-      messagingSenderId: config.Firebase_messagingSenderId,
-      appId: config.Firebase_AppId,
-      measurementId: config.Firebase_MeasurementId
-    }
-    // Initialize Firebase
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig)
-    } else {
-      firebase.app() // if already initialized, use that one
-    }
-    const auth = firebase.auth()
     async function fetchData () {
       console.log('fetchdata')
-      firebase.auth().signInAnonymously()
-        .then(() => {
-          console.log('anonymous user signed in')
-          auth.onAuthStateChanged(async (firebaseUser) => {
-            if (firebaseUser) {
-              const userid = firebaseUser.uid
-              console.log('uid', userid)
-              const request = JSON.stringify({
-                userid: userid
-              })
-              const options = {
-                method: 'POST',
-                headers: {
-                  Accept: 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                body: request
-              }
-              const response = await fetch(config.API_URL + 'getData', options)
-              console.log('useeffect')
-              const json = await response.json()
-              console.log(json.data)
-              const stocksArray = []
-              if (json.data.length !== 0) {
-                for (let i = 0; i < json.data.length; i++) {
-                  // console.log("name: "+ json.data[i].stockname)
-                  stocksArray.push({
-                    stockname: json.data[i].stockname,
-                    stockpricewhenuseraddedit: json.data[i].stockpricewhenuseraddedit,
-                    triggerPrice: json.data[i].triggerPrice,
-                    userId: json.data[i].userId
-                  })
-                }
-              }
-              setStockDetails(stocksArray)
-            } else {
-              console.log('user is not signed in')
-            }
-          })
-        })
-        .catch((error) => {
-          const errorCode = error.code
-          const errorMessage = error.message
-          console.log(errorCode + ': ' + errorMessage)
-        })
+      const userid = await firebaseuser()
+      const request = JSON.stringify({
+        userid: userid
+      })
+      try {
+        const options = {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: request
+        }
+        const response = await fetch(config.API_URL + 'getData', options)
+        console.log('useeffect')
+        const json = await response.json()
+        console.log(json.data)
+        const stocksArray = []
+        if (json.data.length !== 0) {
+          for (let i = 0; i < json.data.length; i++) {
+            // console.log("name: "+ json.data[i].stockname)
+            stocksArray.push({
+              stockname: json.data[i].stockname,
+              stockpricewhenuseraddedit: json.data[i].stockpricewhenuseraddedit,
+              triggerPrice: json.data[i].triggerPrice,
+              userId: json.data[i].userId
+            })
+          }
+        }
+        setStockDetails(stocksArray)
+      } catch (error) {
+        const errorCode = error.code
+        const errorMessage = error.message
+        console.log(errorCode + ': ' + errorMessage)
+      }
     }
     fetchData()
   }, [])
