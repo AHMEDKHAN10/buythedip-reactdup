@@ -37,6 +37,7 @@ function SetAlert ({ route }) {
     const token = registerForPushNotificationsAsync()
     setExpoPushToken(token)
     console.log('token: ' + token)
+    // console.log('stock price from firstcreen: ' + price)
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification)
     })
@@ -66,8 +67,8 @@ function SetAlert ({ route }) {
     const request = JSON.stringify({
       userid: userid,
       trigger: textInput,
-      stockName,
-      price
+      stockName: stockName,
+      price: price
     })
     const options = {
       method: 'POST',
@@ -84,7 +85,14 @@ function SetAlert ({ route }) {
 
   function renderHeader (navigation) {
     return (
-      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: 10 }}>
+      <View style={{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        height: 10,
+        marginTop: (Platform.OS === 'ios') ? 0 : 35
+      }}>
         <AntDesign name="close" size={24} color="black"
           onPress={() => {
             const stock = 'Lookup a stock'

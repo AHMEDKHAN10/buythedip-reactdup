@@ -2,6 +2,8 @@
 import * as Notifications from 'expo-notifications'
 import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import firebaseuser from '../firebase/firebaseconfig'
+import config from '../../config'
 
 import {
   StyleSheet,
@@ -42,6 +44,27 @@ function stockScreenBluePrint ({ route }) {
   const notificationListener = useRef()
   const responseListener = useRef()
 
+  const deleteStock = async () => {
+    const userid = await firebaseuser()
+    const request = JSON.stringify({
+      userid: userid,
+      stockName: otherParam
+    })
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: request
+    }
+    const response = await fetch(config.API_URL + 'delData', options)
+    console.log('deleting ..... ')
+    const json = await response.json()
+    console.log(json)
+    navigation.navigate('Home')
+  }
+
   useEffect(() => {
     const token = registerForPushNotificationsAsync()
     setExpoPushToken(token)
@@ -60,6 +83,7 @@ function stockScreenBluePrint ({ route }) {
       Notifications.removeNotificationSubscription(responseListener.current)
     }
   }, [])
+
   async function schedulePushNotification () {
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -102,6 +126,7 @@ function stockScreenBluePrint ({ route }) {
       </View>
     )
   }
+
   function StalkPriceHeader () {
     return (
       <View style={{ flex: 2, padding: 10, width: (Dimensions.get('window').width) }}>
@@ -113,6 +138,7 @@ function stockScreenBluePrint ({ route }) {
       </View>
     )
   }
+
   function enableNotification () {
     return (
       <View style={{ flex: 1, width: (Dimensions.get('window').width), height: 50 }}>
@@ -144,13 +170,14 @@ function stockScreenBluePrint ({ route }) {
           />
         </View>
         <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', justifyContent: 'center' }}>
-          <TouchableHighlight style={styles.ButtonAddStock} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
+          <TouchableHighlight style={styles.ButtonAddStock} onPress={deleteStock} underlayColor='#fff'>
               <Text style={styles.ButtonAddStockText}>Delete</Text>
           </TouchableHighlight>
         </View>
       </View>
     )
   }
+
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' }}>
       <KeyboardAvoidingView

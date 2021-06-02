@@ -5,7 +5,8 @@ import {
   SafeAreaView,
   View, Text,
   Dimensions,
-  TouchableHighlight
+  TouchableHighlight,
+  Platform
 } from 'react-native'
 import { Camera } from 'expo-camera'
 import { AntDesign } from '@expo/vector-icons'
@@ -14,7 +15,14 @@ import FaceId from '../services/faceid'
 
 function renderHeader (navigation) {
   return (
-    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: 10 }}>
+    <View style={{
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+      height: 10,
+      marginTop: (Platform.OS === 'ios') ? 0 : 35
+    }}>
       <AntDesign name="arrowleft" size={24} color="black"
         onPress={ () => {
           navigation.navigate('Home')

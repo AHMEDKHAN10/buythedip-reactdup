@@ -4,7 +4,8 @@ import {
   SafeAreaView,
   View,
   Text,
-  Dimensions
+  Dimensions,
+  Platform
 } from 'react-native'
 import stocks from '../constants'
 import { Menu } from 'react-native-paper'
@@ -12,11 +13,12 @@ import Autocomplete from 'react-native-autocomplete-input'
 import configg from '../../config'
 const height = Dimensions.get('screen').height
 // * localhost api http://127.0.0.1:3000/
+// * backend api https://buythedipapi.herokuapp.com/
 function FirstScreen () {
   const navigation = useNavigation()
   const [query, setQuery] = useState('')
   const [data, setData] = useState([])
-  const [price, setPrice] = useState([])
+  const [price, setPrice] = useState('')
 
   const StockName = async (name) => {
     const request = JSON.stringify({
@@ -33,7 +35,8 @@ function FirstScreen () {
     console.log(configg.API_URL)
     const response = await fetch(configg.API_URL + 'getStockName', options)
     const json = await response.json()
-    setPrice(json.price)
+    console.log('price in stockname func in Firstscreen: ' + json.price)
+    return (json.price)
   }
 
   function renderHeader (navigation) {
@@ -57,7 +60,11 @@ function FirstScreen () {
             height: 50
           }}
         >
-          <Text style={{ fontWeight: '800' }}>DIP</Text>
+          <Text style={{
+            fontWeight: Platform.OS === 'ios' ? '800' : 'bold'
+          }}>
+            DIP
+          </Text>
           <Text style={{ fontWeight: '400' }}>LIST</Text>
         </Text>
         <Text
@@ -106,7 +113,13 @@ function FirstScreen () {
   }, [query])
 
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: (Platform.OS === 'ios') ? 0 : 35
+      }}>
       {renderHeader(navigation)}
       <View style={{ flex: 3, padding: 10, width: Dimensions.get('window').width }}>
        <Autocomplete
@@ -121,14 +134,15 @@ function FirstScreen () {
                 setQuery(item.symbol)
                 setData([])
                 //* to send company name to next screen
-                await StockName(item.symbol)
-                console.log('price: ', price)
-                if (price === 'Stock price not available') {
-                  alert(price)
+                const pricee = await StockName(item.symbol)
+                setPrice(pricee)
+                console.log('price: ', pricee)
+                if (pricee === 'Stock price not available') {
+                  alert(pricee)
                 } else {
                   navigation.navigate('SetAlert', {
                     stockName: item.symbol,
-                    price: '$' + price
+                    price: '$ ' + pricee
                   })
                 }
               }}
@@ -156,7 +170,7 @@ function FirstScreen () {
 
           autoCapitalize="characters"
         />
-        { price === 'Stock price not available'
+        { price === 'Stock price not available' || null
           ? <Text
             placeholder='abc'
             style={{
@@ -177,7 +191,7 @@ function FirstScreen () {
               textAlign: 'center'
             }}
           >
-          last closed at ${price}
+            last closed at ${price}
           </Text>
         }
       </View>

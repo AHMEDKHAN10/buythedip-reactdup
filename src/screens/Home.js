@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight } from 'react-native'
+import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight, Platform } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
 import firebaseuser from '../firebase/firebaseconfig'
 import config from '../../config'
 
 function renderHeader (navigation) {
   return (
     // flex:1,
-    <View style={{ flex: 1, alignItems: 'flex-start', flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: 50, marginTop: 50 }}>
+    <View style={{
+      flex: 1,
+      alignItems: 'flex-start',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+      height: 50,
+      marginTop: (Platform.OS === 'ios') ? 0 : 35
+    }}>
       <Ionicons
         name='settings-outline' size={24} color='black' style={{ paddingTop: 10, paddingLeft: 35, width: '40%' }}
         onPress={() => {
@@ -134,8 +142,9 @@ const sleep = (milliseconds) => {
 }
 
 // eslint-disable-next-line react/prop-types
-function Home ({ route }) {
+function Home () {
   const [stockDetails, setStockDetails] = useState([])
+  const isFocused = useIsFocused()
   useEffect(() => {
     sleep(3000)
     async function fetchData () {
@@ -177,7 +186,7 @@ function Home ({ route }) {
       }
     }
     fetchData()
-  }, [])
+  }, [isFocused])
   const navigation = useNavigation()
   return (
     <SafeAreaView style={styles.container}>

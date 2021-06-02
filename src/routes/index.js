@@ -15,11 +15,12 @@ export default function Routes () {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="FirstScreen" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
-        <Stack.Screen name="Home" component={Home} options={{ headerLeft: null }}/>
+        <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="SetAlert" component= { SetAlert } />
-        <Stack.Screen name="Settings" component= { Settings } options={{ headerLeft: null }}/>
+        <Stack.Screen name="Settings" component= { Settings } />
         <Stack.Screen name="StockScreenBluePrint" component={StockScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   )
 }
+// options={{ headerLeft: null}}
