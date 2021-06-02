@@ -36,8 +36,6 @@ function SetAlert ({ route }) {
   useEffect(() => {
     const token = registerForPushNotificationsAsync()
     setExpoPushToken(token)
-    console.log('token: ' + token)
-    // console.log('stock price from firstcreen: ' + price)
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification)
     })
@@ -61,7 +59,6 @@ function SetAlert ({ route }) {
       return
     }
     const userid = await firebaseuser()
-    // console.log('user id in setalert: ' + userid)
     navigation.navigate('Home')
 
     const request = JSON.stringify({
@@ -79,8 +76,8 @@ function SetAlert ({ route }) {
       body: request
     }
     const response = await fetch(config.API_URL + 'getTrigger', options)
+    // eslint-disable-next-line no-unused-vars
     const json = await response.json()
-    console.log(json)
   }
 
   function renderHeader (navigation) {

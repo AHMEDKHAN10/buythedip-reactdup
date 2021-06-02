@@ -4,11 +4,9 @@ import {
   Alert
 } from 'react-native'
 import * as LocalAuthentication from 'expo-local-authentication'
-// import {
-//   isEnrolledAsync
-// } from 'expo-local-authentication'
 
 const faceid = async () => {
+  // eslint-disable-next-line no-unused-vars
   const [isBiometricSupported, setIsBiometricSupported] = useState(false)
 
   // Check if hardware supports biometrics
@@ -32,7 +30,6 @@ const faceid = async () => {
     ])
   }
 
-  // const handleBiometricAuth = async () => {
   // Check if hardware supports biometrics
   const isBiometricAvailable = await LocalAuthentication.hasHardwareAsync()
 
@@ -67,17 +64,15 @@ const faceid = async () => {
   })
   // Log the user in on success
   if (biometricAuth) {
-    console.log('success')
-    console.log({ isBiometricSupported })
-    console.log({ isBiometricAvailable })
-    console.log({ supportedBiometrics })
-    console.log({ savedBiometrics })
-    console.log({ biometricAuth })
+    // console.log('success')
+    // console.log({ isBiometricSupported })
+    // console.log({ isBiometricAvailable })
+    // console.log({ supportedBiometrics })
+    // console.log({ savedBiometrics })
+    // console.log({ biometricAuth })
     return ('biometric Auth')
   }
   return ('no biometric auth')
-// }
-  // return handleBiometricAuth()
 }
 
 export default faceid

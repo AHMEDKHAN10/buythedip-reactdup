@@ -163,9 +163,7 @@ function Home () {
           body: request
         }
         const response = await fetch(config.API_URL + 'getData', options)
-        console.log('useeffect')
         const json = await response.json()
-        console.log(json.data)
         const stocksArray = []
         if (json.data.length !== 0) {
           for (let i = 0; i < json.data.length; i++) {
@@ -180,9 +178,10 @@ function Home () {
         }
         setStockDetails(stocksArray)
       } catch (error) {
-        const errorCode = error.code
-        const errorMessage = error.message
-        console.log(errorCode + ': ' + errorMessage)
+        // const errorCode = error.code
+        // const errorMessage = error.message
+        // console.log(errorCode + ': ' + errorMessage)
+        console.error(error)
       }
     }
     fetchData()

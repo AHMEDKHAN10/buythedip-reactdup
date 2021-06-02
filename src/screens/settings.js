@@ -54,7 +54,6 @@ function Content2 () {
     if (!isEnabled) {
       console.log('enabled')
       FaceId()
-      // console.log('faceid')
     } else {
       console.log('not enabled')
     }
