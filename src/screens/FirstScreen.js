@@ -32,10 +32,10 @@ function FirstScreen () {
       },
       body: request
     }
-    console.log(configg.API_URL)
+    // console.log(configg.API_URL + 'getStockName')
     const response = await fetch(configg.API_URL + 'getStockName', options)
     const json = await response.json()
-    console.log('price in stockname func in Firstscreen: ' + json.price)
+    // console.log('price in stockname func in Firstscreen: ' + json.price)
     return (json.price)
   }
 
@@ -110,7 +110,7 @@ function FirstScreen () {
     } else {
       setData(stuff)
     }
-  }, [query])
+  }, [query, price])
 
   return (
     <SafeAreaView
@@ -126,7 +126,9 @@ function FirstScreen () {
          data={data}
           defaultValue={query}
           placeholder="GME"
-          onChangeText={(value) => setQuery(value)}
+          onChangeText={(value) => {
+            setQuery(value)
+          }}
           renderItem={({ item, index }) => (
             <Menu.Item
               key={index}
@@ -136,7 +138,7 @@ function FirstScreen () {
                 //* to send company name to next screen
                 const pricee = await StockName(item.symbol)
                 setPrice(pricee)
-                console.log('price: ', pricee)
+                // console.log('price: ', pricee)
                 if (pricee === 'Stock price not available') {
                   alert(pricee)
                 } else {
@@ -170,7 +172,7 @@ function FirstScreen () {
 
           autoCapitalize="characters"
         />
-        { price === 'Stock price not available' || null
+        { price === ''
           ? <Text
             placeholder='abc'
             style={{

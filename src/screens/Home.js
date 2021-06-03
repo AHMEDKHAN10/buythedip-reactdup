@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight, Platform } from 'react-native'
+import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight, Platform, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation, useIsFocused } from '@react-navigation/native'
 import firebaseuser from '../firebase/firebaseconfig'
 import config from '../../config'
+// import { ScrollView } from 'react-native-gesture-handler'
 
 function renderHeader (navigation) {
   return (
@@ -34,9 +35,9 @@ function StockList (navigation, stockDetails) {
   // eslint-disable-next-line react/prop-types
   const StockSect = ({ card, index }) => {
     return (
-      <View style={{ flex: 2, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 50 }}>
+      <View style={{ flex: 2, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
         <TouchableOpacity
-          style={{ flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}
+          style={{ flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}
           onPress={() => {
             navigation.navigate('StockScreenBluePrint', {
               // eslint-disable-next-line react/prop-types
@@ -74,25 +75,55 @@ function StockList (navigation, stockDetails) {
       </View>
     )
   }
-
   return (
     // flex:10,
-    <View style={{ flex: 5, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 50 }}>
+    <View style={{ flex: 4, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 300 }}>
       <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', alignItems: 'left' }}>
         <Text style={{ fontSize: 25 }}>
           <Text style={{ fontWeight: '800' }}>DIP</Text>
           <Text style={{ fontWeight: '400' }}>LIST</Text>
         </Text>
       </View>
-      {stockDetails.map((item, index) => (
-        <StockSect card={item} index={index} key={index} />
-      ))}
+      <ScrollView style={{ flex: 1, width: '100%', marginLeft: '5%' }}>
+        { Object.keys(stockDetails).length
+          ? stockDetails.map((item, index) => (
+              <StockSect card={item} index={index} key={index} />
+          ))
+          : <View>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              height: 60,
+              marginLeft: '0%',
+              borderBottomWidth: 1,
+              borderBottomColor: '#e2e3e4',
+              alignItems: 'left'
+            }}
+        >
+              <View style={{ width: '80%' }}>
+              <Text style={{ fontSize: 17 }}>
+                Loookup a Stock
+              </Text>
+              <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>
+                Prices updated at market close
+              </Text>
+            </View>
+            <TouchableHighlight style={styles.Button2} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
+              <Text style={styles.ButtonText2}>
+                Add
+              </Text>
+            </TouchableHighlight>
+          </TouchableOpacity>
+          </View>
+        }
+      </ScrollView>
     </View>
   )
 }
 function StockMarketsSect () {
   return (
-    <View style={{ flex: 5, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 50 }}>
+    <View style={{ flex: 6, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 50 }}>
       <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', alignItems: 'left' }}>
         <Text style={{ fontSize: 25 }}>
           <Text style={{ fontWeight: '400' }}>INDICES</Text>
@@ -148,7 +179,6 @@ function Home () {
   useEffect(() => {
     sleep(3000)
     async function fetchData () {
-      console.log('fetchdata')
       const userid = await firebaseuser()
       const request = JSON.stringify({
         userid: userid
@@ -225,14 +255,17 @@ const styles = StyleSheet.create({
     paddingRight: 10
   },
   Button2: {
+    display: 'flex',
     marginLeft: '0%',
     width: '20%',
-    backgroundColor: '#fff',
+    color: '#000',
+    borderColor: '#000',
+    borderWidth: 1,
+    backgroundColor: '#ffffff',
     height: 35,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#000',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   Button2Text: {
     color: '#000',
