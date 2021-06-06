@@ -8,9 +8,9 @@ import config from '../../config'
 
 function renderHeader (navigation) {
   return (
-    // flex:1,
+    // flex:1, height: 50
     <View style={{
-      flex: 1,
+      // flex: 1,
       alignItems: 'flex-start',
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -35,7 +35,8 @@ function StockList (navigation, stockDetails) {
   // eslint-disable-next-line react/prop-types
   const StockSect = ({ card, index }) => {
     return (
-      <View style={{ flex: 2, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
+      // flex: 2, height: 80
+      <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
         <TouchableOpacity
           style={{ flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}
           onPress={() => {
@@ -76,15 +77,16 @@ function StockList (navigation, stockDetails) {
     )
   }
   return (
-    // flex:10,
-    <View style={{ flex: 4, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 300 }}>
-      <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', alignItems: 'left' }}>
+    // flex:10, flex: 4, height: 300
+    <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
+      <View style={{ width: '100%', height: 50, marginTop: 30, marginLeft: '5%', alignItems: 'left' }}>
         <Text style={{ fontSize: 25 }}>
           <Text style={{ fontWeight: '800' }}>DIP</Text>
           <Text style={{ fontWeight: '400' }}>LIST</Text>
         </Text>
       </View>
-      <ScrollView style={{ flex: 1, width: '100%', marginLeft: '5%' }}>
+      <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>
+      {/* <ScrollView style={{ flex: 1, width: '100%', marginLeft: '5%' }}> */}
         { Object.keys(stockDetails).length
           ? stockDetails.map((item, index) => (
               <StockSect card={item} index={index} key={index} />
@@ -117,13 +119,15 @@ function StockList (navigation, stockDetails) {
           </TouchableOpacity>
           </View>
         }
-      </ScrollView>
+      {/* </ScrollView> */}
+      </View>
     </View>
   )
 }
+//  flex: 6, height: 50
 function StockMarketsSect () {
   return (
-    <View style={{ flex: 6, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 50 }}>
+    <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
       <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', alignItems: 'left' }}>
         <Text style={{ fontSize: 25 }}>
           <Text style={{ fontWeight: '400' }}>INDICES</Text>
@@ -159,9 +163,10 @@ function StockMarketsSect () {
     </View>
   )
 }
+// flex: 1, height: 50
 function AddAtockBtn (navigation) {
   return (
-    <View style={{ flex: 1, width: (Dimensions.get('window').width), height: 50, alignContent: 'center', alignItems: 'center' }}>
+    <View style={{ width: (Dimensions.get('window').width), height: 'auto', alignContent: 'center', alignItems: 'center', marginTop: 40 }}>
       <TouchableHighlight style={styles.ButtonAddStock} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
         <Text style={styles.ButtonAddStockText}>Add Stock</Text>
       </TouchableHighlight>
@@ -220,9 +225,13 @@ function Home () {
   return (
     <SafeAreaView style={styles.container}>
       {renderHeader(navigation)}
+      <ScrollView>
       {StockList(navigation, stockDetails)}
       {StockMarketsSect()}
-      {AddAtockBtn(navigation)}
+      </ScrollView>
+      <View style={{ marginTop: 10, borderTopWidth: 1, borderTopColor: '#e2e3e4', shadowOpacity: 1, shadowRadius: 4.65, backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
+        {AddAtockBtn(navigation)}
+      </View>
     </SafeAreaView>
   )
 }

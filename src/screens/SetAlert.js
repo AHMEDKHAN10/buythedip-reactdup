@@ -14,8 +14,8 @@ import {
   Keyboard
 } from 'react-native'
 import * as Notifications from 'expo-notifications'
-import { AntDesign } from '@expo/vector-icons'
 import Switch from 'react-native-switch-pro'
+import { AntDesign } from '@expo/vector-icons'
 import firebaseuser from '../firebase/firebaseconfig'
 import registerForPushNotificationsAsync from '../services/pushNotification'
 
@@ -34,6 +34,7 @@ function SetAlert ({ route }) {
   const responseListener = useRef()
 
   useEffect(() => {
+    console.log(price)
     const token = registerForPushNotificationsAsync()
     setExpoPushToken(token)
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -113,14 +114,17 @@ function SetAlert ({ route }) {
     return (
       <View style={{ flex: 2, padding: 10, width: (Dimensions.get('window').width) }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center' }}>
-            <Text style={{ fontSize: 30, lineHeight: 55, color: '#ec5d29' }}>$</Text>
-            <TextInput placeholder='900' keyboardType='numeric'
-            onChangeText={
-                (value) => setTextInput(value)
-                }
-            style={{ fontSize: 80, lineHeight: 90, color: '#ec5d29' }}></TextInput>
+          <Text style={{ fontSize: 30, lineHeight: 55, color: '#ec5d29' }}>$</Text>
+          <TextInput
+            placeholder = {String(Math.round(price - (price * 0.1)))}
+            keyboardType = 'numeric'
+            onChangeText = {
+              (value) => setTextInput(value)
+            }
+            style={{ fontSize: 80, lineHeight: 90, color: '#ec5d29' }}>
+          </TextInput>
         </View>
-        <Text style={{ fontWeight: '400', letterSpacing: 2, textAlign: 'center', color: '#ec5d29' }}>Target Price for TSLA</Text>
+        <Text style={{ fontWeight: '400', letterSpacing: 2, textAlign: 'center', color: '#ec5d29' }}>Target Price for {stockName}</Text>
       </View>
     )
   }

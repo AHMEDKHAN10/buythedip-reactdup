@@ -9,9 +9,12 @@ import {
 } from 'react-native'
 import stocks from '../constants'
 import { Menu } from 'react-native-paper'
+import { AntDesign } from '@expo/vector-icons'
 import Autocomplete from 'react-native-autocomplete-input'
 import configg from '../../config'
+import firebaseuser from '../firebase/firebaseconfig'
 const height = Dimensions.get('screen').height
+
 // * localhost api http://127.0.0.1:3000/
 // * backend api https://buythedipapi.herokuapp.com/
 function FirstScreen () {
@@ -19,6 +22,7 @@ function FirstScreen () {
   const [query, setQuery] = useState('')
   const [data, setData] = useState([])
   const [price, setPrice] = useState('')
+  const [empty, setempty] = useState(true)
 
   const StockName = async (name) => {
     const request = JSON.stringify({
@@ -38,6 +42,51 @@ function FirstScreen () {
     // console.log('price in stockname func in Firstscreen: ' + json.price)
     return (json.price)
   }
+
+  useEffect(() => {
+    const stuff = []
+    if (query === '') {
+      setData([])
+    } else if (query.length === 1) {
+      // eslint-disable-next-line array-callback-return
+      stocks[query].map((element) => {
+        stuff.push(element)
+      })
+    } else if (query.length > 1) {
+      stocks[query[0]].forEach((element) => {
+        if (element.symbol.search(query) === 0) {
+          stuff.push(element)
+        }
+      })
+    }
+    if (stuff === [] || stuff.length === 1) {
+      setData([])
+    } else {
+      setData(stuff)
+    }
+    async function check () {
+      const userid = await firebaseuser()
+      const request = JSON.stringify({
+        userid: userid
+      })
+      const options = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: request
+      }
+      const response = await fetch(configg.API_URL + 'getData', options)
+      const json = await response.json()
+      if (json.data.length !== 0) {
+        return setempty(false)
+      }
+      return setempty(true)
+    }
+    check()
+    console.log('empty: ' + empty)
+  }, [query, price])
 
   function renderHeader (navigation) {
     return (
@@ -67,50 +116,34 @@ function FirstScreen () {
           </Text>
           <Text style={{ fontWeight: '400' }}>LIST</Text>
         </Text>
-        <Text
-          style={{
-            padding: 10,
-            paddingTop: 15,
-            textAlign: 'right',
-            width: '33%',
-            fontSize: 18,
-            height: 50,
-            color: '#6fcc51'
-          }}
-          onPress={() => {
-            navigation.navigate('Home', {
-              StockName: 'No specific stock selected'
-            })
-          }}
-        >
-          Skip
-        </Text>
+        {empty
+          ? <Text
+            style={{
+              padding: 10,
+              paddingTop: 15,
+              textAlign: 'right',
+              width: '33%',
+              fontSize: 18,
+              height: 50,
+              color: '#6fcc51'
+            }}
+            onPress={() => {
+              navigation.navigate('Home', {
+                StockName: 'No specific stock selected'
+              })
+            }}
+          >
+            Skip
+          </Text>
+          : <AntDesign name="close" size={24} color="black"
+            onPress={() => {
+              navigation.navigate('Home')
+            }}
+            style={{ padding: 10, paddingTop: 12, paddingRight: 25, paddingLeft: 65, width: '33%' }}/>
+        }
       </View>
     )
   }
-
-  useEffect(() => {
-    const stuff = []
-    if (query === '') {
-      setData([])
-    } else if (query.length === 1) {
-      // eslint-disable-next-line array-callback-return
-      stocks[query].map((element) => {
-        stuff.push(element)
-      })
-    } else if (query.length > 1) {
-      stocks[query[0]].forEach((element) => {
-        if (element.symbol.search(query) === 0) {
-          stuff.push(element)
-        }
-      })
-    }
-    if (stuff === [] || stuff.length === 1) {
-      setData([])
-    } else {
-      setData(stuff)
-    }
-  }, [query, price])
 
   return (
     <SafeAreaView
@@ -144,7 +177,7 @@ function FirstScreen () {
                 } else {
                   navigation.navigate('SetAlert', {
                     stockName: item.symbol,
-                    price: '$ ' + pricee
+                    price: pricee
                   })
                 }
               }}
