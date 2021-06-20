@@ -58,14 +58,19 @@ function stockScreenBluePrint ({ route }) {
       },
       body: request
     }
-    const response = await fetch(config.API_URL + 'delData', options)
-    console.log('deleting ..... ')
-    const json = await response.json()
-    console.log(json)
-    navigation.navigate('Home')
+    try {
+      const response = await fetch(config.API_URL + 'delData', options)
+      console.log('deleting ..... ')
+      const json = await response.json()
+      console.log(json)
+      navigation.navigate('Home')
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   useEffect(() => {
+    // console.log('array: ' + array)
     const token = registerForPushNotificationsAsync()
     setExpoPushToken(token)
     // This listener is fired whenever a notification is received while the app is foregrounded

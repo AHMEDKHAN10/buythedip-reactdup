@@ -32,6 +32,7 @@ function renderHeader (navigation) {
   )
 }
 function StockList (navigation, stockDetails) {
+  // console.log('in stock list: ' + stockDetails[2].stockname)
   // eslint-disable-next-line react/prop-types
   const StockSect = ({ card, index }) => {
     return (
@@ -119,7 +120,6 @@ function StockList (navigation, stockDetails) {
           </TouchableOpacity>
           </View>
         }
-      {/* </ScrollView> */}
       </View>
     </View>
   )
@@ -173,54 +173,56 @@ function AddAtockBtn (navigation) {
     </View>
   )
 }
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
+// const sleep = (milliseconds) => {
+//   return new Promise(resolve => setTimeout(resolve, milliseconds))
+// }
 
 // eslint-disable-next-line react/prop-types
 function Home () {
   const [stockDetails, setStockDetails] = useState([])
   const isFocused = useIsFocused()
-  useEffect(() => {
-    sleep(3000)
-    async function fetchData () {
-      const userid = await firebaseuser()
-      const request = JSON.stringify({
-        userid: userid
-      })
-      try {
-        const options = {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: request
-        }
-        const response = await fetch(config.API_URL + 'getData', options)
-        const json = await response.json()
-        const stocksArray = []
-        if (json.data.length !== 0) {
-          for (let i = 0; i < json.data.length; i++) {
-            // console.log("name: "+ json.data[i].stockname)
-            stocksArray.push({
-              stockname: json.data[i].stockname,
-              stockpricewhenuseraddedit: json.data[i].stockpricewhenuseraddedit,
-              triggerPrice: json.data[i].triggerPrice,
-              userId: json.data[i].userId
-            })
-          }
-        }
-        setStockDetails(stocksArray)
-      } catch (error) {
-        // const errorCode = error.code
-        // const errorMessage = error.message
-        // console.log(errorCode + ': ' + errorMessage)
-        console.error(error)
+
+  async function fetchData () {
+    const userid = await firebaseuser()
+    const request = JSON.stringify({
+      userid: userid
+    })
+    try {
+      const options = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: request
       }
+      const response = await fetch(config.API_URL + 'getData', options)
+      const json = await response.json()
+      const stocksArray = []
+      if (json.data.length !== 0) {
+        for (let i = 0; i < json.data.length; i++) {
+          // console.log("name: "+ json.data[i].stockname)
+          stocksArray.push({
+            stockname: json.data[i].stockname,
+            stockpricewhenuseraddedit: json.data[i].stockpricewhenuseraddedit,
+            triggerPrice: json.data[i].triggerPrice,
+            userId: json.data[i].userId
+          })
+        }
+      }
+      setStockDetails(stocksArray)
+    } catch (error) {
+      // const errorCode = error.code
+      // const errorMessage = error.message
+      // console.log(errorCode + ': ' + errorMessage)
+      console.error(error)
     }
+  }
+
+  useEffect(() => {
     fetchData()
   }, [isFocused])
+
   const navigation = useNavigation()
   return (
     <SafeAreaView style={styles.container}>

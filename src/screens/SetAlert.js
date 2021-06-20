@@ -55,10 +55,10 @@ function SetAlert ({ route }) {
 
   const checkTextInput = async () => {
     //* Check for the Name TextInput
-    if (!textInput.trim()) {
-      alert('Please Enter details')
-      return
-    }
+    // if (!textInput.trim()) {
+    //   alert('Please Enter details')
+    //   return
+    // }
     const userid = await firebaseuser()
     navigation.navigate('Home')
 
@@ -116,12 +116,13 @@ function SetAlert ({ route }) {
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center' }}>
           <Text style={{ fontSize: 30, lineHeight: 55, color: '#ec5d29' }}>$</Text>
           <TextInput
-            placeholder = {String(Math.round(price - (price * 0.1)))}
+            value = {String(Math.round(price - (price * 0.1)))}
             keyboardType = 'numeric'
             onChangeText = {
               (value) => setTextInput(value)
             }
             style={{ fontSize: 80, lineHeight: 90, color: '#ec5d29' }}>
+            {String(Math.round(price - (price * 0.1)))}
           </TextInput>
         </View>
         <Text style={{ fontWeight: '400', letterSpacing: 2, textAlign: 'center', color: '#ec5d29' }}>Target Price for {stockName}</Text>

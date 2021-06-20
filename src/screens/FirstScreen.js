@@ -85,7 +85,7 @@ function FirstScreen () {
       return setempty(true)
     }
     check()
-    console.log('empty: ' + empty)
+    // console.log('empty: ' + empty)
   }, [query, price])
 
   function renderHeader (navigation) {
