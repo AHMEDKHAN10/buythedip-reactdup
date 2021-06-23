@@ -10,16 +10,6 @@ import logo from '../../assets/applogo.png'
 const SplashScreen = () => {
   return (
     <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
-      {/* <Text
-        style={style.text}
-      >
-        TBD
-      </Text>
-      <Text
-        style={style.text}
-      >
-        SPLASH
-      </Text> */}
       <Text
         style={{
           padding: 10,
@@ -40,15 +30,5 @@ const SplashScreen = () => {
     </SafeAreaView>
   )
 }
-
-// const style = StyleSheet.create({
-//   text: {
-//     color: '#929192',
-//     fontWeight: '600',
-//     textAlign: 'center',
-//     fontSize: 30,
-//     letterSpacing: 1
-//   }
-// })
 
 export default SplashScreen

@@ -4,7 +4,9 @@ import { Ionicons } from '@expo/vector-icons'
 import { useNavigation, useIsFocused } from '@react-navigation/native'
 import firebaseuser from '../firebase/firebaseconfig'
 import config from '../../config'
-// import { ScrollView } from 'react-native-gesture-handler'
+import AppLoading from 'expo-app-loading'
+// eslint-disable-next-line camelcase
+import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 
 function renderHeader (navigation) {
   return (
@@ -19,14 +21,14 @@ function renderHeader (navigation) {
       marginTop: (Platform.OS === 'ios') ? 0 : 35
     }}>
       <Ionicons
-        name='settings-outline' size={24} color='black' style={{ paddingTop: 10, paddingLeft: 35, width: '40%' }}
+        name='settings-outline' size={24} color='black' style={{ paddingTop: 10, paddingLeft: 15, width: '40%' }}
         onPress={() => {
           navigation.navigate('Settings')
         }}
       />
       <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 23 }}>
-        <Text style={{ fontWeight: '800' }}>DIP</Text>
-        <Text style={{ fontWeight: '400' }}>LIST</Text>
+        <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold' }}>DIP</Text>
+        <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular' }}>LIST</Text>
       </Text>
     </View>
   )
@@ -39,7 +41,7 @@ function StockList (navigation, stockDetails) {
       // flex: 2, height: 80
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
         <TouchableOpacity
-          style={{ flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}
+          style={styles.diplistSect}
           onPress={() => {
             navigation.navigate('StockScreenBluePrint', {
               // eslint-disable-next-line react/prop-types
@@ -52,13 +54,13 @@ function StockList (navigation, stockDetails) {
           }}
         >
           <View style={{ width: '80%' }}>
-            <Text style={{ fontSize: 17 }}>
+            <Text style={styles.dns}>
               {
                 // eslint-disable-next-line react/prop-types
                 card.stockname
               }
             </Text>
-            <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>
+            <Text style={styles.diplistStockSect}>
               {
                 // eslint-disable-next-line react/prop-types
                 card.stockpricewhenuseraddedit
@@ -82,8 +84,8 @@ function StockList (navigation, stockDetails) {
     <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
       <View style={{ width: '100%', height: 50, marginTop: 30, marginLeft: '5%', alignItems: 'left' }}>
         <Text style={{ fontSize: 25 }}>
-          <Text style={{ fontWeight: '800' }}>DIP</Text>
-          <Text style={{ fontWeight: '400' }}>LIST</Text>
+          <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold' }}>DIP</Text>
+          <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular' }}>LIST</Text>
         </Text>
       </View>
       <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>
@@ -126,42 +128,49 @@ function StockList (navigation, stockDetails) {
 }
 //  flex: 6, height: 50
 function StockMarketsSect () {
-  return (
-    <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
-      <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', alignItems: 'left' }}>
-        <Text style={{ fontSize: 25 }}>
-          <Text style={{ fontWeight: '400' }}>INDICES</Text>
-        </Text>
-      </View>
-      <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}>
-        <View style={{ width: '50%' }}>
-          <Text style={{ fontSize: 17 }}>DJIA</Text>
-          <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>Last closed $29,891</Text>
+  const [fontsLoaded] = useFonts({
+    Lato_300Light, Lato_400Regular, Lato_700Bold
+  })
+  if (!fontsLoaded) {
+    return <AppLoading/>
+  } else {
+    return (
+      <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
+        <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', alignItems: 'left' }}>
+          <Text style={{ fontSize: 25 }}>
+            <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold' }}>INDICES</Text>
+          </Text>
         </View>
-        <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-          <Text style={styles.ButtonSetText}>Set</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}>
-        <View style={{ width: '50%' }}>
-          <Text style={{ fontSize: 17 }}>NASDAQ</Text>
-          <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>Last closed $30,000</Text>
+        <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}>
+          <View style={{ width: '50%' }}>
+            <Text style={styles.dns}>DJIA</Text>
+            <Text style={styles.lastClose}>Last closed $29,891</Text>
+          </View>
+          <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+            <Text style={styles.ButtonSetText}>Set</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-          <Text style={styles.ButtonSetText}>Set</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}>
-        <View style={{ width: '50%' }}>
-          <Text style={{ fontSize: 17 }}>S&P 500</Text>
-          <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>Last closed $15,029</Text>
+        <View style={ styles.indicesSect }>
+          <View style={{ width: '50%' }}>
+            <Text style={styles.dns}>NASDAQ</Text>
+            <Text style={styles.lastClose}>Last closed $30,000</Text>
+          </View>
+          <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+            <Text style={styles.ButtonSetText}>Set</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-          <Text style={styles.ButtonSetText}>Set</Text>
-        </TouchableOpacity>
+        <View style={styles.indicesSect}>
+          <View style={{ width: '50%' }}>
+            <Text style={styles.dns}>S&P 500</Text>
+            <Text style={styles.lastClose}>Last closed $15,029</Text>
+          </View>
+          <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+            <Text style={styles.ButtonSetText}>Set</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  )
+    )
+  }
 }
 // flex: 1, height: 50
 function AddAtockBtn (navigation) {
@@ -263,7 +272,8 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    fontFamily: 'Lato_400Regular'
   },
   Button2: {
     display: 'flex',
@@ -298,7 +308,8 @@ const styles = StyleSheet.create({
     color: '#2b3033',
     textAlign: 'center',
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    fontFamily: 'Lato_400Regular'
   },
   ButtonAddStock: {
     width: '85%',
@@ -314,6 +325,44 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    fontFamily: 'Lato_400Regular'
+  },
+  diplistSect: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 60,
+    marginLeft: '0%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e2e3e4',
+    alignItems: 'flex-start'
+  },
+  diplistStockSect: {
+    marginTop: 4,
+    fontSize: 14,
+    color: '#6a6e70',
+    fontWeight: '500',
+    fontFamily: 'Lato_400Regular'
+  },
+  indicesSect: {
+    marginTop: 40,
+    flexDirection: 'row',
+    width: '100%',
+    height: 60,
+    marginLeft: '5%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e2e3e4',
+    alignItems: 'flex-start'
+  },
+  dns: {
+    fontSize: 17,
+    fontFamily: 'Lato_400Regular'
+  },
+  lastClose: {
+    marginTop: 4,
+    fontSize: 14,
+    color: '#6a6e70',
+    fontWeight: '500',
+    fontFamily: 'Lato_400Regular'
   }
 })
