@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight, Platform, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
-import { useNavigation, useIsFocused } from '@react-navigation/native'
+import { useNavigation, useIsFocused, useTheme } from '@react-navigation/native'
 import firebaseuser from '../firebase/firebaseconfig'
 import config from '../../config'
 import AppLoading from 'expo-app-loading'
@@ -9,6 +9,7 @@ import AppLoading from 'expo-app-loading'
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 
 function renderHeader (navigation) {
+  const { colors } = useTheme()
   return (
     // flex:1, height: 50
     <View style={{
@@ -21,20 +22,20 @@ function renderHeader (navigation) {
       marginTop: (Platform.OS === 'ios') ? 0 : 35
     }}>
       <Ionicons
-        name='settings-outline' size={24} color='black' style={{ paddingTop: 10, paddingLeft: 15, width: '40%' }}
+        name='settings-outline' size={24} color={colors.text} style={{ paddingTop: 10, paddingLeft: 15, width: '40%' }}
         onPress={() => {
           navigation.navigate('Settings')
         }}
       />
       <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 23 }}>
-        <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold' }}>DIP</Text>
-        <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular' }}>LIST</Text>
+        <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold', color: colors.text }}>DIP</Text>
+        <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>LIST</Text>
       </Text>
     </View>
   )
 }
 function StockList (navigation, stockDetails) {
-  // console.log('in stock list: ' + stockDetails[2].stockname)
+  const { colors } = useTheme()
   // eslint-disable-next-line react/prop-types
   const StockSect = ({ card, index }) => {
     return (
@@ -54,13 +55,13 @@ function StockList (navigation, stockDetails) {
           }}
         >
           <View style={{ width: '80%' }}>
-            <Text style={styles.dns}>
+            <Text style={[styles.dns, { color: colors.text }]}>
               {
                 // eslint-disable-next-line react/prop-types
                 card.stockname
               }
             </Text>
-            <Text style={styles.diplistStockSect}>
+            <Text style={[styles.diplistStockSect, { color: colors.text }]}>
               {
                 // eslint-disable-next-line react/prop-types
                 card.stockpricewhenuseraddedit
@@ -107,14 +108,15 @@ function StockList (navigation, stockDetails) {
             }}
         >
               <View style={{ width: '80%' }}>
-              <Text style={{ fontSize: 17 }}>
-                Loookup a Stock
-              </Text>
-              <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>
-                Prices updated at market close
-              </Text>
+                <Text style={{ fontSize: 17, color: colors.text }}>
+                  Loookup a Stock
+                </Text>
+                {/* , color: '#6a6e70' */}
+                <Text style={{ marginTop: 4, fontSize: 14, fontWeight: '500', color: colors.text }}>
+                  Prices updated at market close
+                </Text>
             </View>
-            <TouchableHighlight style={styles.Button2} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
+            <TouchableHighlight style={[styles.Button2, { color: colors.background }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
               <Text style={styles.ButtonText2}>
                 Add
               </Text>
@@ -128,6 +130,7 @@ function StockList (navigation, stockDetails) {
 }
 //  flex: 6, height: 50
 function StockMarketsSect () {
+  const { colors } = useTheme()
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })
@@ -138,34 +141,34 @@ function StockMarketsSect () {
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
         <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', alignItems: 'left' }}>
           <Text style={{ fontSize: 25 }}>
-            <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold' }}>INDICES</Text>
+            <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold', color: colors.text }}>INDICES</Text>
           </Text>
         </View>
         <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}>
           <View style={{ width: '50%' }}>
-            <Text style={styles.dns}>DJIA</Text>
-            <Text style={styles.lastClose}>Last closed $29,891</Text>
+            <Text style={[styles.dns, { color: colors.text }]}>DJIA</Text>
+            <Text style={[styles.lastClose, { color: colors.text }]}>Last closed $29,891</Text>
           </View>
-          <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-            <Text style={styles.ButtonSetText}>Set</Text>
+          <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.border }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+            <Text style={[styles.ButtonSetText, { color: colors.text }]}>Set</Text>
           </TouchableOpacity>
         </View>
         <View style={ styles.indicesSect }>
           <View style={{ width: '50%' }}>
-            <Text style={styles.dns}>NASDAQ</Text>
-            <Text style={styles.lastClose}>Last closed $30,000</Text>
+            <Text style={[styles.dns, { color: colors.text }]}>NASDAQ</Text>
+            <Text style={[styles.lastClose, { color: colors.text }]}>Last closed $30,000</Text>
           </View>
-          <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-            <Text style={styles.ButtonSetText}>Set</Text>
+          <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.border }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+            <Text style={[styles.ButtonSetText, { color: colors.text }]}>Set</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.indicesSect}>
           <View style={{ width: '50%' }}>
-            <Text style={styles.dns}>S&P 500</Text>
-            <Text style={styles.lastClose}>Last closed $15,029</Text>
+            <Text style={[styles.dns, { color: colors.text }]}>S&P 500</Text>
+            <Text style={[styles.lastClose, { color: colors.text }]}>Last closed $15,029</Text>
           </View>
-          <TouchableOpacity style={styles.ButtonSet} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-            <Text style={styles.ButtonSetText}>Set</Text>
+          <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.border }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+            <Text style={[styles.ButtonSetText, { color: colors.text }]}>Set</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -174,10 +177,11 @@ function StockMarketsSect () {
 }
 // flex: 1, height: 50
 function AddAtockBtn (navigation) {
+  const { colors } = useTheme()
   return (
     <View style={{ width: (Dimensions.get('window').width), height: 'auto', alignContent: 'center', alignItems: 'center', marginTop: 40 }}>
-      <TouchableHighlight style={styles.ButtonAddStock} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
-        <Text style={styles.ButtonAddStockText}>Add Stock</Text>
+      <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
+        <Text style={[styles.ButtonAddStockText, { color: colors.background }]}>Add Stock</Text>
       </TouchableHighlight>
     </View>
   )
@@ -190,7 +194,7 @@ function AddAtockBtn (navigation) {
 function Home () {
   const [stockDetails, setStockDetails] = useState([])
   const isFocused = useIsFocused()
-
+  const { colors } = useTheme()
   async function fetchData () {
     const userid = await firebaseuser()
     const request = JSON.stringify({
@@ -234,7 +238,7 @@ function Home () {
 
   const navigation = useNavigation()
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       {renderHeader(navigation)}
       <ScrollView>
       {StockList(navigation, stockDetails)}
@@ -297,7 +301,7 @@ const styles = StyleSheet.create({
   ButtonSet: {
     marginLeft: '25%',
     width: '25%',
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     height: 38,
     borderRadius: 8,
     justifyContent: 'center',

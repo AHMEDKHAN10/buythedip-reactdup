@@ -30,6 +30,7 @@ function FirstScreen () {
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })
+
   const StockName = async (name) => {
     const request = JSON.stringify({
       stock: name
@@ -44,7 +45,7 @@ function FirstScreen () {
     }
     console.log(configg.API_URL)
     const response = await fetch(configg.API_URL + 'getStockName', options)
-    // console.log('error: ' + response.json())
+    // console.log('error: ' + response.text())
     const json = await response.json()
     return (json.price)
   }

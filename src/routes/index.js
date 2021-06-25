@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import 'react-native-gesture-handler'
 import Home from '../screens/Home'
@@ -10,12 +10,12 @@ import StockScreen from '../screens/stockScreenBluePrint'
 import firebaseuser from '../firebase/firebaseconfig'
 import configg from '../../config'
 import { faClosedCaptioning } from '@fortawesome/free-solid-svg-icons'
+import { EventRegister } from 'react-native-event-listeners'
 
 const Stack = createStackNavigator()
 
 export default function Routes () {
   const [route, setroute] = useState(faClosedCaptioning)
-
   useEffect(() => {
     async function check () {
       const userid = await firebaseuser()
@@ -39,11 +39,22 @@ export default function Routes () {
       setroute(false)
     }
     check()
+    const eventListener = EventRegister.addEventListener(
+      'themeListener',
+      data => {
+        setDarkApp(data)
+      }
+    )
+    return () => {
+      EventRegister.removeEventListener(eventListener)
+    }
     // console.log('route: ' + route)
   }, [])
 
+  const [darkApp, setDarkApp] = useState(false)
+  const appTheme = darkApp ? DarkTheme : DefaultTheme
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={appTheme}>
       <Stack.Navigator initialRouteName={ route ? 'Home' : 'FirstScreen'} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
         <Stack.Screen name="Home" component={Home} />
