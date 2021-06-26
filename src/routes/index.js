@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import 'react-native-gesture-handler'
 import Home from '../screens/Home'
@@ -50,9 +50,31 @@ export default function Routes () {
     }
     // console.log('route: ' + route)
   }, [])
+  const MyDarkTheme = {
+    dark: false,
+    colors: {
+      primary: '#ffffff',
+      background: '#000000',
+      card: '#1C1C1D',
+      text: '#ffffff',
+      border: '#000000',
+      notification: '#EC5D29'
+    }
+  }
+  const MyTheme = {
+    dark: false,
+    colors: {
+      primary: '#2B3033',
+      background: '#ffffff',
+      card: '#ffffff',
+      text: '#000000',
+      border: '#FFE6D1',
+      notification: '#000000'
+    }
+  }
 
   const [darkApp, setDarkApp] = useState(false)
-  const appTheme = darkApp ? DarkTheme : DefaultTheme
+  const appTheme = darkApp ? MyDarkTheme : MyTheme
   return (
     <NavigationContainer theme={appTheme}>
       <Stack.Navigator initialRouteName={ route ? 'Home' : 'FirstScreen'} screenOptions={{ headerShown: false }}>

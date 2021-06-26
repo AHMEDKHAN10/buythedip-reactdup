@@ -10,32 +10,43 @@ import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-go
 
 function renderHeader (navigation) {
   const { colors } = useTheme()
-  return (
-    // flex:1, height: 50
-    <View style={{
-      // flex: 1,
-      alignItems: 'flex-start',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
-      height: 50,
-      marginTop: (Platform.OS === 'ios') ? 0 : 35
-    }}>
-      <Ionicons
-        name='settings-outline' size={24} color={colors.text} style={{ paddingTop: 10, paddingLeft: 15, width: '40%' }}
-        onPress={() => {
-          navigation.navigate('Settings')
-        }}
-      />
-      <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 23 }}>
-        <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold', color: colors.text }}>DIP</Text>
-        <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>LIST</Text>
-      </Text>
-    </View>
-  )
+  const [fontsLoaded] = useFonts({
+    Lato_300Light, Lato_400Regular, Lato_700Bold
+  })
+  if (!fontsLoaded) {
+    return <AppLoading/>
+  } else {
+    return (
+      // flex:1, height: 50
+      <View style={{
+        // flex: 1,
+        alignItems: 'flex-start',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        height: 50,
+        marginTop: (Platform.OS === 'ios') ? 0 : 35
+      }}>
+        <Ionicons
+          name='settings-outline' size={24} color={colors.text} style={{ paddingTop: 10, paddingLeft: 15, width: '40%' }}
+          onPress={() => {
+            navigation.navigate('Settings')
+          }}
+        />
+        <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 23 }}>
+          <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold', color: colors.text }}>DIP</Text>
+          <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>LIST</Text>
+        </Text>
+      </View>
+    )
+  }
 }
+
 function StockList (navigation, stockDetails) {
   const { colors } = useTheme()
+  const [fontsLoaded] = useFonts({
+    Lato_300Light, Lato_400Regular, Lato_700Bold
+  })
   // eslint-disable-next-line react/prop-types
   const StockSect = ({ card, index }) => {
     return (
@@ -55,21 +66,21 @@ function StockList (navigation, stockDetails) {
           }}
         >
           <View style={{ width: '80%' }}>
-            <Text style={[styles.dns, { color: colors.text }]}>
+            <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>
               {
                 // eslint-disable-next-line react/prop-types
                 card.stockname
               }
             </Text>
-            <Text style={[styles.diplistStockSect, { color: colors.text }]}>
-              {
+            <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular' }]}>
+              Last closed ${
                 // eslint-disable-next-line react/prop-types
                 card.stockpricewhenuseraddedit
               }
             </Text>
           </View>
           <TouchableHighlight style={styles.Button} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-            <Text style={styles.ButtonText}>$
+            <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular' }]}>$
               {
                 // eslint-disable-next-line react/prop-types
                 card.triggerPrice
@@ -80,53 +91,57 @@ function StockList (navigation, stockDetails) {
       </View>
     )
   }
-  return (
-    // flex:10, flex: 4, height: 300
-    <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
-      <View style={{ width: '100%', height: 50, marginTop: 30, marginLeft: '5%', alignItems: 'left' }}>
-        <Text style={{ fontSize: 25 }}>
-          <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold' }}>DIP</Text>
-          <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular' }}>LIST</Text>
-        </Text>
-      </View>
-      <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>
-      {/* <ScrollView style={{ flex: 1, width: '100%', marginLeft: '5%' }}> */}
-        { Object.keys(stockDetails).length
-          ? stockDetails.map((item, index) => (
-              <StockSect card={item} index={index} key={index} />
-          ))
-          : <View>
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              width: '100%',
-              height: 60,
-              marginLeft: '0%',
-              borderBottomWidth: 1,
-              borderBottomColor: '#e2e3e4',
-              alignItems: 'left'
-            }}
-        >
-              <View style={{ width: '80%' }}>
-                <Text style={{ fontSize: 17, color: colors.text }}>
-                  Loookup a Stock
+  if (!fontsLoaded) {
+    return <AppLoading/>
+  } else {
+    return (
+      // flex:10, flex: 4, height: 300
+      <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
+        <View style={{ width: '100%', height: 50, marginTop: 30, marginLeft: '5%', alignItems: 'left' }}>
+          <Text style={{ fontSize: 25 }}>
+            <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold' }}>DIP</Text>
+            <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular' }}>LIST</Text>
+          </Text>
+        </View>
+        <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>
+        {/* <ScrollView style={{ flex: 1, width: '100%', marginLeft: '5%' }}> */}
+          { Object.keys(stockDetails).length
+            ? stockDetails.map((item, index) => (
+                <StockSect card={item} index={index} key={index} />
+            ))
+            : <View>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                width: '100%',
+                height: 60,
+                marginLeft: '0%',
+                borderBottomWidth: 1,
+                borderBottomColor: '#e2e3e4',
+                alignItems: 'left'
+              }}
+          >
+                <View style={{ width: '80%' }}>
+                  <Text style={{ fontSize: 17, color: colors.text }}>
+                    Loookup a Stock
+                  </Text>
+                  {/* , color: '#6a6e70' */}
+                  <Text style={{ marginTop: 4, fontSize: 14, fontWeight: '500', color: colors.text }}>
+                    Prices updated at market close
+                  </Text>
+              </View>
+              <TouchableHighlight style={[styles.Button2, { color: colors.background }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
+                <Text style={styles.ButtonText2}>
+                  Add
                 </Text>
-                {/* , color: '#6a6e70' */}
-                <Text style={{ marginTop: 4, fontSize: 14, fontWeight: '500', color: colors.text }}>
-                  Prices updated at market close
-                </Text>
+              </TouchableHighlight>
+            </TouchableOpacity>
             </View>
-            <TouchableHighlight style={[styles.Button2, { color: colors.background }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
-              <Text style={styles.ButtonText2}>
-                Add
-              </Text>
-            </TouchableHighlight>
-          </TouchableOpacity>
-          </View>
-        }
+          }
+        </View>
       </View>
-    </View>
-  )
+    )
+  }
 }
 //  flex: 6, height: 50
 function StockMarketsSect () {
@@ -144,31 +159,31 @@ function StockMarketsSect () {
             <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold', color: colors.text }}>INDICES</Text>
           </Text>
         </View>
-        <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}>
+        <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
           <View style={{ width: '50%' }}>
-            <Text style={[styles.dns, { color: colors.text }]}>DJIA</Text>
-            <Text style={[styles.lastClose, { color: colors.text }]}>Last closed $29,891</Text>
+            <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>DJIA</Text>
+            <Text style={[styles.lastClose, { color: colors.primary }]}>Last closed $29,891</Text>
           </View>
-          <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.border }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-            <Text style={[styles.ButtonSetText, { color: colors.text }]}>Set</Text>
+          <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+            <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
           </TouchableOpacity>
         </View>
         <View style={ styles.indicesSect }>
           <View style={{ width: '50%' }}>
-            <Text style={[styles.dns, { color: colors.text }]}>NASDAQ</Text>
-            <Text style={[styles.lastClose, { color: colors.text }]}>Last closed $30,000</Text>
+            <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>NASDAQ</Text>
+            <Text style={[styles.lastClose, { color: colors.primary }]}>Last closed $30,000</Text>
           </View>
-          <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.border }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-            <Text style={[styles.ButtonSetText, { color: colors.text }]}>Set</Text>
+          <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+            <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.indicesSect}>
           <View style={{ width: '50%' }}>
-            <Text style={[styles.dns, { color: colors.text }]}>S&P 500</Text>
-            <Text style={[styles.lastClose, { color: colors.text }]}>Last closed $15,029</Text>
+            <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>S&P 500</Text>
+            <Text style={[styles.lastClose, { color: colors.primary, fontFamily: 'Lato_400Regular' }]}>Last closed $15,029</Text>
           </View>
-          <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.border }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-            <Text style={[styles.ButtonSetText, { color: colors.text }]}>Set</Text>
+          <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
+            <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -178,13 +193,20 @@ function StockMarketsSect () {
 // flex: 1, height: 50
 function AddAtockBtn (navigation) {
   const { colors } = useTheme()
-  return (
-    <View style={{ width: (Dimensions.get('window').width), height: 'auto', alignContent: 'center', alignItems: 'center', marginTop: 40 }}>
-      <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
-        <Text style={[styles.ButtonAddStockText, { color: colors.background }]}>Add Stock</Text>
-      </TouchableHighlight>
-    </View>
-  )
+  const [fontsLoaded] = useFonts({
+    Lato_300Light, Lato_400Regular, Lato_700Bold
+  })
+  if (!fontsLoaded) {
+    return <AppLoading/>
+  } else {
+    return (
+      <View style={{ width: (Dimensions.get('window').width), height: 'auto', alignContent: 'center', alignItems: 'center', marginTop: 40 }}>
+        <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
+          <Text style={[styles.ButtonAddStockText, { color: colors.border, fontFamily: 'Lato_700Bold' }]}>Add Stock</Text>
+        </TouchableHighlight>
+      </View>
+    )
+  }
 }
 // const sleep = (milliseconds) => {
 //   return new Promise(resolve => setTimeout(resolve, milliseconds))
@@ -244,7 +266,7 @@ function Home () {
       {StockList(navigation, stockDetails)}
       {StockMarketsSect()}
       </ScrollView>
-      <View style={{ marginTop: 10, borderTopWidth: 1, borderTopColor: '#e2e3e4', shadowOpacity: 1, shadowRadius: 4.65, backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
+      <View style={{ marginTop: 10, borderTopWidth: 0.25, borderTopColor: '#e2e3e4', shadowOpacity: 1, shadowRadius: 4.65, backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
         {AddAtockBtn(navigation)}
       </View>
     </SafeAreaView>
@@ -276,8 +298,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     paddingLeft: 10,
-    paddingRight: 10,
-    fontFamily: 'Lato_400Regular'
+    paddingRight: 10
   },
   Button2: {
     display: 'flex',
@@ -312,8 +333,7 @@ const styles = StyleSheet.create({
     color: '#2b3033',
     textAlign: 'center',
     paddingLeft: 10,
-    paddingRight: 10,
-    fontFamily: 'Lato_400Regular'
+    paddingRight: 10
   },
   ButtonAddStock: {
     width: '85%',
@@ -329,24 +349,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     paddingLeft: 10,
-    paddingRight: 10,
-    fontFamily: 'Lato_400Regular'
+    paddingRight: 10
   },
   diplistSect: {
     flexDirection: 'row',
     width: '100%',
     height: 60,
     marginLeft: '0%',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e2e3e4',
+    borderBottomWidth: 0.4,
+    borderBottomColor: '#b2b2b2',
     alignItems: 'flex-start'
   },
   diplistStockSect: {
     marginTop: 4,
-    fontSize: 14,
-    color: '#6a6e70',
-    fontWeight: '500',
-    fontFamily: 'Lato_400Regular'
+    fontSize: 13,
+    color: '#b2b2b2'
   },
   indicesSect: {
     marginTop: 40,
@@ -354,19 +371,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     marginLeft: '5%',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e2e3e4',
+    borderBottomWidth: 0.4,
+    borderBottomColor: '#b2b2b2',
     alignItems: 'flex-start'
   },
   dns: {
-    fontSize: 17,
-    fontFamily: 'Lato_400Regular'
+    fontSize: 17
   },
   lastClose: {
     marginTop: 4,
-    fontSize: 14,
-    color: '#6a6e70',
-    fontWeight: '500',
-    fontFamily: 'Lato_400Regular'
+    fontSize: 13,
+    color: '#b2b2b2'
   }
 })

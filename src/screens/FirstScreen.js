@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useTheme } from '@react-navigation/native'
 import React, { useState, useEffect } from 'react'
 import {
   SafeAreaView,
@@ -30,6 +30,7 @@ function FirstScreen () {
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })
+  const { colors } = useTheme()
 
   const StockName = async (name) => {
     const request = JSON.stringify({
@@ -120,11 +121,12 @@ function FirstScreen () {
         >
           <Text style={{
             fontWeight: Platform.OS === 'ios' ? '800' : 'bold',
-            fontFamily: 'Lato_700Bold'
+            fontFamily: 'Lato_700Bold',
+            color: colors.text
           }}>
             DIP
           </Text>
-          <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular' }}>LIST</Text>
+          <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>LIST</Text>
         </Text>
         {empty
           ? <Text
@@ -149,7 +151,7 @@ function FirstScreen () {
             onPress={() => {
               navigation.navigate('Home')
             }}
-            style={{ padding: 10, paddingTop: 12, paddingRight: 25, paddingLeft: 65, width: '33%' }}/>
+            style={{ padding: 10, paddingTop: 12, paddingRight: 25, paddingLeft: 65, width: '33%', color: colors.text }}/>
         }
       </View>
     )
@@ -167,11 +169,12 @@ function FirstScreen () {
           marginTop: (Platform.OS === 'ios') ? 0 : 35
         }}>
         {renderHeader(navigation)}
-        <View style={{ flex: 3, padding: 10, width: Dimensions.get('window').width }}>
-        <Autocomplete
-          data={data}
+        <View style={{ flex: 3, padding: 10, width: Dimensions.get('window').width, fontFamily: 'Lato_400Regular' }}>
+          <Autocomplete
+            data={data}
             defaultValue={query}
             placeholder="GME"
+            placeholderTextColor= "#7f7f7f"
             onChangeText={(value) => {
               setQuery(value)
             }}
@@ -207,7 +210,9 @@ function FirstScreen () {
               letterSpacing: 4,
               textAlign: 'center',
               fontSize: 80,
-              height: 90
+              height: 90,
+              color: colors.text,
+              fontFamily: 'Lato_400Regular'
             }}
             listStyle={{ maxHeight: 0.4 * height, borderColor: 'transparent' }}
             flatListProps={{ showsVerticalScrollIndicator: false }}
@@ -215,7 +220,6 @@ function FirstScreen () {
             keyExtractor={(item, index) => {
               return item.symbol
             }}
-
             autoCapitalize="characters"
           />
           { price === ''
@@ -225,7 +229,8 @@ function FirstScreen () {
                 fontWeight: '400',
                 marginTop: 4,
                 color: '#c6c8c9',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontFamily: 'Lato_400Regular'
               }}
             >
               last closed at $567.99
@@ -236,7 +241,8 @@ function FirstScreen () {
                 fontWeight: '400',
                 marginTop: 4,
                 color: '#000',
-                textAlign: 'center'
+                textAlign: 'center',
+                fontFamily: 'Lato_400Regular'
               }}
             >
               last closed at ${price}

@@ -42,7 +42,7 @@ function renderHeader (navigation) {
           }}
           style={{ paddingTop: 10, paddingLeft: 35, width: '40%', color: colors.text }}/>
         <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 20 }}>
-          <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>Settings</Text>
+          <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold', color: colors.text }}>Settings</Text>
         </Text>
       </View>
     )
@@ -73,98 +73,104 @@ function Content2 () {
     }
   }
   const [darkMode, setDarkMode] = useState(false)
+  const [fontsLoaded] = useFonts({
+    Lato_300Light, Lato_400Regular, Lato_700Bold
+  })
+  if (!fontsLoaded) {
+    return <AppLoading/>
+  } else {
+    return (
+      <View style={{ flex: 8, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 50 }}>
+        <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
+          <View style={{ width: '80%' }}>
+            <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Face ID</Text>
+          </View>
+          <Switch
+            width= {57}
+            height={30}
+            circleColorInactive='#f1f1f1'
+            backgroundInactive={colors.background}
+            value = {isEnabled}
+            style={{
+              borderColor: colors.text,
+              borderWidth: 0.5,
+              padding: 2
+            }}
+            circleStyle={{
+              width: 25,
+              height: 25,
+              borderWidth: 0.5,
+              borderColor: '#000'
+            }}
+            onSyncPress = {async () => {
+              await toggleSwitch()
+            }}
+          />
+        </View>
+        <View style={styles.settingsOptions}>
+          <View style={{ width: '80%' }}>
+            <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Manage Notifications</Text>
+          </View>
+          <AntDesign name="right" size={24} color="black" style={{ width: '20%', justifyContent: 'center', marginLeft: '10%', color: colors.text }}/>
+        </View>
+        <View style={styles.settingsOptions}>
+          <View style={{ width: '80%' }}>
+            <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Feature Request & Report Bugs</Text>
+          </View>
+          <AntDesign name="right" size={24} color="black" style={{ width: '20%', justifyContent: 'center', marginLeft: '10%', color: colors.text }}/>
+        </View>
+        <View style={styles.settingsOptions}>
+          <View style={{ width: '80%' }}>
+            <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Restore subscription</Text>
+          </View>
+          <AntDesign name="right" size={24} color="black" style={{ width: '20%', justifyContent: 'center', marginLeft: '10%', color: colors.text }}/>
+        </View>
+        <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 30, marginLeft: '0%' }}>
+          <View style={{ width: '80%' }}>
+            <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Theme</Text>
+          </View>
+          <Switch
+            width= {57}
+            height={30}
+            circleColorInactive='#f1f1f1'
+            backgroundInactive= {colors.background}
+            value = {darkMode}
+            style={{
+              borderColor: colors.text,
+              borderWidth: 0.5,
+              padding: 2
+            }}
+            circleStyle={{
+              width: 25,
+              height: 25,
+              borderWidth: 0.5,
+              borderColor: '#000'
+            }}
+            onSyncPress = {(val) => {
+              setDarkMode(val)
+              EventRegister.emit('themeListener', val)
+            }}
+          />
+        </View>
+        <View style={styles.settingsOptions3}>
+          <View style={styles.settingsOptions2}>
+            <Text style={{ fontSize: 24, fontFamily: 'Lato_700Bold', color: colors.text }}>A little favor</Text>
+            <Text style={{ marginTop: 10, fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>
+              If you’ve gotten value out of this app, i’d appricate your support by sharing the app.
+            </Text>
+          </View>
+          <Image source={davidPic}>
 
-  return (
-    <View style={{ flex: 8, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 50 }}>
-      <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4', alignItems: 'left' }}>
-        <View style={{ width: '80%' }}>
-          <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Face ID</Text>
+          </Image>
         </View>
-        <Switch
-          width= {57}
-          height={30}
-          circleColorInactive='#f1f1f1'
-          backgroundInactive={colors.background}
-          value = {isEnabled}
-          style={{
-            borderColor: colors.text,
-            borderWidth: 0.5,
-            padding: 2
-          }}
-          circleStyle={{
-            width: 25,
-            height: 25,
-            borderWidth: 0.5,
-            borderColor: '#000'
-          }}
-          onSyncPress = {async () => {
-            await toggleSwitch()
-          }}
-        />
-      </View>
-      <View style={styles.settingsOptions}>
-        <View style={{ width: '80%' }}>
-          <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Manage Notifications</Text>
+        <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', justifyContent: 'center' }}>
+          <TouchableHighlight style={styles.ButtonAddStock} onPress={() => console.log('button tapped')} underlayColor= '#fff'>
+            <Text style={styles.ButtonAddStockText}>Share with friends</Text>
+          </TouchableHighlight>
         </View>
-        <AntDesign name="right" size={24} color="black" style={{ width: '20%', justifyContent: 'center', marginLeft: '10%', color: colors.text }}/>
       </View>
-      <View style={styles.settingsOptions}>
-        <View style={{ width: '80%' }}>
-          <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Feature Request & Report Bugs</Text>
-        </View>
-        <AntDesign name="right" size={24} color="black" style={{ width: '20%', justifyContent: 'center', marginLeft: '10%', color: colors.text }}/>
-      </View>
-      <View style={styles.settingsOptions}>
-        <View style={{ width: '80%' }}>
-          <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Restore subscription</Text>
-        </View>
-        <AntDesign name="right" size={24} color="black" style={{ width: '20%', justifyContent: 'center', marginLeft: '10%', color: colors.text }}/>
-      </View>
-      <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 30, marginLeft: '0%' }}>
-        <View style={{ width: '80%' }}>
-          <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Theme</Text>
-        </View>
-        <Switch
-          width= {57}
-          height={30}
-          circleColorInactive='#f1f1f1'
-          backgroundInactive= {colors.background}
-          value = {darkMode}
-          style={{
-            borderColor: colors.text,
-            borderWidth: 0.5,
-            padding: 2
-          }}
-          circleStyle={{
-            width: 25,
-            height: 25,
-            borderWidth: 0.5,
-            borderColor: '#000'
-          }}
-          onSyncPress = {(val) => {
-            setDarkMode(val)
-            EventRegister.emit('themeListener', val)
-          }}
-        />
-      </View>
-      <View style={styles.settingsOptions3}>
-        <View style={styles.settingsOptions2}>
-          <Text style={{ fontSize: 24, fontFamily: 'Lato_700Bold', color: colors.text }}>A little favor</Text>
-          <Text style={{ marginTop: 10, fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>
-            If you’ve gotten value out of this app, i’d appricate your support by sharing the app.
-          </Text>
-        </View>
-        <Image source={davidPic}>
-
-        </Image>
-      </View>
-      <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', justifyContent: 'center' }}>
-        <TouchableHighlight style={styles.ButtonAddStock} onPress={() => console.log('button tapped')} underlayColor= '#fff'>
-          <Text style={styles.ButtonAddStockText}>Share with friends</Text>
-        </TouchableHighlight>
-      </View>
-    </View>
-  )
+    )
+  }
 }
 
 function settings () {
@@ -187,8 +193,8 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     marginLeft: '0%',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e2e3e4',
+    borderBottomWidth: 0.4,
+    borderBottomColor: '#b2b2b2',
     alignItems: 'flex-start'
   },
   settingsOptions2: {
