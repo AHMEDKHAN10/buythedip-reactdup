@@ -1,5 +1,5 @@
 import { useNavigation, useTheme } from '@react-navigation/native'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   SafeAreaView,
   View,
@@ -12,8 +12,8 @@ import { Menu } from 'react-native-paper'
 import { AntDesign } from '@expo/vector-icons'
 import Autocomplete from 'react-native-autocomplete-input'
 import configg from '../../config'
-import firebaseuser from '../firebase/firebaseconfig'
-import LottieView from 'lottie-react-native';
+// import firebaseuser from '../firebase/firebaseconfig'
+// import LottieView from 'lottie-react-native';
 import AppLoading from 'expo-app-loading'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
@@ -21,11 +21,12 @@ const height = Dimensions.get('screen').height
 
 // * localhost api http://127.0.0.1:3000/
 // * backend api https://buythedipapi.herokuapp.com/
-function FirstScreen() {
+function FirstScreen () {
   const navigation = useNavigation()
   const [query, setQuery] = useState('')
   const [data, setData] = useState([])
   const [price, setPrice] = useState('')
+  // eslint-disable-next-line no-unused-vars
   const [empty, setempty] = useState(true)
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
@@ -75,7 +76,7 @@ function FirstScreen() {
   //   // console.log('empty: ' + empty)
   // }, [query, price])
 
-  function renderHeader(navigation) {
+  function renderHeader (navigation) {
     return (
       <View
         style={{
@@ -134,6 +135,29 @@ function FirstScreen() {
     )
   }
 
+  const autocomplete = (value) => {
+    const stuff = []
+    if (value === '') {
+      setData([])
+    } else if (value.length === 1) {
+      // eslint-disable-next-line array-callback-return
+      stocks[value].map((element) => {
+        stuff.push(element)
+      })
+    } else if (value.length > 1) {
+      stocks[value[0]].forEach((element) => {
+        if (element.symbol.search(value) === 0) {
+          stuff.push(element)
+        }
+      })
+    }
+    if (stuff === [] || stuff.length === 1) {
+      setData([])
+    } else {
+      setData(stuff)
+    }
+  }
+
   if (!fontsLoaded) {
     return <AppLoading/>
   } else {
@@ -153,7 +177,11 @@ function FirstScreen() {
             placeholder="GME"
             placeholderTextColor= "#7f7f7f"
             onChangeText={(value) => {
-              setQuery(value)
+              // setQuery(value)
+              // eslint-disable-next-line camelcase
+              const new_val = value.toLocaleUpperCase()
+              setQuery(new_val)
+              autocomplete(value.toLocaleUpperCase())
             }}
             renderItem={({ item, index }) => (
               <Menu.Item

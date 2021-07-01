@@ -125,7 +125,7 @@ function SetAlert ({ route }) {
     )
   }
   function StalkPriceHeader () {
-    const val = (Math.round(price - (price * 0.1))).toString()
+    // const val = (Math.round(price - (price * 0.1))).toString()
     return (
       <View style={{ flex: 2, padding: 10, width: (Dimensions.get('window').width) }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center' }}>
@@ -219,34 +219,38 @@ function SetAlert ({ route }) {
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
         <Modal
-            // style={{position:"absolute",width:width,height:width/1.2,backgroundColor:"#fff",bottom:0,borderRadius:50,alignItems:"center"}}
+            // style={{ position: 'absolute', width: width, height: (width / 1.2), backgroundColor: '#fff', bottom: 0, borderRadius: 50, alignItems: 'center' }}
+            // style={{height: 400, bottom: 0 }}
             visible={modal}
-            contentContainerStyle={{ position: 'absolute', bottom: 0 }}
+            contentContainerStyle={{ position: 'absolute', bottom: -30 }}
             onDismiss={ () => setModal(false)}
           >
-            <View style={{ paddingBottom: 20, backgroundColor: '#fff', borderRadius: 50 }}><LottieView
-              style={{ height: width, width: width, marginTop: -width / 3, marginBottom: -width / 2 }}
-              source={require('../../assets/lottie_assets/Bell_new_shadow.json')}
-              autoPlay
-            />
-              <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center' }} > Don't miss out </Text>
-              <Text style={{ fontSize: 15, textAlign: 'center' }} > Don't risk miss another oppertunity, we'll send you a  reminder when a dip occurs</Text>
+            <View style={{ paddingBottom: 20, backgroundColor: '#fff', borderRadius: 50, height: 400 }}>
+              <LottieView
+                style={{ height: width, width: width, marginTop: -80, marginBottom: -width / 2 }}
+                source={require('../../assets/lottie_assets/Bell_new_shadow.json')}
+                autoPlay
+              />
+              <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center', fontFamily: 'Lato_700Bold', letterSpacing: 2 }} > Don't miss out </Text>
+              <Text style={{ fontSize: 15, textAlign: 'center', marginTop: 10, letterSpacing: 0.5 }} > Don't risk miss another oppertunity, we'll send you a  reminder when a dip occurs</Text>
 
-              <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 10, borderWidth: 1, borderColor: '#000', alignSelf: 'center' }} labelStyle={{ fontWeight: 'bold', color: '#000' }}
+              <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 30, borderWidth: 1, borderColor: '#000', alignSelf: 'center' }}
+                labelStyle={{ fontWeight: 'bold', color: '#000', fontFamily: 'Lato_700Bold' }}
                 onPress={async () => {
                   await Permissions.getAsync(Permissions.NOTIFICATIONS)
                 }}
               >
                 Allow Notifications
               </Button>
-              <Button style={{ backgroundColor: '#eeefef', width: '80%', borderRadius: 30, padding: 10, marginTop: 10, alignSelf: 'center' }} labelStyle={{ color: 'gray' }}
+              <Button style={{ backgroundColor: '#eeefef', width: '80%', borderRadius: 30, padding: 10, marginTop: 10, alignSelf: 'center' }}
+                labelStyle={{ color: 'gray' }}
                 onPress={ async () => {
                   setModal(false)
                 }}
               >
                 Maybe Later
               </Button>
-              </View>
+            </View>
          </Modal>
       </SafeAreaView>
     )

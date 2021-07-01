@@ -162,7 +162,7 @@ function StockMarketsSect () {
         <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
           <View style={{ width: '50%' }}>
             <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>DJIA</Text>
-            <Text style={[styles.lastClose, { color: colors.primary }]}>Last closed $29,891</Text>
+            <Text style={[styles.lastClose, { color: colors.primary }]}>Last closed 29,891</Text>
           </View>
           <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
             <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
@@ -171,7 +171,7 @@ function StockMarketsSect () {
         <View style={ styles.indicesSect }>
           <View style={{ width: '50%' }}>
             <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>NASDAQ</Text>
-            <Text style={[styles.lastClose, { color: colors.primary }]}>Last closed $30,000</Text>
+            <Text style={[styles.lastClose, { color: colors.primary }]}>Last closed 30,000</Text>
           </View>
           <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
             <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
@@ -180,7 +180,7 @@ function StockMarketsSect () {
         <View style={styles.indicesSect}>
           <View style={{ width: '50%' }}>
             <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>S&P 500</Text>
-            <Text style={[styles.lastClose, { color: colors.primary, fontFamily: 'Lato_400Regular' }]}>Last closed $15,029</Text>
+            <Text style={[styles.lastClose, { color: colors.primary, fontFamily: 'Lato_400Regular' }]}>Last closed 15,029</Text>
           </View>
           <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
             <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
@@ -201,7 +201,7 @@ function AddAtockBtn (navigation) {
   } else {
     return (
       <View style={{ width: (Dimensions.get('window').width), height: 'auto', alignContent: 'center', alignItems: 'center', marginTop: 40 }}>
-        <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
+        <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#000000'>
           <Text style={[styles.ButtonAddStockText, { color: colors.border, fontFamily: 'Lato_700Bold' }]}>Add Stock</Text>
         </TouchableHighlight>
       </View>
@@ -266,7 +266,8 @@ function Home () {
       {StockList(navigation, stockDetails)}
       {StockMarketsSect()}
       </ScrollView>
-      <View style={{ marginTop: 10, borderTopWidth: 0.25, borderTopColor: '#e2e3e4', shadowOpacity: 1, shadowRadius: 4.65, backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
+      {/* shadowOpacity: 1, shadowRadius: 4.65, */}
+      <View style={{ marginTop: 10, borderTopWidth: 0.25, borderTopColor: '#e2e3e4', backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
         {AddAtockBtn(navigation)}
       </View>
     </SafeAreaView>
