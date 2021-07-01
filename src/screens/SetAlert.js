@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import config from '../../config'
@@ -19,24 +20,26 @@ import { Button, Modal } from 'react-native-paper'
 import { AntDesign } from '@expo/vector-icons'
 import firebaseuser from '../firebase/firebaseconfig'
 import registerForPushNotificationsAsync from '../services/pushNotification'
-import LottieView from 'lottie-react-native';
+import LottieView from 'lottie-react-native'
 
 // eslint-disable-next-line react/prop-types
-function SetAlert({ route }) {
+function SetAlert ({ route }) {
   const navigation = useNavigation()
   // eslint-disable-next-line react/prop-types
   const { stockName, price } = route.params
   // eslint-disable-next-line react/prop-types
+  // eslint-disable-next-line no-unused-vars
   const [isEnabled, setIsEnabled] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const [expoPushToken, setExpoPushToken] = useState('')
   // eslint-disable-next-line no-unused-vars
   const [notification, setNotification] = useState(false)
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState(false)
   const notificationListener = useRef()
   const responseListener = useRef()
-  const animationRef = useRef();
-  const { height, width } = Dimensions.get('window');
+  // const animationRef = useRef();
+  // eslint-disable-next-line no-unused-vars
+  const { height, width } = Dimensions.get('window')
 
   useEffect(() => {
     console.log(price)
@@ -86,7 +89,7 @@ function SetAlert({ route }) {
     const json = await response.json()
   }
 
-  function renderHeader(navigation) {
+  function renderHeader (navigation) {
     return (
       <View style={{
         flex: 1,
@@ -115,8 +118,8 @@ function SetAlert({ route }) {
       </View>
     )
   }
-  function StalkPriceHeader() {
-    const val = (Math.round(price - (price * 0.1))).toString();
+  function StalkPriceHeader () {
+    const val = (Math.round(price - (price * 0.1))).toString()
     return (
       <View style={{ flex: 2, padding: 10, width: (Dimensions.get('window').width) }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center' }}>
@@ -135,17 +138,17 @@ function SetAlert({ route }) {
     )
   }
 
-  function enableNotification() {
-    const toggleSwitch = async () => {
-      setIsEnabled(previousState => !previousState)
-      console.log('toggle switch')
-      console.log('isenabled: ' + isEnabled)
-      if (!isEnabled) {
-        console.log('enabled')
-      } else {
-        console.log('not enabled')
-      }
-    }
+  function enableNotification () {
+    // const toggleSwitch = async () => {
+    //   setIsEnabled(previousState => !previousState)
+    //   console.log('toggle switch')
+    //   console.log('isenabled: ' + isEnabled)
+    //   if (!isEnabled) {
+    //     console.log('enabled')
+    //   } else {
+    //     console.log('not enabled')
+    //   }
+    // }
     return (
       <View style={{ flex: 1, width: (Dimensions.get('window').width), height: 50 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 10 }}>
@@ -172,12 +175,11 @@ function SetAlert({ route }) {
             }}
             onSyncPress={async () => {
               // await toggleSwitch()
-              const {status} = await Notifications.getPermissionsAsync();
-              if(status !=="granted"){
-                setModal(true);
-              }
-              else{
-                console.log("Already allowed");
+              const { status } = await Notifications.getPermissionsAsync()
+              if (status !== 'granted') {
+                setModal(true)
+              } else {
+                console.log('Already allowed')
               }
             }}
           />
@@ -211,30 +213,27 @@ function SetAlert({ route }) {
       <Modal
         // style={{position:"absolute",width:width,height:width/1.2,backgroundColor:"#fff",bottom:0,borderRadius:50,alignItems:"center"}}
         visible={modal}
-        contentContainerStyle={{ position: "absolute", bottom: 0 }}
-        onDismiss={()=>setModal(false)}
+        contentContainerStyle={{ position: 'absolute', bottom: 0 }}
+        onDismiss={ () => setModal(false)}
       >
-
-
-        <View style={{ paddingBottom: 20, backgroundColor: "#fff", borderRadius: 50, }}><LottieView
+        <View style={{ paddingBottom: 20, backgroundColor: '#fff', borderRadius: 50 }}><LottieView
           style={{ height: width, width: width, marginTop: -width / 3, marginBottom: -width / 2 }}
-          source={require("../../assets/lottie_assets/Bell_new_shadow.json")}      
+          source={require('../../assets/lottie_assets/Bell_new_shadow.json')}
           autoPlay
         />
-          <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center" }} >Don't miss out</Text>
-          <Text style={{ fontSize: 15, textAlign: "center" }} >Don't risk miss another oppertunity, we'll send you a  reminder when a dip occurs</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center' }} > Don't miss out </Text>
+          <Text style={{ fontSize: 15, textAlign: 'center' }} > Don't risk miss another oppertunity, we'll send you a  reminder when a dip occurs</Text>
 
-          <Button style={{ width: "80%", borderRadius: 30, padding: 10, marginTop: 10, borderWidth: 1, borderColor: "#000", alignSelf: "center" }} labelStyle={{ fontWeight: "bold", color: "#000" }}
-            onPress={async ()=>{
-              await Permissions.getAsync(Permissions.NOTIFICATIONS);
+          <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 10, borderWidth: 1, borderColor: '#000', alignSelf: 'center' }} labelStyle={{ fontWeight: 'bold', color: '#000' }}
+            onPress={async () => {
+              await Permissions.getAsync(Permissions.NOTIFICATIONS)
             }}
           >
             Allow Notifications
           </Button>
-          <Button style={{ backgroundColor: "#eeefef", width: "80%", borderRadius: 30, padding: 10, marginTop: 10, alignSelf: "center" }} labelStyle={{ color: "gray" }} 
-          
-            onPress={async()=>{
-              setModal(false);
+          <Button style={{ backgroundColor: '#eeefef', width: '80%', borderRadius: 30, padding: 10, marginTop: 10, alignSelf: 'center' }} labelStyle={{ color: 'gray' }}
+            onPress={ async () => {
+              setModal(false)
             }}
           >
             Maybe Later

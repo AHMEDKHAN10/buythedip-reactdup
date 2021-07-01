@@ -141,7 +141,7 @@ function StockMarketsSect () {
           <Text style={styles.ButtonSetText}>Set</Text>
         </TouchableOpacity>
       </View>
-      <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4',  }}>
+      <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4' }}>
         <View style={{ width: '50%' }}>
           <Text style={{ fontSize: 17 }}>NASDAQ</Text>
           <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>Last closed $30,000</Text>
@@ -150,7 +150,7 @@ function StockMarketsSect () {
           <Text style={styles.ButtonSetText}>Set</Text>
         </TouchableOpacity>
       </View>
-      <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4',  }}>
+      <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 1, borderBottomColor: '#e2e3e4' }}>
         <View style={{ width: '50%' }}>
           <Text style={{ fontSize: 17 }}>S&P 500</Text>
           <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500' }}>Last closed $15,029</Text>
