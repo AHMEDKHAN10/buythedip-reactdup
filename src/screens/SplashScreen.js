@@ -6,20 +6,12 @@ import {
   Platform
 } from 'react-native'
 import logo from '../../assets/applogo.png'
+import { useTheme } from '@react-navigation/native'
 
 const SplashScreen = () => {
+  const { colors } = useTheme()
   return (
-    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
-      {/* <Text
-        style={style.text}
-      >
-        TBD
-      </Text>
-      <Text
-        style={style.text}
-      >
-        SPLASH
-      </Text> */}
+    <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
       <Text
         style={{
           padding: 10,
@@ -30,25 +22,15 @@ const SplashScreen = () => {
         }}
       >
         <Text style={{
-          fontWeight: Platform.OS === 'ios' ? '800' : 'bold'
+          fontWeight: Platform.OS === 'ios' ? '800' : 'bold', color: colors.text
         }}>
           DIP
         </Text>
-        <Text style={{ fontWeight: '400' }}>LIST</Text>
+        <Text style={{ fontWeight: '400', color: colors.text }}>LIST</Text>
       </Text>
       <Image style={{ marginTop: 40 }} source={logo}/>
     </SafeAreaView>
   )
 }
-
-// const style = StyleSheet.create({
-//   text: {
-//     color: '#929192',
-//     fontWeight: '600',
-//     textAlign: 'center',
-//     fontSize: 30,
-//     letterSpacing: 1
-//   }
-// })
 
 export default SplashScreen

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState, useRef } from 'react'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useTheme } from '@react-navigation/native'
 import config from '../../config'
 import {
   StyleSheet,
@@ -21,7 +21,9 @@ import { AntDesign } from '@expo/vector-icons'
 import firebaseuser from '../firebase/firebaseconfig'
 import registerForPushNotificationsAsync from '../services/pushNotification'
 import LottieView from 'lottie-react-native'
-
+// eslint-disable-next-line camelcase
+import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
+import AppLoading from 'expo-app-loading'
 // eslint-disable-next-line react/prop-types
 function SetAlert ({ route }) {
   const navigation = useNavigation()
@@ -40,9 +42,15 @@ function SetAlert ({ route }) {
   // const animationRef = useRef();
   // eslint-disable-next-line no-unused-vars
   const { height, width } = Dimensions.get('window')
+  const [textInput, setTextInput] = useState('')
+  const { colors } = useTheme()
 
+  const [fontsLoaded] = useFonts({
+    Lato_300Light, Lato_400Regular, Lato_700Bold
+  })
   useEffect(() => {
     console.log(price)
+    setTextInput(String(Math.round(price - (price * 0.1))))
     const token = registerForPushNotificationsAsync()
     setExpoPushToken(token)
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -58,8 +66,6 @@ function SetAlert ({ route }) {
       Notifications.removeNotificationSubscription(responseListener)
     }
   }, [])
-
-  const [textInput, setTextInput] = useState('')
 
   const checkTextInput = async () => {
     //* Check for the Name TextInput
@@ -111,9 +117,9 @@ function SetAlert ({ route }) {
             })
             navigation.navigate('Home')
           }}
-          style={{ paddingTop: 10, paddingLeft: 35, width: '40%' }} />
+          style={{ paddingTop: 10, paddingLeft: 35, width: '40%', color: colors.text }}/>
         <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 20 }}>
-          <Text style={{ fontWeight: '400' }}>Set Alert</Text>
+            <Text style={{ fontWeight: '400', color: colors.text, fontFamily: 'Lato_700Bold' }}>Set Alert</Text>
         </Text>
       </View>
     )
@@ -123,17 +129,18 @@ function SetAlert ({ route }) {
     return (
       <View style={{ flex: 2, padding: 10, width: (Dimensions.get('window').width) }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center' }}>
-          <Text style={{ fontSize: 30, lineHeight: 55, color: '#ec5d29' }}>$</Text>
+          <Text style={{ fontSize: 30, lineHeight: 55, color: '#ec5d29', fontFamily: 'Lato_700Bold' }}>$</Text>
           <TextInput
-            value={val}
-            keyboardType='numeric'
-            onChangeText={
+            value = {textInput}
+            keyboardType = 'numeric'
+            onChangeText = {
               (value) => setTextInput(value)
             }
-            style={{ fontSize: 80, lineHeight: 90, color: '#ec5d29' }}
-          />
+            style={{ fontSize: 80, lineHeight: 90, color: '#ec5d29', fontFamily: 'Lato_400Regular' }}>
+            {/* {String(Math.round(price - (price * 0.1)))} */}
+          </TextInput>
         </View>
-        <Text style={{ fontWeight: '400', letterSpacing: 2, textAlign: 'center', color: '#ec5d29' }}>Target Price for {stockName}</Text>
+        <Text style={{ fontWeight: '400', letterSpacing: 2, textAlign: 'center', color: '#ec5d29', fontFamily: 'Lato_400Regular' }}>Target Price for {stockName}</Text>
       </View>
     )
   }
@@ -151,19 +158,19 @@ function SetAlert ({ route }) {
     // }
     return (
       <View style={{ flex: 1, width: (Dimensions.get('window').width), height: 50 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 10 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 25, borderTopWidth: 0.25, borderTopColor: '#b2b2b2', marginLeft: '5%', marginRight: '5%' }}>
           <View style={{ width: '80%' }}>
-            <Text style={{ fontSize: 17 }}>Price Alerts</Text>
-            <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '400' }}>Send 10% dip notification</Text>
+            <Text style={{ fontSize: 17, color: colors.text, fontFamily: 'Lato_400Regular' }}>Price Alerts</Text>
+            <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '400', fontFamily: 'Lato_400Regular' }}>Send 10% dip notification</Text>
           </View>
           <Switch
             width={57}
             height={30}
             circleColorInactive='#f1f1f1'
-            backgroundInactive='#fff'
-            value={isEnabled}
+            backgroundInactive={colors.background}
+            value = {isEnabled}
             style={{
-              borderColor: '#000',
+              borderColor: colors.text,
               borderWidth: 0.5,
               padding: 2
             }}
@@ -171,7 +178,7 @@ function SetAlert ({ route }) {
               width: 25,
               height: 25,
               borderWidth: 0.5,
-              borderColor: '#000'
+              borderColor: '#fff'
             }}
             onSyncPress={async () => {
               // await toggleSwitch()
@@ -185,63 +192,65 @@ function SetAlert ({ route }) {
           />
         </View>
         <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', marginTop: 10 }}>
-          <TouchableHighlight style={styles.Button}
-            onPress={checkTextInput}
-            underlayColor='#fff'>
-            <Text style={styles.ButtonText}>Submit</Text>
+          <TouchableHighlight style={[styles.Button, { backgroundColor: colors.notification }]}
+            onPress={checkTextInput }
+            underlayColor='#f18d69'>
+            <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular' }]}>Submit</Text>
           </TouchableHighlight>
         </View>
       </View>
     )
   }
-  return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inner}>
-            {renderHeader(navigation)}
-            {StalkPriceHeader()}
-            {enableNotification()}
-
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-
-      <Modal
-        // style={{position:"absolute",width:width,height:width/1.2,backgroundColor:"#fff",bottom:0,borderRadius:50,alignItems:"center"}}
-        visible={modal}
-        contentContainerStyle={{ position: 'absolute', bottom: 0 }}
-        onDismiss={ () => setModal(false)}
-      >
-        <View style={{ paddingBottom: 20, backgroundColor: '#fff', borderRadius: 50 }}><LottieView
-          style={{ height: width, width: width, marginTop: -width / 3, marginBottom: -width / 2 }}
-          source={require('../../assets/lottie_assets/Bell_new_shadow.json')}
-          autoPlay
-        />
-          <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center' }} > Don't miss out </Text>
-          <Text style={{ fontSize: 15, textAlign: 'center' }} > Don't risk miss another oppertunity, we'll send you a  reminder when a dip occurs</Text>
-
-          <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 10, borderWidth: 1, borderColor: '#000', alignSelf: 'center' }} labelStyle={{ fontWeight: 'bold', color: '#000' }}
-            onPress={async () => {
-              await Permissions.getAsync(Permissions.NOTIFICATIONS)
-            }}
+  if (!fontsLoaded) {
+    return <AppLoading/>
+  } else {
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.container}
           >
-            Allow Notifications
-          </Button>
-          <Button style={{ backgroundColor: '#eeefef', width: '80%', borderRadius: 30, padding: 10, marginTop: 10, alignSelf: 'center' }} labelStyle={{ color: 'gray' }}
-            onPress={ async () => {
-              setModal(false)
-            }}
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.inner}>
+              {renderHeader(navigation)}
+              {StalkPriceHeader()}
+              {enableNotification()}
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+        <Modal
+            // style={{position:"absolute",width:width,height:width/1.2,backgroundColor:"#fff",bottom:0,borderRadius:50,alignItems:"center"}}
+            visible={modal}
+            contentContainerStyle={{ position: 'absolute', bottom: 0 }}
+            onDismiss={ () => setModal(false)}
           >
-            Maybe Later
-          </Button>
-          </View>
-      </Modal>
-    </SafeAreaView>
-  )
+            <View style={{ paddingBottom: 20, backgroundColor: '#fff', borderRadius: 50 }}><LottieView
+              style={{ height: width, width: width, marginTop: -width / 3, marginBottom: -width / 2 }}
+              source={require('../../assets/lottie_assets/Bell_new_shadow.json')}
+              autoPlay
+            />
+              <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center' }} > Don't miss out </Text>
+              <Text style={{ fontSize: 15, textAlign: 'center' }} > Don't risk miss another oppertunity, we'll send you a  reminder when a dip occurs</Text>
+
+              <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 10, borderWidth: 1, borderColor: '#000', alignSelf: 'center' }} labelStyle={{ fontWeight: 'bold', color: '#000' }}
+                onPress={async () => {
+                  await Permissions.getAsync(Permissions.NOTIFICATIONS)
+                }}
+              >
+                Allow Notifications
+              </Button>
+              <Button style={{ backgroundColor: '#eeefef', width: '80%', borderRadius: 30, padding: 10, marginTop: 10, alignSelf: 'center' }} labelStyle={{ color: 'gray' }}
+                onPress={ async () => {
+                  setModal(false)
+                }}
+              >
+                Maybe Later
+              </Button>
+              </View>
+         </Modal>
+      </SafeAreaView>
+    )
+  }
 }
 
 export default SetAlert
@@ -256,7 +265,6 @@ const styles = StyleSheet.create({
   },
   Button: {
     width: '100%',
-    backgroundColor: '#000',
     height: 55,
     justifyContent: 'center',
     alignSelf: 'flex-end'
