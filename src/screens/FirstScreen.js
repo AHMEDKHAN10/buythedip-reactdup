@@ -13,15 +13,15 @@ import { AntDesign } from '@expo/vector-icons'
 import Autocomplete from 'react-native-autocomplete-input'
 import configg from '../../config'
 import firebaseuser from '../firebase/firebaseconfig'
+import LottieView from 'lottie-react-native';
 import AppLoading from 'expo-app-loading'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
-
 const height = Dimensions.get('screen').height
 
 // * localhost api http://127.0.0.1:3000/
 // * backend api https://buythedipapi.herokuapp.com/
-function FirstScreen () {
+function FirstScreen() {
   const navigation = useNavigation()
   const [query, setQuery] = useState('')
   const [data, setData] = useState([])
@@ -50,55 +50,32 @@ function FirstScreen () {
     const json = await response.json()
     return (json.price)
   }
+  // useEffect(() => {
+  //   const stuff = []
+  //   if (query === '') {
+  //     setData([])
+  //   } else if (query.length === 1) {
+  //     // eslint-disable-next-line array-callback-return
+  //     stocks[query].map((element) => {
+  //       stuff.push(element)
+  //     })
+  //   } else if (query.length > 1) {
+  //     stocks[query[0]].forEach((element) => {
+  //       if (element.symbol.search(query) === 0) {
+  //         stuff.push(element)
+  //       }
+  //     })
+  //   }
+  //   if (stuff === [] || stuff.length === 1) {
+  //     setData([])
+  //   } else {
+  //     setData(stuff)
+  //   }
+  //   // check()
+  //   // console.log('empty: ' + empty)
+  // }, [query, price])
 
-  useEffect(() => {
-    const stuff = []
-    if (query === '') {
-      setData([])
-    } else if (query.length === 1) {
-      // eslint-disable-next-line array-callback-return
-      stocks[query].map((element) => {
-        stuff.push(element)
-      })
-    } else if (query.length > 1) {
-      stocks[query[0]].forEach((element) => {
-        if (element.symbol.search(query) === 0) {
-          stuff.push(element)
-        }
-      })
-    }
-    if (stuff === [] || stuff.length === 1) {
-      setData([])
-    } else {
-      setData(stuff)
-    }
-    async function check () {
-      const userid = await firebaseuser()
-      const request = JSON.stringify({
-        userid: userid
-      })
-      const options = {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: request
-      }
-      // console.log('api in firstscreen: ' + configg.API_URL + 'getData')
-      const response = await fetch(configg.API_URL + 'getData', options)
-      const json = await response.json()
-      // console.log('json' + json)
-      if (json.data.length !== 0) {
-        return setempty(false)
-      }
-      return setempty(true)
-    }
-    check()
-    // console.log('empty: ' + empty)
-  }, [query, price])
-
-  function renderHeader (navigation) {
+  function renderHeader(navigation) {
     return (
       <View
         style={{

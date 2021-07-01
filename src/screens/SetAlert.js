@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState, useRef } from 'react'
 import { useNavigation, useTheme } from '@react-navigation/native'
 import config from '../../config'
@@ -15,9 +16,11 @@ import {
 } from 'react-native'
 import * as Notifications from 'expo-notifications'
 import Switch from 'react-native-switch-pro'
+import { Button, Modal } from 'react-native-paper'
 import { AntDesign } from '@expo/vector-icons'
 import firebaseuser from '../firebase/firebaseconfig'
 import registerForPushNotificationsAsync from '../services/pushNotification'
+import LottieView from 'lottie-react-native'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 import AppLoading from 'expo-app-loading'
@@ -27,13 +30,18 @@ function SetAlert ({ route }) {
   // eslint-disable-next-line react/prop-types
   const { stockName, price } = route.params
   // eslint-disable-next-line react/prop-types
+  // eslint-disable-next-line no-unused-vars
   const [isEnabled, setIsEnabled] = useState(false)
   // eslint-disable-next-line no-unused-vars
   const [expoPushToken, setExpoPushToken] = useState('')
   // eslint-disable-next-line no-unused-vars
   const [notification, setNotification] = useState(false)
+  const [modal, setModal] = useState(false)
   const notificationListener = useRef()
   const responseListener = useRef()
+  // const animationRef = useRef();
+  // eslint-disable-next-line no-unused-vars
+  const { height, width } = Dimensions.get('window')
   const [textInput, setTextInput] = useState('')
   const { colors } = useTheme()
 
@@ -117,6 +125,7 @@ function SetAlert ({ route }) {
     )
   }
   function StalkPriceHeader () {
+    const val = (Math.round(price - (price * 0.1))).toString()
     return (
       <View style={{ flex: 2, padding: 10, width: (Dimensions.get('window').width) }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center' }}>
@@ -137,16 +146,16 @@ function SetAlert ({ route }) {
   }
 
   function enableNotification () {
-    const toggleSwitch = async () => {
-      setIsEnabled(previousState => !previousState)
-      console.log('toggle switch')
-      console.log('isenabled: ' + isEnabled)
-      if (!isEnabled) {
-        console.log('enabled')
-      } else {
-        console.log('not enabled')
-      }
-    }
+    // const toggleSwitch = async () => {
+    //   setIsEnabled(previousState => !previousState)
+    //   console.log('toggle switch')
+    //   console.log('isenabled: ' + isEnabled)
+    //   if (!isEnabled) {
+    //     console.log('enabled')
+    //   } else {
+    //     console.log('not enabled')
+    //   }
+    // }
     return (
       <View style={{ flex: 1, width: (Dimensions.get('window').width), height: 50 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 25, borderTopWidth: 0.25, borderTopColor: '#b2b2b2', marginLeft: '5%', marginRight: '5%' }}>
@@ -155,7 +164,7 @@ function SetAlert ({ route }) {
             <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '400', fontFamily: 'Lato_400Regular' }}>Send 10% dip notification</Text>
           </View>
           <Switch
-            width= {57}
+            width={57}
             height={30}
             circleColorInactive='#f1f1f1'
             backgroundInactive={colors.background}
@@ -171,8 +180,14 @@ function SetAlert ({ route }) {
               borderWidth: 0.5,
               borderColor: '#fff'
             }}
-            onSyncPress={ async () => {
-              await toggleSwitch()
+            onSyncPress={async () => {
+              // await toggleSwitch()
+              const { status } = await Notifications.getPermissionsAsync()
+              if (status !== 'granted') {
+                setModal(true)
+              } else {
+                console.log('Already allowed')
+              }
             }}
           />
         </View>
@@ -203,6 +218,36 @@ function SetAlert ({ route }) {
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
+        <Modal
+            // style={{position:"absolute",width:width,height:width/1.2,backgroundColor:"#fff",bottom:0,borderRadius:50,alignItems:"center"}}
+            visible={modal}
+            contentContainerStyle={{ position: 'absolute', bottom: 0 }}
+            onDismiss={ () => setModal(false)}
+          >
+            <View style={{ paddingBottom: 20, backgroundColor: '#fff', borderRadius: 50 }}><LottieView
+              style={{ height: width, width: width, marginTop: -width / 3, marginBottom: -width / 2 }}
+              source={require('../../assets/lottie_assets/Bell_new_shadow.json')}
+              autoPlay
+            />
+              <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center' }} > Don't miss out </Text>
+              <Text style={{ fontSize: 15, textAlign: 'center' }} > Don't risk miss another oppertunity, we'll send you a  reminder when a dip occurs</Text>
+
+              <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 10, borderWidth: 1, borderColor: '#000', alignSelf: 'center' }} labelStyle={{ fontWeight: 'bold', color: '#000' }}
+                onPress={async () => {
+                  await Permissions.getAsync(Permissions.NOTIFICATIONS)
+                }}
+              >
+                Allow Notifications
+              </Button>
+              <Button style={{ backgroundColor: '#eeefef', width: '80%', borderRadius: 30, padding: 10, marginTop: 10, alignSelf: 'center' }} labelStyle={{ color: 'gray' }}
+                onPress={ async () => {
+                  setModal(false)
+                }}
+              >
+                Maybe Later
+              </Button>
+              </View>
+         </Modal>
       </SafeAreaView>
     )
   }
