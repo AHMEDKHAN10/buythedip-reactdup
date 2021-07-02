@@ -40,7 +40,7 @@ function renderHeader (navigation) {
           onPress={ () => {
             navigation.navigate('Home')
           }}
-          style={{ paddingTop: 10, paddingLeft: 35, width: '40%', color: colors.text }}/>
+          style={{ paddingTop: 10, paddingLeft: 15, width: '40%', color: colors.text }}/>
         <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 20 }}>
           <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold', color: colors.text }}>Settings</Text>
         </Text>

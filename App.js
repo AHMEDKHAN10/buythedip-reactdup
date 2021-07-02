@@ -5,7 +5,6 @@ import 'react-native-gesture-handler'
 
 export default function App () {
   const [loading, setLoading] = useState(true)
-
   useEffect(() => {
     const handle = setTimeout(() => {
       setLoading(false)

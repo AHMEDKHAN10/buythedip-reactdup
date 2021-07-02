@@ -126,7 +126,7 @@ function stockScreenBluePrint ({ route }) {
           onPress={() => {
             navigation.navigate('Home')
           }}
-          style={{ paddingTop: 10, paddingLeft: 35, width: '40%' }}/>
+          style={{ paddingTop: 10, paddingLeft: 15, width: '40%' }}/>
         <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 20 }}>
           <View style={{ width: '60%' }}>
             <Text style={{ fontSize: 17, fontWeight: '400', marginLeft: '25%', color: colors.text, fontFamily: 'Lato_700Bold' }}>{otherParam}</Text>

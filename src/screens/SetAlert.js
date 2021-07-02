@@ -231,7 +231,7 @@ function SetAlert ({ route }) {
                 source={require('../../assets/lottie_assets/Bell_new_shadow.json')}
                 autoPlay
               />
-              <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center', fontFamily: 'Lato_700Bold', letterSpacing: 2 }} > Don't miss out </Text>
+              <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center', fontFamily: 'Lato_700Bold', letterSpacing: 2 }} > Don't miss out 🚀</Text>
               <Text style={{ fontSize: 15, textAlign: 'center', marginTop: 10, letterSpacing: 0.5 }} > Don't risk miss another oppertunity, we'll send you a  reminder when a dip occurs</Text>
 
               <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 30, borderWidth: 1, borderColor: '#000', alignSelf: 'center' }}
@@ -246,6 +246,7 @@ function SetAlert ({ route }) {
                 labelStyle={{ color: 'gray' }}
                 onPress={ async () => {
                   setModal(false)
+                  setIsEnabled(false)
                 }}
               >
                 Maybe Later
