@@ -177,47 +177,6 @@ function StockList (navigation, stockDetails, loading) {
     )
   }
 }
-// * code for shimmer
-// eslint-disable-next-line no-lone-blocks
-{ /* <SkeletonPlaceholder>
-  <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: "row" }}>
-      <View style={{ width: '80%' }}>
-        <View style={{ width: 50, height: 20, borderRadius: 5 }}/>
-        <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }}/>
-      </View>
-      <View style={{ width: 75, height: 35, borderRadius: 8 }} />
-  </View>
-</SkeletonPlaceholder> */ }
-
-// * code for home screen when stocks are empty
-// eslint-disable-next-line no-lone-blocks
-{ /* <View>
-  <TouchableOpacity
-    style={{
-      flexDirection: 'row',
-      width: '100%',
-      height: 60,
-      marginLeft: '0%',
-      borderBottomWidth: 1,
-      borderBottomColor: '#e2e3e4',
-      alignItems: 'left'
-    }}
-  >
-    <View style={{ width: '80%' }}>
-      <Text style={{ fontSize: 17, color: colors.text }}>
-        Loookup a Stock
-      </Text>
-      <Text style={{ marginTop: 4, fontSize: 14, fontWeight: '500', color: colors.text }}>
-        Prices updated at market close
-      </Text>
-    </View>
-    <TouchableHighlight style={[styles.Button2, { color: colors.background }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
-      <Text style={styles.ButtonText2}>
-        Add
-      </Text>
-    </TouchableHighlight>
-  </TouchableOpacity>
-</View> */ }
 
 //  flex: 6, height: 50
 function StockMarketsSect (loading) {
@@ -313,9 +272,6 @@ function AddAtockBtn (navigation) {
     )
   }
 }
-// const sleep = (milliseconds) => {
-//   return new Promise(resolve => setTimeout(resolve, milliseconds))
-// }
 
 // eslint-disable-next-line react/prop-types
 function Home () {
@@ -379,17 +335,6 @@ function Home () {
       <View style={{ marginTop: 10, borderTopWidth: 0.25, borderTopColor: '#e2e3e4', backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
         {AddAtockBtn(navigation)}
       </View>
-      {/* <SkeletonPlaceholder>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View style={{ marginLeft: 20 }}>
-          <View style={{ width: 120, height: 20, borderRadius: 4 }} />
-          <View
-            style={{ marginTop: 6, width: 80, height: 20, borderRadius: 4 }}
-          />
-        </View>
-        <View style={{ marginTop: 0, width: 80, height: 30, borderRadius: 4 }}/>
-      </View>
-    </SkeletonPlaceholder> */}
     </SafeAreaView>
   )
 }
