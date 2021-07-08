@@ -77,7 +77,7 @@ export default function Routes () {
   const appTheme = darkApp ? MyDarkTheme : MyTheme
   return (
     <NavigationContainer theme={appTheme}>
-      <Stack.Navigator initialRouteName={ route ? 'Home' : 'FirstScreen'} screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={ route ? 'Home' : 'FirstScreen' } screenOptions={{ headerShown: false }}>
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="SetAlert" component= { SetAlert } />

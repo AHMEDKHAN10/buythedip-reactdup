@@ -109,7 +109,7 @@ function StockList (navigation, stockDetails, loading) {
         <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>
         {/* <ScrollView style={{ flex: 1, width: '100%', marginLeft: '5%' }}> */}
         {loading
-          ? <SkeletonPlaceholder>
+          ? <SkeletonPlaceholder backgroundColor= '#E1E9EE' highlightColor= '#F2F8FC' speed= {800} >
               <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
                   <View style={{ width: '80%' }}>
                     <View style={{ width: 50, height: 20, borderRadius: 5 }}/>
@@ -196,7 +196,7 @@ function StockMarketsSect (loading) {
         </View>
         <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>
         {loading
-          ? <SkeletonPlaceholder>
+          ? <SkeletonPlaceholder backgroundColor= '#E1E9EE' highlightColor= '#F2F8FC' speed= {800}>
               <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
                   <View style={{ width: '80%' }}>
                     <View style={{ width: 50, height: 20, borderRadius: 5 }}/>
@@ -311,6 +311,7 @@ function Home () {
       if (loading) {
         setloading(false)
       }
+      console.log('uid: ' + userid)
     } catch (error) {
       // const errorCode = error.code
       // const errorMessage = error.message
@@ -450,3 +451,6 @@ const styles = StyleSheet.create({
     color: '#b2b2b2'
   }
 })
+
+// ToDo
+// when new stock added it shows up on screen with some delay so display shimmer unitl delay gets over
