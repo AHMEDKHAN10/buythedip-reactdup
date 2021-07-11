@@ -6,6 +6,7 @@ import firebaseuser from '../firebase/firebaseconfig'
 import config from '../../config'
 import AppLoading from 'expo-app-loading'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
+import * as Animatable from 'react-native-animatable'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 
@@ -54,7 +55,7 @@ function StockList (navigation, stockDetails, loading) {
   const StockSect = ({ card, index }) => {
     return (
       // flex: 2, height: 80
-      <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
+      <Animatable.View animation='slideInUp' style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
         <TouchableOpacity
           style={styles.diplistSect}
           onPress={() => {
@@ -78,7 +79,7 @@ function StockList (navigation, stockDetails, loading) {
             <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular' }]}>
               Last closed ${
                 // eslint-disable-next-line react/prop-types
-                card.stockpricewhenuseraddedit
+                (card.stockpricewhenuseraddedit).toFixed(2)
               }
             </Text>
           </View>
@@ -91,7 +92,7 @@ function StockList (navigation, stockDetails, loading) {
             </Text>
           </TouchableHighlight>
         </TouchableOpacity>
-      </View>
+      </Animatable.View>
     )
   }
   if (!fontsLoaded) {
@@ -102,8 +103,8 @@ function StockList (navigation, stockDetails, loading) {
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
         <View style={{ width: '100%', height: 50, marginTop: 30, marginLeft: '5%', alignItems: 'left' }}>
           <Text style={{ fontSize: 25 }}>
-            <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold' }}>DIP</Text>
-            <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular' }}>LIST</Text>
+            <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold', color: colors.text }}>DIP</Text>
+            <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>LIST</Text>
           </Text>
         </View>
         <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>

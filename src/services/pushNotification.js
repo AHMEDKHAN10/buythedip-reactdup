@@ -29,6 +29,7 @@ async function registerForPushNotificationsAsync () {
       lightColor: '#FF231F7C'
     })
   }
+  console.log('token in pushnotification: ' + token)
   return token
 }
 

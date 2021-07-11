@@ -52,6 +52,7 @@ function SetAlert ({ route }) {
     console.log(price)
     setTextInput(String(Math.round(price - (price * 0.1))))
     const token = registerForPushNotificationsAsync()
+    // console.log('token: ' + token)
     setExpoPushToken(token)
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification)
@@ -238,6 +239,8 @@ function SetAlert ({ route }) {
                 labelStyle={{ fontWeight: 'bold', color: '#000', fontFamily: 'Lato_700Bold' }}
                 onPress={async () => {
                   await Permissions.getAsync(Permissions.NOTIFICATIONS)
+                  setModal(false)
+                  setIsEnabled(false)
                 }}
               >
                 Allow Notifications
