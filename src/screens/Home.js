@@ -194,31 +194,33 @@ function StockMarketsSect (loading) {
             <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold', color: colors.text }}>INDICES</Text>
           </Text>
         </View>
-        <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>
+        <View style={{ flex: 1, width: '100%', marginLeft: '0%', height: 'auto' }}>
         {loading
-          ? <SkeletonPlaceholder backgroundColor= '#E1E9EE' highlightColor= '#F2F8FC' speed= {800}>
-              <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
-                  <View style={{ width: '80%' }}>
-                    <View style={{ width: 50, height: 20, borderRadius: 5 }}/>
-                    <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }}/>
-                  </View>
-                  <View style={{ width: 75, height: 35, borderRadius: 8 }} />
-              </View>
-              <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
-                  <View style={{ width: '80%' }}>
-                    <View style={{ width: 50, height: 20, borderRadius: 5 }}/>
-                    <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }}/>
-                  </View>
-                  <View style={{ width: 75, height: 35, borderRadius: 8 }} />
-              </View>
-              <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
-                  <View style={{ width: '80%' }}>
-                    <View style={{ width: 50, height: 20, borderRadius: 5 }}/>
-                    <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }}/>
-                  </View>
-                  <View style={{ width: 75, height: 35, borderRadius: 8 }} />
-              </View>
-            </SkeletonPlaceholder>
+          ? <View style={{ marginLeft: '5%' }}>
+              <SkeletonPlaceholder backgroundColor= '#E1E9EE' highlightColor= '#F2F8FC' speed= {800}>
+                <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
+                    <View style={{ width: '80%' }}>
+                      <View style={{ width: 50, height: 20, borderRadius: 5 }}/>
+                      <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }}/>
+                    </View>
+                    <View style={{ width: 75, height: 35, borderRadius: 8 }} />
+                </View>
+                <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
+                    <View style={{ width: '80%' }}>
+                      <View style={{ width: 50, height: 20, borderRadius: 5 }}/>
+                      <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }}/>
+                    </View>
+                    <View style={{ width: 75, height: 35, borderRadius: 8 }} />
+                </View>
+                <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
+                    <View style={{ width: '80%' }}>
+                      <View style={{ width: 50, height: 20, borderRadius: 5 }}/>
+                      <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }}/>
+                    </View>
+                    <View style={{ width: 75, height: 35, borderRadius: 8 }} />
+                </View>
+              </SkeletonPlaceholder>
+            </View>
           : <View >
               <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
                 <View style={{ width: '50%' }}>
@@ -307,7 +309,12 @@ function Home () {
           })
         }
       }
+      console.log('length: ' + stocksArray.length)
       setStockDetails(stocksArray)
+      // if (stocksArray.length > 0) {
+      //   setTimeout(function () { setloading(true) }, 3000)
+      //   setloading(false)
+      // }
       if (loading) {
         setloading(false)
       }
