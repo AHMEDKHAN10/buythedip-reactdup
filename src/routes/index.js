@@ -81,7 +81,7 @@ export default function Routes () {
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="SetAlert" component= { SetAlert } />
-        <Stack.Screen name="Settings" component= { Settings } />
+        <Stack.Screen name="Settings" component= { Settings } initialParams={{darkApp,setDarkApp}} />
         <Stack.Screen name="StockScreenBluePrint" component={StockScreen} />
       </Stack.Navigator>
     </NavigationContainer>

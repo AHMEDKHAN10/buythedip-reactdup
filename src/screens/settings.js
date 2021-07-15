@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigation, useTheme } from '@react-navigation/native'
+import { useNavigation, useTheme,useRoute } from '@react-navigation/native'
 import { EventRegister } from 'react-native-event-listeners'
 import {
   StyleSheet,
@@ -54,10 +54,12 @@ function Content2 () {
   // eslint-disable-next-line no-unused-vars
   const [hasPermission, setHasPermission] = useState(null)
   const { colors } = useTheme()
+  const {darkApp,setDarkApp} = useRoute().params;
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync()
       setHasPermission(status === 'granted')
+      console.log(darkApp);
     })()
   }, [])
 
@@ -76,12 +78,14 @@ function Content2 () {
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })
+
+
   if (!fontsLoaded) {
     return <AppLoading/>
   } else {
     return (
       <View style={{ flex: 8, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 50 }}>
-        <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
+        <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', }}>
           <View style={{ width: '80%' }}>
             <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Face ID</Text>
           </View>
@@ -134,7 +138,7 @@ function Content2 () {
             height={30}
             circleColorInactive='#f1f1f1'
             backgroundInactive= {colors.background}
-            value = {darkMode}
+            value = {darkApp}
             style={{
               borderColor: colors.text,
               borderWidth: 0.5,
@@ -147,8 +151,8 @@ function Content2 () {
               borderColor: '#000'
             }}
             onSyncPress = {(val) => {
-              setDarkMode(val)
-              EventRegister.emit('themeListener', val)
+              setDarkApp(val)
+              // EventRegister.emit('themeListener', val)
             }}
           />
         </View>

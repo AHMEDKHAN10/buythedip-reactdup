@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight, Platform, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation, useIsFocused, useTheme } from '@react-navigation/native'
+import {Modal,Button} from 'react-native-paper'
 import firebaseuser from '../firebase/firebaseconfig'
 import config from '../../config'
 import AppLoading from 'expo-app-loading'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import * as Animatable from 'react-native-animatable'
+import LottieView from 'lottie-react-native'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
+
+const { height, width } = Dimensions.get('window')
 
 function renderHeader (navigation) {
   const { colors } = useTheme()
@@ -31,9 +35,11 @@ function renderHeader (navigation) {
       }}>
         <Ionicons
           name='settings-outline' size={24} color={colors.text} style={{ paddingTop: 10, paddingLeft: 15, width: '40%' }}
-          onPress={() => {
+          onPress={
+            () => {
             navigation.navigate('Settings')
-          }}
+          }
+        }
         />
         <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 23 }}>
           <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold', color: colors.text }}>DIP</Text>
@@ -70,13 +76,13 @@ function StockList (navigation, stockDetails, loading) {
           }}
         >
           <View style={{ width: '80%' }}>
-            <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>
+            <Text style={{ ...styles.dns,color: colors.text, fontFamily: 'Lato_700Bold' }}>
               {
                 // eslint-disable-next-line react/prop-types
                 card.stockname
               }
             </Text>
-            <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular' }]}>
+            <Text style={{...styles.diplistStockSect, color: colors.primary, fontFamily: 'Lato_400Regular'}}>
               Last closed ${
                 // eslint-disable-next-line react/prop-types
                 (card.stockpricewhenuseraddedit).toFixed(2)
@@ -84,7 +90,7 @@ function StockList (navigation, stockDetails, loading) {
             </Text>
           </View>
           <TouchableHighlight style={styles.Button} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-            <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular' }]}>$
+            <Text style={{ ...styles.ButtonText,fontFamily: 'Lato_400Regular' }}>$
               {
                 // eslint-disable-next-line react/prop-types
                 card.triggerPrice
@@ -101,7 +107,7 @@ function StockList (navigation, stockDetails, loading) {
     return (
       // flex:10, flex: 4, height: 300
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
-        <View style={{ width: '100%', height: 50, marginTop: 30, marginLeft: '5%', alignItems: 'left' }}>
+        <View style={{ width: '100%', height: 50, marginTop: 30, marginLeft: '5%' }}>
           <Text style={{ fontSize: 25 }}>
             <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold', color: colors.text }}>DIP</Text>
             <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>LIST</Text>
@@ -153,7 +159,6 @@ function StockList (navigation, stockDetails, loading) {
                       marginLeft: '0%',
                       borderBottomWidth: 1,
                       borderBottomColor: '#e2e3e4',
-                      alignItems: 'left'
                     }}
                   >
                     <View style={{ width: '80%' }}>
@@ -164,7 +169,7 @@ function StockList (navigation, stockDetails, loading) {
                         Prices updated at market close
                       </Text>
                     </View>
-                    <TouchableHighlight style={[styles.Button2, { color: colors.background }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
+                    <TouchableHighlight style={{...styles.Button2, color: colors.background }} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#fff'>
                       <Text style={styles.ButtonText2}>
                         Add
                       </Text>
@@ -190,7 +195,7 @@ function StockMarketsSect (loading) {
   } else {
     return (
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
-        <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', alignItems: 'left' }}>
+        <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', }}>
           <Text style={{ fontSize: 25 }}>
             <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold', color: colors.text }}>INDICES</Text>
           </Text>
@@ -198,7 +203,7 @@ function StockMarketsSect (loading) {
         <View style={{ flex: 1, width: '100%', marginLeft: '0%', height: 'auto' }}>
         {loading
           ? <View style={{ marginLeft: '5%' }}>
-              <SkeletonPlaceholder backgroundColor= '#E1E9EE' highlightColor= '#F2F8FC' speed= {800}>
+              
                 <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
                     <View style={{ width: '80%' }}>
                       <View style={{ width: 50, height: 20, borderRadius: 5 }}/>
@@ -220,16 +225,15 @@ function StockMarketsSect (loading) {
                     </View>
                     <View style={{ width: 75, height: 35, borderRadius: 8 }} />
                 </View>
-              </SkeletonPlaceholder>
             </View>
           : <View >
-              <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
+              <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', }}>
                 <View style={{ width: '50%' }}>
                   <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>DJIA</Text>
                   <Text style={[styles.lastClose, { color: colors.primary }]}>Last closed 29,891</Text>
                 </View>
                 <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                  <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
+                  <Text style={{...styles.ButtonSetText, color: colors.text, fontFamily: 'Lato_400Regular' }}>Set</Text>
                 </TouchableOpacity>
               </View>
               <View style={ styles.indicesSect }>
@@ -238,7 +242,7 @@ function StockMarketsSect (loading) {
                   <Text style={[styles.lastClose, { color: colors.primary }]}>Last closed 30,000</Text>
                 </View>
                 <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                  <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
+                  <Text style={{...styles.ButtonSetText, color: colors.text, fontFamily: 'Lato_400Regular' }}>Set</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.indicesSect}>
@@ -247,7 +251,7 @@ function StockMarketsSect (loading) {
                   <Text style={[styles.lastClose, { color: colors.primary, fontFamily: 'Lato_400Regular' }]}>Last closed 15,029</Text>
                 </View>
                 <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                  <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
+                  <Text style={{...styles.ButtonSetText, color: colors.text, fontFamily: 'Lato_400Regular' }}>Set</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -269,7 +273,7 @@ function AddAtockBtn (navigation) {
     return (
       <View style={{ width: (Dimensions.get('window').width), height: 'auto', alignContent: 'center', alignItems: 'center', marginTop: 40 }}>
         <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#000000'>
-          <Text style={[styles.ButtonAddStockText, { color: colors.border, fontFamily: 'Lato_700Bold' }]}>Add Stock</Text>
+          <Text style={{...styles.ButtonAddStockText, color: colors.border, fontFamily: 'Lato_700Bold' }}>Add Stock</Text>
         </TouchableHighlight>
       </View>
     )
@@ -279,7 +283,8 @@ function AddAtockBtn (navigation) {
 // eslint-disable-next-line react/prop-types
 function Home () {
   const [stockDetails, setStockDetails] = useState([])
-  const [loading, setloading] = useState(true)
+  const [modal,setModal]= useState(true);
+  const [loading, setloading] = useState(false)
   const isFocused = useIsFocused()
   const { colors } = useTheme()
   async function fetchData () {
@@ -312,10 +317,9 @@ function Home () {
       }
       console.log('length: ' + stocksArray.length)
       setStockDetails(stocksArray)
-      // if (stocksArray.length > 0) {
-      //   setTimeout(function () { setloading(true) }, 3000)
-      //   setloading(false)
-      // }
+      if (stocksArray.length === 1 ) {
+        setModal(true);
+      }
       if (loading) {
         setloading(false)
       }
@@ -344,6 +348,44 @@ function Home () {
       <View style={{ marginTop: 10, borderTopWidth: 0.25, borderTopColor: '#e2e3e4', backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
         {AddAtockBtn(navigation)}
       </View>
+      
+      <Modal
+            // style={{ position: 'absolute', width: width, height: (width / 1.2), backgroundColor: '#fff', bottom: 0, borderRadius: 50, alignItems: 'center' }}
+            // style={{height: 400, bottom: 0 }}
+            visible={modal}
+            contentContainerStyle={{ position: 'absolute', bottom: -30 }}
+            onDismiss={ () => setModal(false)}
+          >
+            <View style={{ paddingBottom: 20, backgroundColor: '#fff', borderRadius: 50, height: 400 }}>
+              <LottieView
+                style={{ height: width, width: width, marginTop: -80, marginBottom: -width / 2 }}
+                source={require('../../assets/lottie_assets/padlock.json')}
+                autoPlay
+              />
+              <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center', fontFamily: 'Lato_700Bold', letterSpacing: 2 }} > Unlock your limits</Text>
+              <Text style={{ fontSize: 15, textAlign: 'center', marginTop: 10, letterSpacing: 0.5 }} >Feel calmer knowing you'll never miss a buying oppertunity during a dip. Like last time...</Text>
+
+              <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 30, borderWidth: 1, borderColor: '#000', alignSelf: 'center' }}
+                labelStyle={{ fontWeight: 'bold', color: '#000', fontFamily: 'Lato_700Bold' }}
+                onPress={() => {
+                  console.log("Unlocked!")
+                  //Implementation of payment API
+                }}
+              >
+                $9.99 Monthly
+              </Button>
+              <Button style={{ backgroundColor: '#eeefef', width: '80%', borderRadius: 30, padding: 10, marginTop: 10, alignSelf: 'center' }}
+                labelStyle={{ color: 'gray' }}
+                onPress={() => {
+                  console.log("nothing");
+                  setModal(false);
+                }}
+              >
+                Maybe Later
+              </Button>
+
+            </View>
+         </Modal>
     </SafeAreaView>
   )
 }
