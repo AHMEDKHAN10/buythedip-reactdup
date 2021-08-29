@@ -5,7 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   View, Text,
-  Dimensions,
+  // Dimensions,
   TouchableHighlight,
   Platform,
   Image
@@ -15,6 +15,7 @@ import { AntDesign } from '@expo/vector-icons'
 import Switch from 'react-native-switch-pro'
 import FaceId from '../services/faceid'
 import AppLoading from 'expo-app-loading'
+import ToggleSwitch from 'toggle-switch-react-native'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 import davidPic from '../../assets/david.png'
@@ -36,11 +37,11 @@ function renderHeader (navigation) {
         height: 10,
         marginTop: (Platform.OS === 'ios') ? 0 : 35
       }}>
-        <AntDesign name="arrowleft" size={24} color="black"
+        <AntDesign name="close" size={24} color="black"
           onPress={ () => {
             navigation.navigate('Home')
           }}
-          style={{ paddingTop: 10, paddingLeft: 15, width: '40%', color: colors.text }}/>
+          style={{ paddingTop: 10, paddingLeft: 24, width: '40%', color: colors.text }}/>
         <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 20 }}>
           <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold', color: colors.text }}>Settings</Text>
         </Text>
@@ -80,12 +81,13 @@ function Content2 () {
     return <AppLoading/>
   } else {
     return (
-      <View style={{ flex: 8, width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 50 }}>
-        <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
-          <View style={{ width: '80%' }}>
-            <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Face ID</Text>
+      // (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width)))
+      <View style={{ flex: 8, width: '100%', paddingLeft: 24, paddingRight: 24, height: 50 }}>
+        <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 50, marginLeft: '0%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', paddingBottom: 15 }}>
+          <View style={{ width: '80%', marginTop: 10 }}>
+            <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Face ID</Text>
           </View>
-          <Switch
+          {/* <Switch
             width= {57}
             height={30}
             circleColorInactive='#f1f1f1'
@@ -105,29 +107,36 @@ function Content2 () {
             onSyncPress = {async () => {
               await toggleSwitch()
             }}
-          />
+          /> */}
+            <ToggleSwitch
+              isOn={isEnabled}
+              onColor="#04D700"
+              offColor="#C4C4C4"
+              size= 'large'
+              onToggle={async () => await toggleSwitch()}
+            />
         </View>
         <View style={styles.settingsOptions}>
           <View style={{ width: '80%' }}>
-            <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Manage Notifications</Text>
+            <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Manage Notifications</Text>
           </View>
-          <AntDesign name="right" size={24} color="black" style={{ width: '20%', justifyContent: 'center', marginLeft: '10%', color: colors.text }}/>
+          <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }}/>
         </View>
         <View style={styles.settingsOptions}>
           <View style={{ width: '80%' }}>
-            <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Feature Request & Report Bugs</Text>
+            <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Feature Request & Report Bugs</Text>
           </View>
-          <AntDesign name="right" size={24} color="black" style={{ width: '20%', justifyContent: 'center', marginLeft: '10%', color: colors.text }}/>
+          <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }}/>
         </View>
         <View style={styles.settingsOptions}>
           <View style={{ width: '80%' }}>
-            <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Restore subscription</Text>
+            <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Restore subscription</Text>
           </View>
-          <AntDesign name="right" size={24} color="black" style={{ width: '20%', justifyContent: 'center', marginLeft: '10%', color: colors.text }}/>
+          <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }}/>
         </View>
-        <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 30, marginLeft: '0%' }}>
+        <View style={{ marginTop: 25, flexDirection: 'row', width: '100%', height: 30, marginLeft: '0%' }}>
           <View style={{ width: '80%' }}>
-            <Text style={{ fontSize: 17, fontFamily: 'Lato_400Regular', color: colors.text }}>Theme</Text>
+            <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Theme</Text>
           </View>
           <Switch
             width= {57}
@@ -152,14 +161,14 @@ function Content2 () {
             }}
           />
         </View>
-        <View style={styles.settingsOptions3}>
+        <View style={[styles.settingsOptions3, { marginRight: -24 }]}>
           <View style={styles.settingsOptions2}>
             <Text style={{ fontSize: 24, fontFamily: 'Lato_700Bold', color: colors.text }}>A little favor</Text>
-            <Text style={{ marginTop: 10, fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>
+            <Text style={{ marginTop: 10, fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text, lineHeight: 24 }}>
               If you’ve gotten value out of this app, i’d appricate your support by sharing the app.
             </Text>
           </View>
-          <Image source={davidPic}>
+          <Image source={davidPic} style={{ width: '50%' }}>
 
           </Image>
         </View>
@@ -188,10 +197,10 @@ export default settings
 
 const styles = StyleSheet.create({
   settingsOptions: {
-    marginTop: 40,
+    marginTop: 25,
     flexDirection: 'row',
     width: '100%',
-    height: 60,
+    height: 45,
     marginLeft: '0%',
     borderBottomWidth: 0.4,
     borderBottomColor: '#b2b2b2',
@@ -214,7 +223,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start'
   },
   ButtonAddStock: {
-    width: '85%',
+    width: '100%',
     backgroundColor: '#FFB801',
     height: 58,
     borderRadius: 40,
@@ -224,7 +233,7 @@ const styles = StyleSheet.create({
   },
   ButtonAddStockText: {
     color: '#2B3033',
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'center',
     paddingLeft: 10,
     paddingRight: 10,

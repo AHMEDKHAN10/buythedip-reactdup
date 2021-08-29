@@ -21,9 +21,10 @@ const height = Dimensions.get('screen').height
 
 // * localhost api http://127.0.0.1:3000/
 // * backend api https://buythedipapi.herokuapp.com/
-function FirstScreen () {
+function AddStock () {
   const navigation = useNavigation()
   const [query, setQuery] = useState('')
+  const [name, setName] = useState()
   const [data, setData] = useState([])
   const [price, setPrice] = useState('')
   // eslint-disable-next-line no-unused-vars
@@ -82,16 +83,22 @@ function FirstScreen () {
           flex: 1,
           paddingRight: 20,
           flexDirection: 'row',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           width: '100%',
           height: 10
         }}
       >
+        <AntDesign name="close" size={24} color="black"
+          onPress={() => {
+            navigation.navigate('Home')
+          }}
+          style={{ padding: 10, paddingTop: 12, paddingRight: 25, paddingLeft: 24, width: '10%', color: colors.text }}
+        />
         <Text
           style={{
             padding: 10,
             textAlign: 'right',
-            width: '67%',
+            width: '53%',
             fontSize: 23,
             height: 50
           }}
@@ -105,31 +112,6 @@ function FirstScreen () {
           </Text>
           <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>LIST</Text>
         </Text>
-        {empty
-          ? <Text
-            style={{
-              padding: 10,
-              paddingTop: 15,
-              textAlign: 'right',
-              width: '33%',
-              fontSize: 18,
-              height: 50,
-              color: '#6fcc51'
-            }}
-            onPress={() => {
-              navigation.navigate('Home', {
-                StockName: 'No specific stock selected'
-              })
-            }}
-          >
-            Skip
-          </Text>
-          : <AntDesign name="close" size={24} color="black"
-            onPress={() => {
-              navigation.navigate('Home')
-            }}
-            style={{ padding: 10, paddingTop: 12, paddingRight: 25, paddingLeft: 65, width: '33%', color: colors.text }}/>
-        }
       </View>
     )
   }
@@ -187,6 +169,7 @@ function FirstScreen () {
                 key={index}
                 onPress={async () => {
                   setQuery(item.symbol)
+                  setName(item.name)
                   setData([])
                   //* to send company name to next screen
                   const pricee = await StockName(item.symbol)
@@ -249,7 +232,7 @@ function FirstScreen () {
                 fontFamily: 'Lato_400Regular'
               }}
             >
-              last closed at ${price}
+              {name} (${price === 'Stock price not available' ? NaN : price})
             </Text>
           }
         </View>
@@ -258,4 +241,4 @@ function FirstScreen () {
   }
 }
 
-export default FirstScreen
+export default AddStock

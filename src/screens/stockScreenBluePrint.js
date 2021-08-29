@@ -14,16 +14,20 @@ import {
   Platform,
   TouchableWithoutFeedback,
   TouchableHighlight,
-  Keyboard
+  Keyboard,
+  TouchableOpacity,
+  Image,
+  TextInput
 } from 'react-native'
-
-import { AntDesign } from '@expo/vector-icons'
-import Switch from 'react-native-switch-pro'
+import ToggleSwitch from 'toggle-switch-react-native'
+// import { AntDesign } from '@expo/vector-icons'
+// import Switch from 'react-native-switch-pro'
 // import PushNotification from '../services/pushNotification'
 import registerForPushNotificationsAsync from '../services/pushNotification'
 import AppLoading from 'expo-app-loading'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
+// import { Input } from 'antd'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -37,8 +41,10 @@ Notifications.setNotificationHandler({
 function stockScreenBluePrint ({ route }) {
   const [isEnabled, setIsEnabled] = useState(false)
   const navigation = useNavigation()
+  const [keyBoard, setkeyBoard] = useState(false)
   // eslint-disable-next-line react/prop-types
   const { otherParam, price, trigger } = route.params
+  const [textInput, setTextInput] = useState(trigger)
   // eslint-disable-next-line no-unused-vars
   const [expoPushToken, setExpoPushToken] = useState('')
   // eslint-disable-next-line no-unused-vars
@@ -73,6 +79,28 @@ function stockScreenBluePrint ({ route }) {
       console.error(e)
     }
   }
+  const updateStock = async () => {
+    const userid = await firebaseuser()
+    navigation.navigate('Home')
+
+    const request = JSON.stringify({
+      userid: userid,
+      trigger: textInput,
+      stockName: otherParam,
+      price: price,
+      GeneralTenPercentDipNotify: isEnabled,
+      TriggerPriceTenPercentDipNotify: null
+    })
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: request
+    }
+    await fetch(config.API_URL + 'getTrigger', options)
+  }
 
   useEffect(() => {
     // console.log('array: ' + array)
@@ -87,12 +115,26 @@ function stockScreenBluePrint ({ route }) {
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response)
     })
+    Keyboard.addListener('keyboardDidShow', _keyboardDidShow)
+    Keyboard.addListener('keyboardDidHide', _keyboardDidHide)
 
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current)
       Notifications.removeNotificationSubscription(responseListener.current)
+      Keyboard.removeListener('keyboardDidShow', _keyboardDidShow)
+      Keyboard.removeListener('keyboardDidHide', _keyboardDidHide)
     }
   }, [])
+
+  const _keyboardDidShow = () => {
+    setkeyBoard(true)
+    // alert('Keyboard Shown');
+  }
+
+  const _keyboardDidHide = () => {
+    setkeyBoard(false)
+    // alert('Keyboard Hidden');
+  }
 
   async function schedulePushNotification () {
     await Notifications.scheduleNotificationAsync({
@@ -122,15 +164,34 @@ function stockScreenBluePrint ({ route }) {
   function renderHeader () {
     return (
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: 10 }}>
-        <AntDesign name="arrowleft" size={24} color= {colors.text}
+        {/* <AntDesign name="arrowleft" size={24} color= {colors.text}
           onPress={() => {
             navigation.navigate('Home')
           }}
-          style={{ paddingTop: 10, paddingLeft: 15, width: '40%' }}/>
+          style={{ paddingTop: 10, paddingLeft: 24, width: '40%' }}/> */}
+          <View style={{ width: '40%', paddingLeft: 24, paddingTop: 15 }}>
+          <TouchableOpacity onPress={ () => {
+            const stock = 'Lookup a stock'
+            const pricing = 'Prices updated at market close'
+            const triggerr = 'Add'
+            navigation.navigate('Home', {
+              otherParam: stock,
+              price: pricing,
+              trigger: triggerr
+            })
+            navigation.navigate('Home')
+          }
+          }>
+          <Image
+            source={require('../../assets/backButton.png')}
+            style={{ paddingLeft: 34, height: 16, width: 16 }}
+          />
+          </TouchableOpacity>
+          </View>
         <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 20 }}>
           <View style={{ width: '60%' }}>
-            <Text style={{ fontSize: 17, fontWeight: '400', marginLeft: '25%', color: colors.text, fontFamily: 'Lato_700Bold' }}>{otherParam}</Text>
-            <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '500', fontFamily: 'Lato_400Regular' }}>Last closed {price}</Text>
+            <Text style={{ fontSize: 17, marginLeft: '25%', color: colors.text, fontFamily: 'Lato_700Bold' }}>{otherParam}</Text>
+            <Text style={{ marginTop: 4, fontSize: 12, color: '#6a6e70', fontWeight: '500', fontFamily: 'Lato_400Regular' }}>Last closed ${price}</Text>
           </View>
         </Text>
       </View>
@@ -142,7 +203,14 @@ function stockScreenBluePrint ({ route }) {
       <View style={{ flex: 2, padding: 10, width: (Dimensions.get('window').width) }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center' }}>
           <Text style={{ fontSize: 30, lineHeight: 55, color: '#ec5d29', fontFamily: 'Lato_700Bold' }}>$</Text>
-          <Text style={{ fontSize: 80, lineHeight: 90, color: '#ec5d29', fontFamily: 'Lato_400Regular' }}>{trigger}</Text>
+          <TextInput
+            value={textInput}
+            keyboardType = 'numeric'
+            onChangeText = {
+              (value) => setTextInput(value)
+            }
+            onEndEditing= {() => console.log(textInput)}
+            style={{ fontSize: 80, lineHeight: 90, color: '#ec5d29', fontFamily: 'Lato_400Regular' }}></TextInput>
         </View>
         <Text style={{ fontWeight: '400', letterSpacing: 1, textAlign: 'center', color: '#ec5d29', fontFamily: 'Lato_400Regular' }}>Price alert for {otherParam}</Text>
       </View>
@@ -151,38 +219,29 @@ function stockScreenBluePrint ({ route }) {
 
   function enableNotification () {
     return (
-      <View style={{ flex: 1, width: (Dimensions.get('window').width), height: 50 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'center', paddingLeft: 10, paddingRight: 10, paddingTop: 25, borderTopWidth: 0.25, borderTopColor: '#b2b2b2', marginLeft: '5%', marginRight: '5%' }}>
-          <View style={{ width: '90%' }}>
-            <Text style={{ fontSize: 17, color: colors.text, fontFamily: 'Lato_400Regular' }}>Price Alerts</Text>
-            <Text style={{ marginTop: 4, fontSize: 14, color: '#6a6e70', fontWeight: '400', fontFamily: 'Lato_400Regular' }}>Send 10% dip notification</Text>
+      <View style={{ flex: keyBoard ? 1.3 : 0.7, width: (Dimensions.get('window').width), height: 50 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', paddingLeft: 0, paddingRight: 0, paddingTop: 20, borderTopWidth: 0.25, borderTopColor: '#b2b2b2', marginLeft: '5%', marginRight: '5%' }}>
+          <View style={{ width: '80%' }}>
+            <Text style={{ fontSize: 15, color: colors.text, fontFamily: 'Lato_400Regular' }}>Price Alerts</Text>
+            <Text style={{ marginTop: 4, fontSize: 13, color: '#6a6e70', fontFamily: 'Lato_400Regular' }}>Send 10% dip notification</Text>
           </View>
-          <Switch
-            width= {57}
-            height={30}
-            circleColorInactive='#f1f1f1'
-            backgroundInactive= {colors.background}
-            value = {isEnabled}
-            style={{
-              borderColor: colors.text,
-              borderWidth: 0.5,
-              padding: 2
-            }}
-            circleStyle={{
-              width: 25,
-              height: 25,
-              borderWidth: 0.5,
-              borderColor: colors.text
-            }}
-            onSyncPress={async () => {
-              await toggleSwitch()
-            }}
-          />
+          <ToggleSwitch
+              isOn={isEnabled}
+              onColor="#04D700"
+              offColor="#C4C4C4"
+              size= 'large'
+              onToggle={async () => await toggleSwitch()}
+            />
         </View>
-        <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', justifyContent: 'center' }}>
-          <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={deleteStock} underlayColor='#fff'>
-              <Text style={[styles.ButtonAddStockText, { color: colors.background, fontFamily: 'Lato_400Regular' }]}>Delete</Text>
-          </TouchableHighlight>
+        <View style={{ marginTop: 20, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', justifyContent: 'center' }}>
+          {keyBoard
+            ? <TouchableHighlight style={[styles.ButtonUpdateStock, { backgroundColor: colors.text }]} onPress={updateStock} underlayColor='#fff'>
+                <Text style={[styles.ButtonAddStockText, { color: colors.background, fontFamily: 'Lato_700Bold', lineHeight: 24 }]}>Update</Text>
+              </TouchableHighlight>
+            : <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.background }]} onPress={deleteStock} underlayColor='#fff'>
+                <Text style={[styles.ButtonAddStockText, { color: colors.text, fontFamily: 'Lato_700Bold', lineHeight: 24 }]}>Delete</Text>
+              </TouchableHighlight>
+          }
         </View>
       </View>
     )
@@ -197,7 +256,7 @@ function stockScreenBluePrint ({ route }) {
           style={styles.container}
           >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
-            <View style={styles.inner}>
+            <View style={styles.inner} >
               {renderHeader()}
               {StalkPriceHeader()}
               {enableNotification()}
@@ -235,7 +294,7 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   ButtonAddStock: {
-    width: '85%',
+    width: '90%',
     backgroundColor: '#fff',
     height: 58,
     borderRadius: 40,
@@ -243,9 +302,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2b3033'
   },
+  ButtonUpdateStock: {
+    width: '100%',
+    backgroundColor: '#fff',
+    height: 58,
+    // borderRadius: 40,
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#2b3033'
+  },
   ButtonAddStockText: {
     color: '#2b3033',
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'center',
     paddingLeft: 10,
     paddingRight: 10

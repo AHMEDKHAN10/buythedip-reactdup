@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight, Platform, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
@@ -8,12 +9,12 @@ import AppLoading from 'expo-app-loading'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import * as Animatable from 'react-native-animatable'
 // eslint-disable-next-line camelcase
-import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
+import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black } from '@expo-google-fonts/lato'
 
 function renderHeader (navigation) {
   const { colors } = useTheme()
   const [fontsLoaded] = useFonts({
-    Lato_300Light, Lato_400Regular, Lato_700Bold
+    Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black
   })
   if (!fontsLoaded) {
     return <AppLoading/>
@@ -36,7 +37,7 @@ function renderHeader (navigation) {
           }}
         />
         <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 23 }}>
-          <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold', color: colors.text }}>DIP</Text>
+          <Text style={{ fontFamily: 'Lato_700Bold', color: colors.text }}>DIP</Text>
           <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>LIST</Text>
         </Text>
       </View>
@@ -48,7 +49,7 @@ function StockList (navigation, stockDetails, loading) {
   // const { navigation, stockDetails, loading } = props
   const { colors } = useTheme()
   const [fontsLoaded] = useFonts({
-    Lato_300Light, Lato_400Regular, Lato_700Bold
+    Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black
   })
   // console.log(loading)
   // eslint-disable-next-line react/prop-types
@@ -70,21 +71,30 @@ function StockList (navigation, stockDetails, loading) {
           }}
         >
           <View style={{ width: '80%' }}>
-            <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>
+            <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>
               {
                 // eslint-disable-next-line react/prop-types
                 card.stockname
               }
             </Text>
-            <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular' }]}>
+            <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 1, opacity: 0.7 }]}>
               Last closed ${
                 // eslint-disable-next-line react/prop-types
-                (card.stockpricewhenuseraddedit).toFixed(2)
+                (card.stockpricewhenuseraddedit)
               }
             </Text>
           </View>
-          <TouchableHighlight style={styles.Button} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-            <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular' }]}>$
+          <TouchableHighlight style={[styles.Button, { backgroundColor: card.triggerPrice > card.stockpricewhenuseraddedit ? '#5AC53A' : '#ec5d29' }]} onPress={() => {
+            navigation.navigate('StockScreenBluePrint', {
+              // eslint-disable-next-line react/prop-types
+              otherParam: card.stockname,
+              // eslint-disable-next-line react/prop-types
+              price: card.stockpricewhenuseraddedit,
+              // eslint-disable-next-line react/prop-types
+              trigger: card.triggerPrice
+            })
+          }} underlayColor='#fff'>
+            <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular', fontSize: 14, letterSpacing: 1 }]}>$
               {
                 // eslint-disable-next-line react/prop-types
                 card.triggerPrice
@@ -102,9 +112,9 @@ function StockList (navigation, stockDetails, loading) {
       // flex:10, flex: 4, height: 300
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
         <View style={{ width: '100%', height: 50, marginTop: 30, marginLeft: '5%', alignItems: 'left' }}>
-          <Text style={{ fontSize: 25 }}>
-            <Text style={{ fontWeight: '800', fontFamily: 'Lato_700Bold', color: colors.text }}>DIP</Text>
-            <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>LIST</Text>
+          <Text style={{ fontSize: 24 }}>
+            <Text style={{ fontFamily: 'Lato_900Black', letterSpacing: 0.5, color: colors.text }}>DIP</Text>
+            <Text style={{ fontFamily: 'Lato_700Bold', letterSpacing: 0.5, color: colors.text }}>LIST</Text>
           </Text>
         </View>
         <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>
@@ -140,7 +150,7 @@ function StockList (navigation, stockDetails, loading) {
                   <View style={{ width: 75, height: 35, borderRadius: 8 }} />
               </View>
             </SkeletonPlaceholder>
-          : (Object.keys(stockDetails)
+          : (stockDetails.length > 0
               ? stockDetails.map((item, index) => (
                   <StockSect card={item} index={index} key={index} />
               ))
@@ -157,10 +167,10 @@ function StockList (navigation, stockDetails, loading) {
                     }}
                   >
                     <View style={{ width: '80%' }}>
-                      <Text style={{ fontSize: 17, color: colors.text }}>
+                      <Text style={{ fontSize: 15, color: colors.text, fontFamily: 'Lato_700Bold' }}>
                         Loookup a Stock
                       </Text>
-                      <Text style={{ marginTop: 4, fontSize: 14, fontWeight: '500', color: colors.text }}>
+                      <Text style={{ marginTop: 4, fontSize: 13, fontFamily: 'Lato_400Regular', color: colors.text, opacity: 0.7 }}>
                         Prices updated at market close
                       </Text>
                     </View>
@@ -191,11 +201,14 @@ function StockMarketsSect (loading) {
     return (
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
         <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', alignItems: 'left' }}>
-          <Text style={{ fontSize: 25 }}>
-            <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold', color: colors.text }}>INDICES</Text>
+          <Text style={{ fontSize: 24 }}>
+            <Text style={{ fontFamily: 'Lato_700Bold', color: colors.text, fontSize: 24 }}>MARKETS</Text>
+          </Text>
+          <Text style={{ fontSize: 13, marginTop: 5 }}>
+            <Text style={{ fontFamily: 'Lato_400Regular', color: colors.text, lineHeight: 20, letterSpacing: 1 }}>Market indices constist of companies that represent a particular segment of the economy.</Text>
           </Text>
         </View>
-        <View style={{ flex: 1, width: '100%', marginLeft: '0%', height: 'auto' }}>
+        <View style={{ flex: 1, width: '100%', marginLeft: '0%', height: 'auto', marginTop: 30 }}>
         {loading
           ? <View style={{ marginLeft: '5%' }}>
               <SkeletonPlaceholder backgroundColor= '#E1E9EE' highlightColor= '#F2F8FC' speed= {800}>
@@ -222,32 +235,32 @@ function StockMarketsSect (loading) {
                 </View>
               </SkeletonPlaceholder>
             </View>
-          : <View >
+          : <View style={{ marginTop: 10 }} >
               <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
                 <View style={{ width: '50%' }}>
-                  <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>DJIA</Text>
-                  <Text style={[styles.lastClose, { color: colors.primary }]}>Last closed 29,891</Text>
+                  <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>DJIA</Text>
+                  <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 29,891</Text>
                 </View>
                 <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                  <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
+                  <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Set</Text>
                 </TouchableOpacity>
               </View>
               <View style={ styles.indicesSect }>
                 <View style={{ width: '50%' }}>
-                  <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>NASDAQ</Text>
-                  <Text style={[styles.lastClose, { color: colors.primary }]}>Last closed 30,000</Text>
+                  <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>NASDAQ</Text>
+                  <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 30,000</Text>
                 </View>
                 <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                  <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
+                  <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Set</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.indicesSect}>
                 <View style={{ width: '50%' }}>
-                  <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold' }]}>S&P 500</Text>
-                  <Text style={[styles.lastClose, { color: colors.primary, fontFamily: 'Lato_400Regular' }]}>Last closed 15,029</Text>
+                  <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>S&P 500</Text>
+                  <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 15,029</Text>
                 </View>
                 <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                  <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular' }]}>Set</Text>
+                  <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Set</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -266,10 +279,11 @@ function AddAtockBtn (navigation) {
   if (!fontsLoaded) {
     return <AppLoading/>
   } else {
+    // colors.text
     return (
       <View style={{ width: (Dimensions.get('window').width), height: 'auto', alignContent: 'center', alignItems: 'center', marginTop: 40 }}>
-        <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={() => navigation.navigate('FirstScreen')} underlayColor='#000000'>
-          <Text style={[styles.ButtonAddStockText, { color: colors.border, fontFamily: 'Lato_700Bold' }]}>Add Stock</Text>
+        <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={() => navigation.navigate('AddStock')} underlayColor='#000000'>
+          <Text style={[styles.ButtonAddStockText, { color: colors.border, fontFamily: 'Lato_700Bold', lineHeight: 24, letterSpacing: 1 }]}>Add Stock</Text>
         </TouchableHighlight>
       </View>
     )
@@ -362,10 +376,8 @@ const styles = StyleSheet.create({
   },
 
   Button: {
-    marginLeft: '0%',
-    width: '20%',
-    backgroundColor: '#ec5d29',
-    height: 35,
+    width: 85,
+    height: 34,
     borderRadius: 8,
     justifyContent: 'center'
   },
@@ -396,9 +408,9 @@ const styles = StyleSheet.create({
   },
   ButtonSet: {
     marginLeft: '25%',
-    width: '25%',
+    width: 85,
     // backgroundColor: '#fff',
-    height: 38,
+    height: 34,
     borderRadius: 8,
     justifyContent: 'center',
     borderWidth: 1,
@@ -421,7 +433,7 @@ const styles = StyleSheet.create({
   },
   ButtonAddStockText: {
     color: '#ffe6d2',
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'center',
     paddingLeft: 10,
     paddingRight: 10
@@ -433,7 +445,8 @@ const styles = StyleSheet.create({
     marginLeft: '0%',
     borderBottomWidth: 0.4,
     borderBottomColor: '#b2b2b2',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    paddingRight: 25
   },
   diplistStockSect: {
     marginTop: 4,
@@ -441,7 +454,7 @@ const styles = StyleSheet.create({
     color: '#b2b2b2'
   },
   indicesSect: {
-    marginTop: 40,
+    marginTop: 25,
     flexDirection: 'row',
     width: '100%',
     height: 60,
