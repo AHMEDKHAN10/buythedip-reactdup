@@ -501,11 +501,11 @@ const styles = StyleSheet.create({
     marginLeft: '25%',
     width: 85,
     // backgroundColor: '#fff',
-    height: 34,
+    height: 36,
     borderRadius: 8,
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#2b3033'
+    borderWidth: 1
+    // borderColor: '#2b3033'
   },
   ButtonSetText: {
     color: '#2b3033',

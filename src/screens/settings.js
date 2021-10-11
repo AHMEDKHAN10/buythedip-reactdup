@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigation, useTheme } from '@react-navigation/native'
-import { EventRegister } from 'react-native-event-listeners'
+// import { EventRegister } from 'react-native-event-listeners'
 import {
   StyleSheet,
   SafeAreaView,
@@ -8,7 +8,8 @@ import {
   // Dimensions,
   TouchableHighlight,
   Platform,
-  Image
+  Image,
+  Linking
 } from 'react-native'
 import { Camera } from 'expo-camera'
 import { AntDesign } from '@expo/vector-icons'
@@ -20,6 +21,8 @@ import ToggleSwitch from 'toggle-switch-react-native'
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 import davidPic from '../../assets/david.png'
 import Constants from 'expo-constants'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+// import Swipeable from 'react-native-gesture-handler/Swipeable'
 
 function renderHeader (navigation) {
   const { colors } = useTheme()
@@ -84,6 +87,7 @@ function Content2 () {
       console.log('not enabled')
     }
   }
+  // eslint-disable-next-line no-unused-vars
   const [darkMode, setDarkMode] = useState(false)
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
@@ -127,12 +131,13 @@ function Content2 () {
             onToggle={async () => await toggleSwitch()}
           />
         </View>
-        <View style={styles.settingsOptions}>
-          <View style={{ width: '80%' }}>
+        {/* Linking.openURL('app-settings:') */}
+        <TouchableOpacity style={styles.settingsOptions} onPress= {() => Linking.openSettings()}>
+          <View style={{ width: '80%' }} >
             <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Manage Notifications</Text>
           </View>
           <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }} />
-        </View>
+        </TouchableOpacity>
         <View style={styles.settingsOptions}>
           <View style={{ width: '80%' }}>
             <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Feature Request & Report Bugs</Text>
@@ -146,9 +151,9 @@ function Content2 () {
           <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }} />
         </View>
         <View style={{ marginTop: 25, flexDirection: 'row', width: '100%', height: 30, marginLeft: '0%' }}>
-          <View style={{ width: '80%' }}>
+          {/* <View style={{ width: '80%' }}>
             <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Theme</Text>
-          </View>
+          </View> */}
           {/* <Switch
             width={57}
             height={30}

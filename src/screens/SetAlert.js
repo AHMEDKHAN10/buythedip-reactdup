@@ -29,7 +29,8 @@ import LottieView from 'lottie-react-native'
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 import AppLoading from 'expo-app-loading'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-
+const backButton = require('../../assets/backButton.png')
+const backButtonDark = require('../../assets/backButtonDark.png')
 // eslint-disable-next-line react/prop-types
 // eslint-disable-next-line space-before-function-paren
 function SetAlert({ route }) {
@@ -170,7 +171,7 @@ function SetAlert({ route }) {
           }
           }>
             <Image
-              source={require('../../assets/backButton.png')}
+              source={ colors.background === '#000000' ? backButtonDark : backButton }
               style={{ paddingLeft: 34, height: 16, width: 16 }}
             />
           </TouchableOpacity>
@@ -276,7 +277,7 @@ function SetAlert({ route }) {
           />
         </View>
         <View style={{ marginTop: 20, flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start' }}>
-          <TouchableHighlight style={[styles.Button, { backgroundColor: colors.text }]}
+          <TouchableHighlight style={[styles.Button, { backgroundColor: colors.notification }]}
             onPress={checkTextInput}
             underlayColor='#f18d69'>
             <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular' }]}>Submit</Text>

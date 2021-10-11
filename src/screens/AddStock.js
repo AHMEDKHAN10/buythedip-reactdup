@@ -246,7 +246,7 @@ function AddStock () {
               style={{
                 fontWeight: '400',
                 marginTop: 4,
-                color: '#000',
+                color: colors.text,
                 textAlign: 'center',
                 fontFamily: 'Lato_400Regular'
               }}

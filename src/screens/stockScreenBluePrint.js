@@ -28,6 +28,8 @@ import AppLoading from 'expo-app-loading'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 // import { Input } from 'antd'
+const backButton = require('../../assets/backButton.png')
+const backButtonDark = require('../../assets/backButtonDark.png')
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -162,6 +164,7 @@ function stockScreenBluePrint ({ route }) {
   }
 
   function renderHeader () {
+    // {colors.background === '#000000' ? backButton : backButtonDark}
     return (
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: 10 }}>
         {/* <AntDesign name="arrowleft" size={24} color= {colors.text}
@@ -183,7 +186,7 @@ function stockScreenBluePrint ({ route }) {
           }
           }>
           <Image
-            source={colors.background === '#000000' ? require('../../assets/backButton.png') : require('../../assets/backButtonDark.png')}
+            source = { colors.background === '#000000' ? backButtonDark : backButton}
             style={{ paddingLeft: 34, height: 16, width: 16, color: '#fffff' }}
           />
           </TouchableOpacity>
