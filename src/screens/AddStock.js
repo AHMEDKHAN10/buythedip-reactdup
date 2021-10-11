@@ -165,7 +165,7 @@ function AddStock () {
             defaultValue={query}
             placeholder="GME"
             placeholderTextColor= "#7f7f7f"
-            returnKeyType = 'go'
+            returnKeyType = 'next'
             onSubmitEditing = {() => {
               if (price === 'Stock price not available') {
                 alert(price)
