@@ -183,8 +183,8 @@ function stockScreenBluePrint ({ route }) {
           }
           }>
           <Image
-            source={require('../../assets/backButton.png')}
-            style={{ paddingLeft: 34, height: 16, width: 16 }}
+            source={colors.background === '#000000' ? require('../../assets/backButton.png') : require('../../assets/backButtonDark.png')}
+            style={{ paddingLeft: 34, height: 16, width: 16, color: '#fffff' }}
           />
           </TouchableOpacity>
           </View>
@@ -238,7 +238,7 @@ function stockScreenBluePrint ({ route }) {
             ? <TouchableHighlight style={[styles.ButtonUpdateStock, { backgroundColor: colors.text }]} onPress={updateStock} underlayColor='#fff'>
                 <Text style={[styles.ButtonAddStockText, { color: colors.background, fontFamily: 'Lato_700Bold', lineHeight: 24 }]}>Update</Text>
               </TouchableHighlight>
-            : <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.background }]} onPress={deleteStock} underlayColor='#fff'>
+            : <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.card }]} onPress={deleteStock} underlayColor='#fff'>
                 <Text style={[styles.ButtonAddStockText, { color: colors.text, fontFamily: 'Lato_700Bold', lineHeight: 24 }]}>Delete</Text>
               </TouchableHighlight>
           }
@@ -299,8 +299,8 @@ const styles = StyleSheet.create({
     height: 58,
     borderRadius: 40,
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#2b3033'
+    borderWidth: 1
+    // borderColor: '#2b3033'
   },
   ButtonUpdateStock: {
     width: '100%',

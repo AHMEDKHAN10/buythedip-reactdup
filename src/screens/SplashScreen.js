@@ -18,6 +18,18 @@ const SplashScreen = () => {
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })
+  // useEffect(() => {
+  //   const today = new Date()
+  //   const time = today.getHours() + ':' + today.getMinutes()
+  //   console.log('time: ' + time)
+  //   if (time >= '18:25' && time <= '6:55') {
+  //     // setDarkMode(true)
+  //     EventRegister.emit('themeListener', true)
+  //   } else {
+  //     // setDarkMode(false)
+  //     EventRegister.emit('themeListener', false)
+  //   }
+  // }, [])
   // eslint-disable-next-line no-unused-vars
   const { height, width } = Dimensions.get('window')
   if (!fontsLoaded) {

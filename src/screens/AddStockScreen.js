@@ -6,7 +6,6 @@ import {
   Text,
   Dimensions,
   Platform
-  // TextInput
 } from 'react-native'
 import stocks from '../constants'
 import { Menu } from 'react-native-paper'
@@ -22,10 +21,9 @@ const height = Dimensions.get('screen').height
 
 // * localhost api http://127.0.0.1:3000/
 // * backend api https://buythedipapi.herokuapp.com/
-function AddStock () {
+function FirstScreen () {
   const navigation = useNavigation()
   const [query, setQuery] = useState('')
-  const [name, setName] = useState()
   const [data, setData] = useState([])
   const [price, setPrice] = useState('')
   // eslint-disable-next-line no-unused-vars
@@ -52,54 +50,27 @@ function AddStock () {
     const json = await response.json()
     return (json.price)
   }
-  // useEffect(() => {
-  //   const stuff = []
-  //   if (query === '') {
-  //     setData([])
-  //   } else if (query.length === 1) {
-  //     // eslint-disable-next-line array-callback-return
-  //     stocks[query].map((element) => {
-  //       stuff.push(element)
-  //     })
-  //   } else if (query.length > 1) {
-  //     stocks[query[0]].forEach((element) => {
-  //       if (element.symbol.search(query) === 0) {
-  //         stuff.push(element)
-  //       }
-  //     })
-  //   }
-  //   if (stuff === [] || stuff.length === 1) {
-  //     setData([])
-  //   } else {
-  //     setData(stuff)
-  //   }
-  //   // check()
-  //   // console.log('empty: ' + empty)
-  // }, [query, price])
 
   function renderHeader (navigation) {
     return (
-      <View
-        style={{
-          flex: 1,
-          paddingRight: 20,
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          width: '100%',
-          height: 10
-        }}
-      >
+      <View style={{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        height: 10,
+        marginTop: (Platform.OS === 'ios') ? 0 : 35
+      }}>
         <AntDesign name="close" size={24} color="black"
           onPress={() => {
             navigation.navigate('Home')
           }}
-          style={{ padding: 10, paddingTop: 12, paddingRight: 25, paddingLeft: 24, width: '10%', color: colors.text }}
-        />
+          style={{ paddingTop: 10, paddingLeft: 24, width: '40%', color: colors.text }} />
         <Text
           style={{
             padding: 10,
-            textAlign: 'right',
-            width: '53%',
+            textAlign: 'left',
+            width: '60%',
             fontSize: 23,
             height: 50
           }}
@@ -153,29 +124,11 @@ function AddStock () {
         }}>
         {renderHeader(navigation)}
         <View style={{ flex: 3, padding: 10, width: Dimensions.get('window').width, fontFamily: 'Lato_400Regular' }}>
-        {/* <TextInput style={{ height: 40 }}
-          placeholder="Input"
-          placeholderTextColor="#DCDCDC"
-          returnKeyType="go"
-        >
-        </TextInput> */}
-
           <Autocomplete
             data={data}
             defaultValue={query}
             placeholder="GME"
             placeholderTextColor= "#7f7f7f"
-            returnKeyType = 'go'
-            onSubmitEditing = {() => {
-              if (price === 'Stock price not available') {
-                alert(price)
-              } else {
-                navigation.navigate('SetAlert', {
-                  stockName: query,
-                  price: price
-                })
-              }
-            }}
             onChangeText={(value) => {
               // setQuery(value)
               // eslint-disable-next-line camelcase
@@ -188,20 +141,19 @@ function AddStock () {
                 key={index}
                 onPress={async () => {
                   setQuery(item.symbol)
-                  setName(item.name)
                   setData([])
                   //* to send company name to next screen
                   const pricee = await StockName(item.symbol)
                   setPrice(pricee)
                   console.log('price: ', pricee)
-                  // if (pricee === 'Stock price not available') {
-                  //   alert(pricee)
-                  // } else {
-                  //   navigation.navigate('SetAlert', {
-                  //     stockName: item.symbol,
-                  //     price: pricee
-                  //   })
-                  // }
+                  if (pricee === 'Stock price not available') {
+                    alert(pricee)
+                  } else {
+                    navigation.navigate('SetAlert', {
+                      stockName: item.symbol,
+                      price: pricee
+                    })
+                  }
                 }}
                 title={
                   <Text style={{ fontWeight: 'bold' }}>
@@ -251,7 +203,7 @@ function AddStock () {
                 fontFamily: 'Lato_400Regular'
               }}
             >
-              {name} (${price === 'Stock price not available' ? NaN : price})
+              last closed at ${price}
             </Text>
           }
         </View>
@@ -260,4 +212,4 @@ function AddStock () {
   }
 }
 
-export default AddStock
+export default FirstScreen

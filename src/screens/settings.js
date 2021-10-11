@@ -12,13 +12,14 @@ import {
 } from 'react-native'
 import { Camera } from 'expo-camera'
 import { AntDesign } from '@expo/vector-icons'
-import Switch from 'react-native-switch-pro'
+// import Switch from 'react-native-switch-pro'
 import FaceId from '../services/faceid'
 import AppLoading from 'expo-app-loading'
 import ToggleSwitch from 'toggle-switch-react-native'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 import davidPic from '../../assets/david.png'
+import Constants from 'expo-constants'
 
 function renderHeader (navigation) {
   const { colors } = useTheme()
@@ -26,7 +27,7 @@ function renderHeader (navigation) {
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })
   if (!fontsLoaded) {
-    return <AppLoading/>
+    return <AppLoading />
   } else {
     return (
       <View style={{
@@ -38,10 +39,10 @@ function renderHeader (navigation) {
         marginTop: (Platform.OS === 'ios') ? 0 : 35
       }}>
         <AntDesign name="close" size={24} color="black"
-          onPress={ () => {
+          onPress={() => {
             navigation.navigate('Home')
           }}
-          style={{ paddingTop: 10, paddingLeft: 24, width: '40%', color: colors.text }}/>
+          style={{ paddingTop: 10, paddingLeft: 24, width: '40%', color: colors.text }} />
         <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 20 }}>
           <Text style={{ fontWeight: '400', fontFamily: 'Lato_700Bold', color: colors.text }}>Settings</Text>
         </Text>
@@ -60,6 +61,16 @@ function Content2 () {
       const { status } = await Camera.requestPermissionsAsync()
       setHasPermission(status === 'granted')
     })()
+    // const today = new Date()
+    // const time = today.getHours() + ':' + today.getMinutes()
+    // console.log('time: ' + time)
+    // if (time >= '18:25' && time <= '6:55') {
+    //   setDarkMode(true)
+    //   EventRegister.emit('themeListener', true)
+    // } else {
+    //   setDarkMode(false)
+    //   EventRegister.emit('themeListener', false)
+    // }
   }, [])
 
   const toggleSwitch = async () => {
@@ -78,7 +89,7 @@ function Content2 () {
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })
   if (!fontsLoaded) {
-    return <AppLoading/>
+    return <AppLoading />
   } else {
     return (
       // (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width)))
@@ -108,42 +119,42 @@ function Content2 () {
               await toggleSwitch()
             }}
           /> */}
-            <ToggleSwitch
-              isOn={isEnabled}
-              onColor="#04D700"
-              offColor="#C4C4C4"
-              size= 'large'
-              onToggle={async () => await toggleSwitch()}
-            />
+          <ToggleSwitch
+            isOn={isEnabled}
+            onColor="#04D700"
+            offColor = {darkMode ? 'rgb(78,78,78)' : '#C4C4C4'}
+            size='large'
+            onToggle={async () => await toggleSwitch()}
+          />
         </View>
         <View style={styles.settingsOptions}>
           <View style={{ width: '80%' }}>
             <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Manage Notifications</Text>
           </View>
-          <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }}/>
+          <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }} />
         </View>
         <View style={styles.settingsOptions}>
           <View style={{ width: '80%' }}>
             <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Feature Request & Report Bugs</Text>
           </View>
-          <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }}/>
+          <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }} />
         </View>
         <View style={styles.settingsOptions}>
           <View style={{ width: '80%' }}>
             <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Restore subscription</Text>
           </View>
-          <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }}/>
+          <AntDesign name="right" size={16} color="black" style={{ width: '20%', justifyContent: 'center', marginTop: 3, textAlign: 'right', color: colors.text }} />
         </View>
         <View style={{ marginTop: 25, flexDirection: 'row', width: '100%', height: 30, marginLeft: '0%' }}>
           <View style={{ width: '80%' }}>
             <Text style={{ fontSize: 15, fontFamily: 'Lato_400Regular', color: colors.text }}>Theme</Text>
           </View>
-          <Switch
-            width= {57}
+          {/* <Switch
+            width={57}
             height={30}
             circleColorInactive='#f1f1f1'
-            backgroundInactive= {colors.background}
-            value = {darkMode}
+            backgroundInactive={colors.background}
+            value={darkMode}
             style={{
               borderColor: colors.text,
               borderWidth: 0.5,
@@ -155,11 +166,11 @@ function Content2 () {
               borderWidth: 0.5,
               borderColor: '#000'
             }}
-            onSyncPress = {(val) => {
+            onSyncPress={(val) => {
               setDarkMode(val)
               EventRegister.emit('themeListener', val)
             }}
-          />
+          /> */}
         </View>
         <View style={[styles.settingsOptions3, { marginRight: -24 }]}>
           <View style={styles.settingsOptions2}>
@@ -173,7 +184,7 @@ function Content2 () {
           </Image>
         </View>
         <View style={{ marginTop: 40, flexDirection: 'row', width: '100%', height: 60, marginLeft: '0%', justifyContent: 'center' }}>
-          <TouchableHighlight style={styles.ButtonAddStock} onPress={() => console.log('button tapped')} underlayColor= '#fff'>
+          <TouchableHighlight style={styles.ButtonAddStock} onPress={() => console.log('button tapped')} underlayColor='#fff'>
             <Text style={styles.ButtonAddStockText}>Share with friends</Text>
           </TouchableHighlight>
         </View>
@@ -187,8 +198,9 @@ function settings () {
   const { colors } = useTheme()
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
-    {renderHeader(navigation)}
-    {Content2()}
+      {renderHeader(navigation)}
+      {Content2()}
+      <Text style={{ color: colors.text, opacity: 0.7, fontFamily: 'Lato_400Regular', fontSize: 10 }}>{'Build v' + Constants.nativeBuildVersion}</Text>
     </SafeAreaView>
   )
 }

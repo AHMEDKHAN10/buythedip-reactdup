@@ -8,6 +8,7 @@ import SetAlert from '../screens/SetAlert'
 import Settings from '../screens/settings'
 import StockScreen from '../screens/stockScreenBluePrint'
 import AddStock from '../screens/AddStock'
+import AddStockScreen from '../screens/AddStockScreen'
 import firebaseuser from '../firebase/firebaseconfig'
 import configg from '../../config'
 import { faClosedCaptioning } from '@fortawesome/free-solid-svg-icons'
@@ -78,12 +79,13 @@ export default function Routes () {
   const appTheme = darkApp ? MyDarkTheme : MyTheme
   return (
     <NavigationContainer theme={appTheme}>
-      <Stack.Navigator initialRouteName={ route ? 'Home' : 'FirstScreen' } screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={route ? 'Home' : 'FirstScreen'} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
+        <Stack.Screen name="AddStockScreen" component={AddStockScreen} />
         <Stack.Screen name="AddStock" component={AddStock} />
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="SetAlert" component= { SetAlert } />
-        <Stack.Screen name="Settings" component= { Settings } />
+        <Stack.Screen name="SetAlert" component={SetAlert} />
+        <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="StockScreenBluePrint" component={StockScreen} />
       </Stack.Navigator>
     </NavigationContainer>
