@@ -12,5 +12,7 @@ export default function App () {
     return () => clearTimeout(handle)
   }, [])
 
-  return loading ? <SplashScreen /> : <Routes />
+  return (
+    loading ? <SplashScreen /> : <Routes />
+  )
 }

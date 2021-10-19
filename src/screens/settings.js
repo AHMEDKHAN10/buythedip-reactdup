@@ -22,7 +22,7 @@ import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-go
 import davidPic from '../../assets/david.png'
 import Constants from 'expo-constants'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import Swipeable from 'react-native-gesture-handler/Swipeable'
+// import Swipeable from 'react-native-gesture-handler/Swipeable'
 
 function renderHeader (navigation) {
   const { colors } = useTheme()

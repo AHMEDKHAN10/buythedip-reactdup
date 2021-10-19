@@ -13,6 +13,7 @@ import firebaseuser from '../firebase/firebaseconfig'
 import configg from '../../config'
 import { faClosedCaptioning } from '@fortawesome/free-solid-svg-icons'
 import { EventRegister } from 'react-native-event-listeners'
+// import ContextProvider from '../context/context'
 
 const Stack = createStackNavigator()
 
@@ -78,6 +79,7 @@ export default function Routes () {
   const [darkApp, setDarkApp] = useState(false)
   const appTheme = darkApp ? MyDarkTheme : MyTheme
   return (
+    // <ContextProvider>
     <NavigationContainer theme={appTheme}>
       <Stack.Navigator initialRouteName={route ? 'Home' : 'FirstScreen'} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
@@ -89,6 +91,7 @@ export default function Routes () {
         <Stack.Screen name="StockScreenBluePrint" component={StockScreen} />
       </Stack.Navigator>
     </NavigationContainer>
+    // </ContextProvider>
   )
 }
 // options={{ headerLeft: null}}

@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useContext } from 'react'
 import { useNavigation, useTheme } from '@react-navigation/native'
 import config from '../../config'
 import {
@@ -29,6 +29,8 @@ import LottieView from 'lottie-react-native'
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 import AppLoading from 'expo-app-loading'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+// import { Context } from '../context/context'
+// import { Context } from '../context/context'
 const backButton = require('../../assets/backButton.png')
 const backButtonDark = require('../../assets/backButtonDark.png')
 // eslint-disable-next-line react/prop-types
@@ -54,12 +56,15 @@ function SetAlert({ route }) {
   const [textInput, setTextInput] = useState('')
   const { colors } = useTheme()
 
+  // eslint-disable-next-line no-unused-vars
+  // const [isSubscribed, setIsSubscribed] = useContext(Context)
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })
 
   useEffect(() => {
-    console.log('isEnabled: ' + isEnabled)
+    console.log('isEnabledd: ' + isEnabled)
+    console.log('isSubscribed: ' + 'isSubscribed')
     console.log(price)
     setTextInput(String(Math.round(price - (price * 0.1))))
     registerForPushNotificationsAsync().then((token) => {

@@ -10,7 +10,8 @@ const storeToken = async (expoPushToken) => {
   const userid = await firebaseuser()
   const request = JSON.stringify({
     pushToken: expoPushToken,
-    userid: userid
+    userid: userid,
+    isSubscribed: false
   })
   const options = {
     method: 'POST',
