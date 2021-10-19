@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight, Platform, ScrollView } from 'react-native'
+import React, { useState, useEffect, useContext } from 'react'
+import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight, Platform, ScrollView, Image } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation, useIsFocused, useTheme } from '@react-navigation/native'
 import firebaseuser from '../firebase/firebaseconfig'
@@ -11,6 +11,9 @@ import * as Animatable from 'react-native-animatable'
 import { EventRegister } from 'react-native-event-listeners'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black } from '@expo-google-fonts/lato'
+import { Context } from '../context/context'
+const premium = require('../../assets/premium.png')
+const lock = require('../../assets/lock.png')
 
 function renderHeader (navigation) {
   const { colors } = useTheme()
@@ -46,7 +49,7 @@ function renderHeader (navigation) {
   }
 }
 
-function StockList (navigation, stockDetails, loading, slideUp) {
+function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
   // const { navigation, stockDetails, loading } = props
   const { colors } = useTheme()
   const [fontsLoaded] = useFonts({
@@ -154,6 +157,56 @@ function StockList (navigation, stockDetails, loading, slideUp) {
         </View>
     )
   }
+  const StockSectlocked = ({ card, index }) => {
+    return (
+      // flex: 2, height: 80
+      slideUp
+        ? <Animatable.View animation='slideInUp' style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
+          <TouchableOpacity
+            style={styles.diplistSect}
+          >
+            <View style={{ width: '80%' }}>
+              <Image
+                source={ premium }
+                width= {26}
+                height = {16}
+                style={{ paddingLeft: 34, height: 16, width: 26 }}
+              />
+              <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 1, opacity: 0.7 }]}>
+                Restore with paid plan
+              </Text>
+            </View>
+            <View style={{ width: '20%' }}>
+              <Image
+                source = { lock }
+                style={{ marginLeft: 24, height: '50%', width: 24 }}
+              />
+            </View>
+          </TouchableOpacity>
+        </Animatable.View>
+        : <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
+          <TouchableOpacity
+            style={styles.diplistSect}
+          >
+            <View style={{ width: '80%' }}>
+            <Image
+                source={ premium }
+                style={{ paddingLeft: 34, height: 20, width: '30%', borderRadius: 4 }}
+              />
+              <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 0.5, opacity: 0.7 }]}>
+                Restore with paid plan
+              </Text>
+            </View>
+            <View style={{ width: '20%' }}>
+              <Image
+                source = { lock }
+                style={{ marginLeft: 24, height: '50%', width: 24 }}
+              />
+            </View>
+          </TouchableOpacity>
+        </View>
+    )
+  }
   if (!fontsLoaded) {
     return <AppLoading />
   } else {
@@ -201,7 +254,11 @@ function StockList (navigation, stockDetails, loading, slideUp) {
             </SkeletonPlaceholder>
             : (stockDetails.length > 0
                 ? stockDetails.map((item, index) => (
-                <StockSect card={item} index={index} key={index} />
+                  isSubscribed
+                    ? index === 0
+                      ? <StockSect card={item} index={index} key={index} />
+                      : <StockSectlocked card={item} index={index} key={index} />
+                    : <StockSectlocked card={item} index={index} key={index} />
                 ))
                 : <View>
                 <TouchableOpacity
@@ -376,6 +433,7 @@ function Home () {
   const [stockDetails, setStockDetails] = useState([])
   const [loading, setloading] = useState(true)
   const [slideUp, setSlideUp] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useContext(Context)
   const isFocused = useIsFocused()
   const { colors } = useTheme()
   async function fetchData () {
@@ -406,7 +464,6 @@ function Home () {
           })
         }
       }
-      // console.log('length: ' + stocksArray.length)
       setStockDetails(stocksArray)
       if (loading) {
         setloading(false)
@@ -416,9 +473,6 @@ function Home () {
       }
       console.log('uid: ' + userid)
     } catch (error) {
-      // const errorCode = error.code
-      // const errorMessage = error.message
-      // console.log(errorCode + ': ' + errorMessage)
       console.error(error)
     }
   }
@@ -442,7 +496,7 @@ function Home () {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       {renderHeader(navigation)}
       <ScrollView>
-        {StockList(navigation, stockDetails, loading, slideUp)}
+        {StockList(navigation, stockDetails, loading, slideUp, isSubscribed)}
         {StockMarketsSect(loading, slideUp)}
       </ScrollView>
       {/* shadowOpacity: 1, shadowRadius: 4.65, */}

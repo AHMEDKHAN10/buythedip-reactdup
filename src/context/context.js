@@ -1,9 +1,9 @@
 import React, { useState, createContext } from 'react'
 
-export const Context = createContext()
+const Context = createContext()
 
-export const stateProvider = (props) => {
-  const [isSubscribed, setisSubscribed] = useState(false)
+const stateProvider = (props) => {
+  const [isSubscribed, setisSubscribed] = useState('false')
 
   return (
     <Context.Provider value = {[isSubscribed, setisSubscribed]}>
@@ -11,3 +11,6 @@ export const stateProvider = (props) => {
     </Context.Provider>
   )
 }
+
+export default stateProvider
+export { Context }

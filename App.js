@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Routes from './src/routes'
 import SplashScreen from './src/screens/SplashScreen'
 import 'react-native-gesture-handler'
+import StateProvider from './src/context/context'
 
 export default function App () {
   const [loading, setLoading] = useState(true)
@@ -13,6 +14,8 @@ export default function App () {
   }, [])
 
   return (
-    loading ? <SplashScreen /> : <Routes />
+    <StateProvider>
+      { loading ? <SplashScreen /> : <Routes /> }
+    </StateProvider>
   )
 }
