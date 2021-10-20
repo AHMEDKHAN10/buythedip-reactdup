@@ -25,7 +25,7 @@ import LottieView from 'lottie-react-native'
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
 import AppLoading from 'expo-app-loading'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Context } from '../context/context'
+// import { Context } from '../context/context'
 const backButton = require('../../assets/backButton.png')
 const backButtonDark = require('../../assets/backButtonDark.png')
 
@@ -46,7 +46,7 @@ function SetAlert ({ route }) {
   const { width } = Dimensions.get('window')
   const { colors } = useTheme()
 
-  const [isSubscribed, setIsSubscribed] = useContext(Context)
+  // const [isSubscribed, setIsSubscribed] = useContext(Context)
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })

@@ -187,7 +187,7 @@ function stockScreenBluePrint ({ route }) {
           }>
           <Image
             source = { colors.background === '#000000' ? backButtonDark : backButton}
-            style={{ paddingLeft: 34, height: 16, width: 16, color: '#fffff' }}
+            style={{ paddingLeft: 34, height: 16, width: 16 }}
           />
           </TouchableOpacity>
           </View>

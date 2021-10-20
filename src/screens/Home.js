@@ -1,6 +1,17 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useContext } from 'react'
-import { StyleSheet, SafeAreaView, View, Text, Dimensions, TouchableOpacity, TouchableHighlight, Platform, ScrollView, Image } from 'react-native'
+import {
+  StyleSheet,
+  SafeAreaView,
+  View, Text,
+  Dimensions,
+  TouchableOpacity,
+  TouchableHighlight,
+  Platform,
+  ScrollView,
+  Image,
+  RefreshControl
+} from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation, useIsFocused, useTheme } from '@react-navigation/native'
 import firebaseuser from '../firebase/firebaseconfig'
@@ -168,9 +179,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
             <View style={{ width: '80%' }}>
               <Image
                 source={ premium }
-                width= {26}
-                height = {16}
-                style={{ paddingLeft: 34, height: 16, width: 26 }}
+                style={{ paddingLeft: 34, height: 20, width: '30%', borderRadius: 4 }}
               />
               <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 1, opacity: 0.7 }]}>
                 Restore with paid plan
@@ -179,7 +188,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
             <View style={{ width: '20%' }}>
               <Image
                 source = { lock }
-                style={{ marginLeft: 24, height: '50%', width: 24 }}
+                style={{ marginLeft: 29, height: '50%', width: 24 }}
               />
             </View>
           </TouchableOpacity>
@@ -189,7 +198,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
             style={styles.diplistSect}
           >
             <View style={{ width: '80%' }}>
-            <Image
+              <Image
                 source={ premium }
                 style={{ paddingLeft: 34, height: 20, width: '30%', borderRadius: 4 }}
               />
@@ -200,7 +209,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
             <View style={{ width: '20%' }}>
               <Image
                 source = { lock }
-                style={{ marginLeft: 24, height: '50%', width: 24 }}
+                style={{ marginLeft: 29, height: '50%', width: 24 }}
               />
             </View>
           </TouchableOpacity>
@@ -213,16 +222,15 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
     return (
       // flex:10, flex: 4, height: 300
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
-        <View style={{ width: '100%', height: 50, marginTop: 30, marginLeft: '5%', alignItems: 'left' }}>
-          <Text style={{ fontSize: 24 }}>
-            <Text style={{ fontFamily: 'Lato_900Black', letterSpacing: 0.5, color: colors.text }}>DIP</Text>
-            <Text style={{ fontFamily: 'Lato_700Bold', letterSpacing: 0.5, color: colors.text }}>LIST</Text>
-          </Text>
-        </View>
         <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>
           {/* <ScrollView style={{ flex: 1, width: '100%', marginLeft: '5%' }}> */}
           {loading
             ? <SkeletonPlaceholder backgroundColor='#E1E9EE' highlightColor='#F2F8FC' speed={800} >
+              <View style={{ width: '90%', height: 80 }}>
+                <View style={{ width: '100%' }}>
+                  <View style={{ width: '40%', height: 40, borderRadius: 5 }} />
+                </View>
+              </View>
               <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
                 <View style={{ width: '80%' }}>
                   <View style={{ width: 50, height: 20, borderRadius: 5 }} />
@@ -252,13 +260,20 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
                 <View style={{ width: 75, height: 35, borderRadius: 8 }} />
               </View>
             </SkeletonPlaceholder>
-            : (stockDetails.length > 0
+            : <View>
+                <View style={{ width: '100%', height: 50, marginTop: 30, alignItems: 'left' }}>
+                  <Text style={{ fontSize: 24 }}>
+                    <Text style={{ fontFamily: 'Lato_900Black', letterSpacing: 0.5, color: colors.text }}>DIP</Text>
+                    <Text style={{ fontFamily: 'Lato_700Bold', letterSpacing: 0.5, color: colors.text }}>LIST</Text>
+                  </Text>
+                </View>
+              {(stockDetails.length > 0
                 ? stockDetails.map((item, index) => (
-                  isSubscribed
+                  isSubscribed === false
                     ? index === 0
                       ? <StockSect card={item} index={index} key={index} />
                       : <StockSectlocked card={item} index={index} key={index} />
-                    : <StockSectlocked card={item} index={index} key={index} />
+                    : <StockSect card={item} index={index} key={index} />
                 ))
                 : <View>
                 <TouchableOpacity
@@ -287,7 +302,8 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
                   </TouchableHighlight>
                 </TouchableOpacity>
               </View>
-              )
+              )}
+              </View>
           }
         </View>
       </View>
@@ -306,19 +322,18 @@ function StockMarketsSect (loading, slideUp) {
   } else {
     return (
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
-        <View style={{ width: '100%', height: 50, marginTop: 50, marginLeft: '5%', alignItems: 'left' }}>
-          <Text style={{ fontSize: 24 }}>
-            <Text style={{ fontFamily: 'Lato_700Bold', color: colors.text, fontSize: 24 }}>MARKETS</Text>
-          </Text>
-          <Text style={{ fontSize: 13, marginTop: 5 }}>
-            <Text style={{ fontFamily: 'Lato_400Regular', color: colors.text, lineHeight: 20, letterSpacing: 1 }}>Market indices constist of companies that represent a particular segment of the economy.</Text>
-          </Text>
-        </View>
         <View style={{ flex: 1, width: '100%', marginLeft: '0%', height: 'auto', marginTop: 30 }}>
           {loading
             ? <View style={{ marginLeft: '5%' }}>
               <SkeletonPlaceholder backgroundColor='#E1E9EE' highlightColor='#F2F8FC' speed={800}>
-                <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
+                <View style={{ width: '90%', height: 80 }}>
+                  <View style={{ width: '100%' }}>
+                    <View style={{ width: '40%', height: 40, borderRadius: 5 }} />
+                    <View style={{ width: '100%', height: 25, marginTop: 10, borderRadius: 5 }} />
+                    <View style={{ width: '100%', height: 25, marginTop: 5, borderRadius: 5 }} />
+                  </View>
+                </View>
+                <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, marginTop: 50, flexDirection: 'row' }}>
                   <View style={{ width: '80%' }}>
                     <View style={{ width: 50, height: 20, borderRadius: 5 }} />
                     <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
@@ -344,7 +359,15 @@ function StockMarketsSect (loading, slideUp) {
             : slideUp
               ? <Animatable.View animation='slideInUp'>
                 <View style={{ marginTop: 10 }} >
-                  <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
+                  <View style={{ width: '100%', height: 50, marginLeft: '5%', alignItems: 'left' }}>
+                    <Text style={{ fontSize: 24 }}>
+                      <Text style={{ fontFamily: 'Lato_700Bold', color: colors.text, fontSize: 24 }}>MARKETS</Text>
+                    </Text>
+                    <Text style={{ fontSize: 13, marginTop: 5 }}>
+                      <Text style={{ fontFamily: 'Lato_400Regular', color: colors.text, lineHeight: 20, letterSpacing: 1 }}>Market indices constist of companies that represent a particular segment of the economy.</Text>
+                    </Text>
+                  </View>
+                  <View style={{ marginTop: 50, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
                     <View style={{ width: '50%' }}>
                       <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>DJIA</Text>
                       <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 29,891</Text>
@@ -374,7 +397,15 @@ function StockMarketsSect (loading, slideUp) {
                 </View>
               </Animatable.View>
               : <View style={{ marginTop: 10 }} >
-                <View style={{ marginTop: 10, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
+                <View style={{ width: '100%', height: 50, marginLeft: '5%', alignItems: 'left' }}>
+                  <Text style={{ fontSize: 24 }}>
+                    <Text style={{ fontFamily: 'Lato_700Bold', color: colors.text, fontSize: 24 }}>MARKETS</Text>
+                  </Text>
+                  <Text style={{ fontSize: 13, marginTop: 5 }}>
+                    <Text style={{ fontFamily: 'Lato_400Regular', color: colors.text, lineHeight: 20, letterSpacing: 1 }}>Market indices constist of companies that represent a particular segment of the economy.</Text>
+                  </Text>
+                </View>
+                <View style={{ marginTop: 50, flexDirection: 'row', width: '100%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
                   <View style={{ width: '50%' }}>
                     <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>DJIA</Text>
                     <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 29,891</Text>
@@ -428,14 +459,29 @@ function AddAtockBtn (navigation) {
   }
 }
 
-// eslint-disable-next-line react/prop-types
+const wait = timeout => {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout)
+  })
+}
+
 function Home () {
   const [stockDetails, setStockDetails] = useState([])
   const [loading, setloading] = useState(true)
   const [slideUp, setSlideUp] = useState(false)
-  const [isSubscribed, setIsSubscribed] = useContext(Context)
+  const [refreshing, setRefreshing] = useState(false)
+
+  const [isSubscribed, setisSubscribed] = useContext(Context)
+
   const isFocused = useIsFocused()
   const { colors } = useTheme()
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    fetchData()
+    getSubscribed()
+    wait(2000).then(() => setRefreshing(false))
+  }, [])
   async function fetchData () {
     const userid = await firebaseuser()
     const request = JSON.stringify({
@@ -476,12 +522,30 @@ function Home () {
       console.error(error)
     }
   }
-
+  const getSubscribed = async () => {
+    const userid = await firebaseuser()
+    const request = JSON.stringify({
+      userid: userid
+    })
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: request
+    }
+    const response = await fetch(config.API_URL + 'GetPushToken', options)
+    const json = await response.json()
+    console.log('json.isSubscribed: ' + json.isSubscribed)
+    setisSubscribed(json.isSubscribed)
+  }
   useEffect(() => {
     fetchData()
+    getSubscribed()
     const today = new Date()
     const time = today.getHours() + ':' + today.getMinutes()
-    console.log('time: ' + time)
+    console.log('isSubscribed: ' + isSubscribed)
     if (time >= '18:25' && time <= '6:55') {
       // setDarkMode(true)
       EventRegister.emit('themeListener', true)
@@ -489,13 +553,16 @@ function Home () {
       // setDarkMode(false)
       EventRegister.emit('themeListener', false)
     }
-  }, [isFocused])
+  }, [isFocused, isSubscribed])
 
   const navigation = useNavigation()
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       {renderHeader(navigation)}
-      <ScrollView>
+      <ScrollView
+        // contentContainerStyle={styles.scrollView}
+        refreshControl={<RefreshControl tintColor = {colors.text} refreshing={refreshing} onRefresh={onRefresh} />}
+      >
         {StockList(navigation, stockDetails, loading, slideUp, isSubscribed)}
         {StockMarketsSect(loading, slideUp)}
       </ScrollView>
