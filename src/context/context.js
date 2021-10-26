@@ -3,9 +3,10 @@ const Context = createContext()
 
 const stateProvider = (props) => {
   const [isSubscribed, setisSubscribed] = useState(false)
+  const [isNewlyAdded, setIsNewlyAdded] = useState(false)
 
   return (
-    <Context.Provider value = {[isSubscribed, setisSubscribed]}>
+    <Context.Provider value = {{ isSubscribed, setisSubscribed, isNewlyAdded, setIsNewlyAdded }}>
       {props.children}
     </Context.Provider>
   )

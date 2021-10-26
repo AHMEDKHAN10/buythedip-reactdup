@@ -10,7 +10,8 @@ import {
   Platform,
   ScrollView,
   Image,
-  RefreshControl
+  RefreshControl,
+  Button
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation, useIsFocused, useTheme } from '@react-navigation/native'
@@ -20,9 +21,11 @@ import AppLoading from 'expo-app-loading'
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import * as Animatable from 'react-native-animatable'
 import { EventRegister } from 'react-native-event-listeners'
+import LottieView from 'lottie-react-native'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black } from '@expo-google-fonts/lato'
 import { Context } from '../context/context'
+const { width } = Dimensions.get('window')
 const premium = require('../../assets/premium.png')
 const lock = require('../../assets/lock.png')
 
@@ -62,11 +65,14 @@ function renderHeader (navigation) {
 
 function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
   // const { navigation, stockDetails, loading } = props
+  const { isNewlyAdded, setIsNewlyAdded } = useContext(Context)
   const { colors } = useTheme()
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black
   })
-  // console.log(loading)
+  useEffect(() => {
+    setIsNewlyAdded(false)
+  }, [])
   // eslint-disable-next-line react/prop-types
   const StockSect = ({ card, index }) => {
     return (
@@ -266,6 +272,18 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
                     <Text style={{ fontFamily: 'Lato_900Black', letterSpacing: 0.5, color: colors.text }}>DIP</Text>
                     <Text style={{ fontFamily: 'Lato_700Bold', letterSpacing: 0.5, color: colors.text }}>LIST</Text>
                   </Text>
+                {isNewlyAdded
+                  ? <LottieView
+                      autoPlay
+                      loop = {false}
+                      style={{
+                        width: width,
+                        height: width * 1.8
+                      }}
+                      source={require('../../assets/lottie_assets/mobile_final_v2.json')}
+                    />
+                  : null
+                }
                 </View>
               {(stockDetails.length > 0
                 ? stockDetails.map((item, index) => (
@@ -470,8 +488,10 @@ function Home () {
   const [loading, setloading] = useState(true)
   const [slideUp, setSlideUp] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
+  const [modal, setModal] = useState(true)
+  const { width } = Dimensions.get('window')
 
-  const [isSubscribed, setisSubscribed] = useContext(Context)
+  const { isSubscribed, setisSubscribed } = useContext(Context)
 
   const isFocused = useIsFocused()
   const { colors } = useTheme()
@@ -545,7 +565,7 @@ function Home () {
     getSubscribed()
     const today = new Date()
     const time = today.getHours() + ':' + today.getMinutes()
-    console.log('isSubscribed: ' + isSubscribed)
+    // console.log('isSubscribed: ' + isSubscribed)
     if (time >= '18:25' && time <= '6:55') {
       // setDarkMode(true)
       EventRegister.emit('themeListener', true)
@@ -560,7 +580,6 @@ function Home () {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       {renderHeader(navigation)}
       <ScrollView
-        // contentContainerStyle={styles.scrollView}
         refreshControl={<RefreshControl tintColor = {colors.text} refreshing={refreshing} onRefresh={onRefresh} />}
       >
         {StockList(navigation, stockDetails, loading, slideUp, isSubscribed)}
