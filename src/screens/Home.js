@@ -30,6 +30,7 @@ import { Context } from '../context/context'
 const { width, height } = Dimensions.get('window')
 const premium = require('../../assets/premium.png')
 const lock = require('../../assets/lock.png')
+const lockForDark = require('../../assets/lockforDark.png')
 
 function renderHeader (navigation) {
   const { colors } = useTheme()
@@ -198,7 +199,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
             </View>
             <View style={{ width: '20%' }}>
               <Image
-                source = { lock }
+                source = { colors.background === '#000000' ? lockForDark : lock }
                 style={{ marginLeft: 29, height: '50%', width: 24 }}
               />
             </View>
@@ -219,7 +220,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
             </View>
             <View style={{ width: '20%' }}>
               <Image
-                source = { lock }
+                source = { colors.background === '#000000' ? lockForDark : lock }
                 style={{ marginLeft: 29, height: '50%', width: 24 }}
               />
             </View>
