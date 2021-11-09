@@ -10,9 +10,10 @@ import {
   Platform,
   ScrollView,
   Image,
-  RefreshControl,
-  Button
+  RefreshControl
+  // Button
 } from 'react-native'
+import { Button, Modal } from 'react-native-paper'
 import { Ionicons } from '@expo/vector-icons'
 import { useNavigation, useIsFocused, useTheme } from '@react-navigation/native'
 import firebaseuser from '../firebase/firebaseconfig'
@@ -22,10 +23,11 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder'
 import * as Animatable from 'react-native-animatable'
 import { EventRegister } from 'react-native-event-listeners'
 import LottieView from 'lottie-react-native'
+import registerForPushNotificationsAsync from '../services/pushNotification'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black } from '@expo-google-fonts/lato'
 import { Context } from '../context/context'
-const { width } = Dimensions.get('window')
+const { width, height } = Dimensions.get('window')
 const premium = require('../../assets/premium.png')
 const lock = require('../../assets/lock.png')
 
@@ -49,14 +51,17 @@ function renderHeader (navigation) {
         marginTop: (Platform.OS === 'ios') ? 0 : 35
       }}>
         <Ionicons
-          name='settings-outline' size={24} color={colors.text} style={{ paddingTop: 10, paddingLeft: 15, width: '40%' }}
+          name='settings-outline' size={24} color={colors.text} style={{ paddingTop: 10, paddingLeft: 15, width: '20%' }}
           onPress={() => {
             navigation.navigate('Settings')
           }}
         />
-        <Text style={{ padding: 10, textAlign: 'left', width: '60%', fontSize: 23 }}>
+        <Text style={{ padding: 10, textAlign: 'center', width: '60%', fontSize: 23 }}>
           <Text style={{ fontFamily: 'Lato_700Bold', color: colors.text }}>DIP</Text>
           <Text style={{ fontWeight: '400', fontFamily: 'Lato_400Regular', color: colors.text }}>LIST</Text>
+        </Text>
+        <Text style={{ marginTop: 13, padding: 5, textAlign: 'left', width: '20%', fontSize: 14, fontFamily: 'Lato_700Bold', color: colors.text }}>
+          Share
         </Text>
       </View>
     )
@@ -458,20 +463,90 @@ function StockMarketsSect (loading, slideUp) {
   }
 }
 // flex: 1, height: 50
-function AddAtockBtn (navigation) {
+function AddAtockBtn (navigation, isSubscribed, setisSubscribed, stockDetails) {
   const { colors } = useTheme()
+  const [modal, setModal] = useState(false)
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })
+  const onAddStockBtnClick = () => {
+    if (isSubscribed) {
+      navigation.navigate('AddStock')
+      setModal(false)
+    } else {
+      if (stockDetails.length > 0) {
+        setModal(true)
+      } else {
+        navigation.navigate('AddStock')
+        setModal(false)
+      }
+    }
+  }
   if (!fontsLoaded) {
     return <AppLoading />
   } else {
     // colors.text
     return (
       <View style={{ width: (Dimensions.get('window').width), height: 'auto', alignContent: 'center', alignItems: 'center', marginTop: 40 }}>
-        <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={() => navigation.navigate('AddStock')} underlayColor='#000000'>
+        <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={onAddStockBtnClick} underlayColor='#000000'>
           <Text style={[styles.ButtonAddStockText, { color: colors.border, fontFamily: 'Lato_700Bold', lineHeight: 24, letterSpacing: 1 }]}>Add Stock</Text>
         </TouchableHighlight>
+        <Modal
+          visible={modal}
+          contentContainerStyle={{ position: 'absolute' }}
+          onDismiss={() => setModal(false)}
+        >
+          <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', height: height * 2 }}>
+          <View style={{ paddingBottom: 20, backgroundColor: colors.card, borderRadius: 50, height: 370, bottom: '-30%' }}>
+            <LottieView
+              style={{ height: width, width: width, marginTop: -80, marginBottom: -220 }}
+              source={require('../../assets/lottie_assets/padlock.json')}
+              autoPlay
+            />
+            <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center', fontFamily: 'Lato_700Bold', letterSpacing: 2, color: colors.text }} > Unlock your limits</Text>
+            <Text style={{ fontSize: 14, textAlign: 'left', paddingLeft: 24, paddingRight: 24, fontFamily: 'Lato_400Regular', marginTop: 20, letterSpacing: 1, color: colors.text, lineHeight: 26 }} >Rest easy knowing you’ll never miss a buying opportunity during a dip. Like last time...</Text>
+
+            <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 30, borderWidth: 1, borderColor: '#FFB801', alignSelf: 'center', backgroundColor: '#FFB801' }}
+              labelStyle={{ fontWeight: 'bold', color: '#000000', fontFamily: 'Lato_700Bold' }}
+              uppercase = {false}
+              onPress={async () => {
+                const userid = await firebaseuser()
+                const token = registerForPushNotificationsAsync()
+                setisSubscribed(true)
+                const request = JSON.stringify({
+                  pushToken: token,
+                  userid: userid,
+                  isSubscribed: true
+                })
+                const options = {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                  },
+                  body: request
+                }
+                await fetch(config.API_URL + 'StorePushToken', options)
+                navigation.navigate('AddStock')
+                setModal(false)
+              }}
+            >
+              $9.99 Monthly
+            </Button>
+            <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 10, alignSelf: 'center' }}
+              labelStyle={{ color: colors.text }}
+              uppercase = {false}
+              onPress={async () => {
+                setisSubscribed(false)
+                setModal(false)
+              }}
+            >
+              Maybe Later
+            </Button>
+            <Text style={{ fontSize: 8, textAlign: 'left', paddingLeft: 24, paddingRight: 24, marginTop: -2, letterSpacing: 0.5, color: colors.text }}>Your iTunes Account will be charged at confirmation of purchase. Subscription will be auto-renewed. Your account will be charged $2.99 US dollars for renewall within 24-hours before current period ends. You can manage subscription & turn-off in Account Settings.</Text>
+          </View>
+          </View>
+        </Modal>
       </View>
     )
   }
@@ -488,8 +563,8 @@ function Home () {
   const [loading, setloading] = useState(true)
   const [slideUp, setSlideUp] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
-  const [modal, setModal] = useState(true)
-  const { width } = Dimensions.get('window')
+  // const [modal, setModal] = useState(true)
+  // const { width } = Dimensions.get('window')
 
   const { isSubscribed, setisSubscribed } = useContext(Context)
 
@@ -557,7 +632,6 @@ function Home () {
     }
     const response = await fetch(config.API_URL + 'GetPushToken', options)
     const json = await response.json()
-    console.log('json.isSubscribed: ' + json.isSubscribed)
     setisSubscribed(json.isSubscribed)
   }
   useEffect(() => {
@@ -587,7 +661,7 @@ function Home () {
       </ScrollView>
       {/* shadowOpacity: 1, shadowRadius: 4.65, */}
       <View style={{ marginTop: 10, borderTopWidth: 0.25, borderTopColor: '#e2e3e4', backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
-        {AddAtockBtn(navigation)}
+        {AddAtockBtn(navigation, isSubscribed, setisSubscribed, stockDetails)}
       </View>
     </SafeAreaView>
   )

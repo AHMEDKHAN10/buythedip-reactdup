@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import Constants from 'expo-constants'
 import * as Notifications from 'expo-notifications'
 import {
@@ -5,13 +6,15 @@ import {
 } from 'react-native'
 import config from '../../config'
 import firebaseuser from '../firebase/firebaseconfig'
+import { Context } from '../context/context'
 
 const storeToken = async (expoPushToken) => {
+  const { isSubscribed } = useContext(Context)
   const userid = await firebaseuser()
   const request = JSON.stringify({
     pushToken: expoPushToken,
     userid: userid,
-    isSubscribed: false
+    isSubscribed: isSubscribed
   })
   const options = {
     method: 'POST',
