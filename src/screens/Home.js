@@ -14,6 +14,7 @@ import {
   FlatList
   // Button
 } from 'react-native'
+import Share from 'react-native-share'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import { Button, Modal } from 'react-native-paper'
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons'
@@ -71,7 +72,7 @@ function renderHeader (navigation) {
   }
 }
 
-function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
+function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, onRefresh) {
   // const { navigation, stockDetails, loading } = props
   const { isNewlyAdded, setIsNewlyAdded } = useContext(Context)
   const { colors } = useTheme()
@@ -233,9 +234,20 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
     )
   }
 
+  const myCustomShare = async () => {
+    const shareOptions = {
+      message: 'share text'
+    }
+    try {
+      const shareResponse = await Share.open(shareOptions)
+    } catch (e) {
+      console.log(e)
+    }
+  }
   const shareRow = (rowMap, rowName, rowKey) => {
     if (rowMap[rowKey]) {
       // console.log('shshshsh: ' + rowName)
+      myCustomShare()
       closeRow(rowMap, rowKey)
     }
   }
@@ -245,10 +257,6 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
       rowMap[rowKey].closeRow()
     }
   }
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true)
-    wait(2000).then(() => setRefreshing(false))
-  }, [])
   const deleteRow = async (rowMap, rowName, rowKey) => {
     console.log('rowName: ' + rowName)
     const userid = await firebaseuser()
@@ -271,6 +279,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
       const json = await response.json()
       console.log(json)
       onRefresh()
+      closeRow(rowMap, rowKey)
       navigation.navigate('Home')
     } catch (e) {
       console.error(e)
@@ -280,46 +289,44 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
   const VisibleItem = props => {
     const { data } = props
     return (
-      isSubscribed === false && data.item.key === 0
-        ? <View style={[styles.rowFront, { backgroundColor: colors.background }]}>
-            <TouchableHighlight style={styles.diplistSect}>
-              <View style = {{ flexDirection: 'row' }}>
-                <View style={{ width: '76%', alignSelf: 'center' }}>
-                  <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]} numberOfLines={1}>
-                    {data.item.stockname}
-                  </Text>
-                  <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 1, opacity: 0.7 }]} numberOfLines={1}>
-                    Last closed ${
-                      (data.item.stockpricewhenuseraddedit)
-                    }
-                  </Text>
-                </View>
-                <View style={{ alignSelf: 'center' }}>
-                  <TouchableHighlight
-                    style={[styles.Button, { backgroundColor: data.item.triggerPrice > data.item.stockpricewhenuseraddedit ? '#5AC53A' : '#ec5d29' }]}
-                    underlayColor='#ffb38a'
-                    onPress={() => {
-                      navigation.navigate('StockScreenBluePrint', {
-                        // eslint-disable-next-line react/prop-types
-                        otherParam: data.item.stockname,
-                        // eslint-disable-next-line react/prop-types
-                        price: data.item.stockpricewhenuseraddedit,
-                        // eslint-disable-next-line react/prop-types
-                        trigger: data.item.triggerPrice
-                      })
-                    }}
-                  >
-                    <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular', fontSize: 14, letterSpacing: 1 }]}>$
-                      {
-                        data.item.triggerPrice
-                      }
-                    </Text>
-                  </TouchableHighlight>
-                </View>
-              </View>
-            </TouchableHighlight>
+      <View style={[styles.rowFront, { backgroundColor: colors.background }]}>
+        <TouchableHighlight style={styles.diplistSect}>
+          <View style = {{ flexDirection: 'row' }}>
+            <View style={{ width: '76%', alignSelf: 'center' }}>
+              <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]} numberOfLines={1}>
+                {data.item.stockname}
+              </Text>
+              <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 1, opacity: 0.7 }]} numberOfLines={1}>
+                Last closed ${
+                  (data.item.stockpricewhenuseraddedit)
+                }
+              </Text>
+            </View>
+            <View style={{ alignSelf: 'center' }}>
+              <TouchableHighlight
+                style={[styles.Button, { backgroundColor: data.item.triggerPrice > data.item.stockpricewhenuseraddedit ? '#5AC53A' : '#ec5d29' }]}
+                underlayColor='#ffb38a'
+                onPress={() => {
+                  navigation.navigate('StockScreenBluePrint', {
+                    // eslint-disable-next-line react/prop-types
+                    otherParam: data.item.stockname,
+                    // eslint-disable-next-line react/prop-types
+                    price: data.item.stockpricewhenuseraddedit,
+                    // eslint-disable-next-line react/prop-types
+                    trigger: data.item.triggerPrice
+                  })
+                }}
+              >
+                <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular', fontSize: 14, letterSpacing: 1 }]}>$
+                  {
+                    data.item.triggerPrice
+                  }
+                </Text>
+              </TouchableHighlight>
+            </View>
           </View>
-        : null
+        </TouchableHighlight>
+      </View>
     )
   }
   const renderItem = (data, rowMap) => {
@@ -362,6 +369,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
   if (!fontsLoaded) {
     return <AppLoading />
   } else {
+    // console.log('stockDetails[0]: ' +JSON.stringify( stockDetails[0]))
     return (
       // flex:10, flex: 4, height: 300
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
@@ -427,10 +435,9 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
                     ? stockDetails.map((item, index) => (
                       index === 0
                         ? <SwipeListView
-                            data = {stockDetails}
+                            data = {[stockDetails[0]]}
                             renderItem = {renderItem}
                             renderHiddenItem = {renderHiddenItem}
-                            // leftOpenValue = {75}
                             rightOpenValue = {-150}
                             disableRightSwipe
                           />
@@ -440,7 +447,6 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
                         data = {stockDetails}
                         renderItem = {renderItem}
                         renderHiddenItem = {renderHiddenItem}
-                        // leftOpenValue = {75}
                         rightOpenValue = {-150}
                         disableRightSwipe
                       />
@@ -841,116 +847,14 @@ function Home () {
 
   const navigation = useNavigation()
 
-  const shareRow = (rowMap, rowName, rowKey) => {
-    if (rowMap[rowKey]) {
-      console.log('shshshsh: ' + rowName)
-      closeRow(rowMap, rowKey)
-    }
-  }
-
-  const closeRow = (rowMap, rowKey) => {
-    if (rowMap[rowKey]) {
-      rowMap[rowKey].closeRow()
-    }
-  }
-
-  const deleteRow = async (rowMap, rowName, rowKey) => {
-    const userid = await firebaseuser()
-    const request = JSON.stringify({
-      userid: userid,
-      stockName: rowName
-    })
-    const options = {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: request
-    }
-    console.log(request)
-    try {
-      const response = await fetch(config.API_URL + 'delData', options)
-      console.log('deleting ..... ')
-      const json = await response.json()
-      console.log(json)
-      onRefresh()
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  const VisibleItem = props => {
-    const { data } = props
-    return (
-      <View style={styles.rowFront}>
-        <TouchableHighlight style={styles.rowFrontVisible}>
-          <View>
-            <Text style={styles.title} numberOfLines={1}>
-              {data.item.stockname}
-            </Text>
-            <Text style={styles.title} numberOfLines={1}>
-              {data.item.stockpricewhenuseraddedit}
-            </Text>
-          </View>
-        </TouchableHighlight>
-      </View>
-    )
-  }
-  const renderItem = (data, rowMap) => {
-    return (
-      <VisibleItem data= { data }/>
-    )
-  }
-
-  const HiddenItemWithActions = props => {
-    const { onShare, onDelete } = props
-    return (
-      <View style = {styles.rowBack}>
-        <Text>left</Text>
-        <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnLeft]} onPress = {onShare}>
-          <Feather
-            name='share' size={22} color = "#FFE6D1" style = {{ paddingLeft: '50%', width: '100%', marginBottom: 5 }}
-          />
-          <Text style = {{ color: '#FFE6D1', fontFamily: 'Lato_400Regular', fontSize: 14 }}>Share</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnRight]} onPress = {onDelete}>
-          <AntDesign
-            name='delete' size={24} color = "#FFE6D1" style = {{ paddingLeft: '45%', width: '100%', marginBottom: 5 }}
-          />
-          <Text style = {{ color: '#FFFFFF', fontFamily: 'Lato_400Regular', fontSize: 14 }} >Delete</Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
-  const renderHiddenItem = (data, rowMap) => {
-    return (
-      <HiddenItemWithActions
-        data = {data}
-        rowMap = {rowMap}
-        onShare = {() => shareRow(rowMap, data.item.stockname, data.item.key)}
-        onDelete = {() => deleteRow(rowMap, data.item.stockname, data.item.key)}
-
-      ></HiddenItemWithActions>
-    )
-  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       {renderHeader(navigation)}
       <ScrollView
         refreshControl={<RefreshControl tintColor = {colors.text} refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        {StockList(navigation, stockDetails, loading, slideUp, isSubscribed)}
+        {StockList(navigation, stockDetails, loading, slideUp, isSubscribed, onRefresh)}
         {StockMarketsSect(loading, slideUp)}
-        {/* <SwipeListView
-          data = {stockDetails}
-          renderItem = {renderItem}
-          renderHiddenItem = {renderHiddenItem}
-          leftOpenValue = {75}
-          rightOpenValue = {-150}
-          disableRightSwipe
-        /> */}
       </ScrollView>
       {/* shadowOpacity: 1, shadowRadius: 4.65, */}
       <View style={{ marginTop: 10, borderTopWidth: 0.25, borderTopColor: '#e2e3e4', backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
