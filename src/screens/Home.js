@@ -10,11 +10,13 @@ import {
   Platform,
   ScrollView,
   Image,
-  RefreshControl
+  RefreshControl,
+  FlatList
   // Button
 } from 'react-native'
+import { SwipeListView } from 'react-native-swipe-list-view'
 import { Button, Modal } from 'react-native-paper'
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons, Feather, AntDesign } from '@expo/vector-icons'
 import { useNavigation, useIsFocused, useTheme } from '@react-navigation/native'
 import firebaseuser from '../firebase/firebaseconfig'
 import config from '../../config'
@@ -76,9 +78,11 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black
   })
+  const [refreshing, setRefreshing] = useState(false)
   useEffect(() => {
     setIsNewlyAdded(false)
-  }, [])
+    console.log('deleledel')
+  }, [refreshing, setRefreshing])
   // eslint-disable-next-line react/prop-types
   const StockSect = ({ card, index }) => {
     return (
@@ -186,7 +190,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
       slideUp
         ? <Animatable.View animation='slideInUp' style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
           <TouchableOpacity
-            style={styles.diplistSect}
+            style={[styles.diplistSect, { borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2' }]}
           >
             <View style={{ width: '80%' }}>
               <Image
@@ -207,7 +211,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
         </Animatable.View>
         : <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
           <TouchableOpacity
-            style={styles.diplistSect}
+            style={[styles.diplistSect, { borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2' }]}
           >
             <View style={{ width: '80%' }}>
               <Image
@@ -226,6 +230,133 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
             </View>
           </TouchableOpacity>
         </View>
+    )
+  }
+
+  const shareRow = (rowMap, rowName, rowKey) => {
+    if (rowMap[rowKey]) {
+      // console.log('shshshsh: ' + rowName)
+      closeRow(rowMap, rowKey)
+    }
+  }
+
+  const closeRow = (rowMap, rowKey) => {
+    if (rowMap[rowKey]) {
+      rowMap[rowKey].closeRow()
+    }
+  }
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    wait(2000).then(() => setRefreshing(false))
+  }, [])
+  const deleteRow = async (rowMap, rowName, rowKey) => {
+    console.log('rowName: ' + rowName)
+    const userid = await firebaseuser()
+    const request = JSON.stringify({
+      userid: userid,
+      stockName: rowName
+    })
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: request
+    }
+    console.log(request)
+    try {
+      const response = await fetch(config.API_URL + 'delData', options)
+      console.log('deleting ..... ')
+      const json = await response.json()
+      console.log(json)
+      onRefresh()
+      navigation.navigate('Home')
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const VisibleItem = props => {
+    const { data } = props
+    return (
+      isSubscribed === false && data.item.key === 0
+        ? <View style={[styles.rowFront, { backgroundColor: colors.background }]}>
+            <TouchableHighlight style={styles.diplistSect}>
+              <View style = {{ flexDirection: 'row' }}>
+                <View style={{ width: '76%', alignSelf: 'center' }}>
+                  <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]} numberOfLines={1}>
+                    {data.item.stockname}
+                  </Text>
+                  <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 1, opacity: 0.7 }]} numberOfLines={1}>
+                    Last closed ${
+                      (data.item.stockpricewhenuseraddedit)
+                    }
+                  </Text>
+                </View>
+                <View style={{ alignSelf: 'center' }}>
+                  <TouchableHighlight
+                    style={[styles.Button, { backgroundColor: data.item.triggerPrice > data.item.stockpricewhenuseraddedit ? '#5AC53A' : '#ec5d29' }]}
+                    underlayColor='#ffb38a'
+                    onPress={() => {
+                      navigation.navigate('StockScreenBluePrint', {
+                        // eslint-disable-next-line react/prop-types
+                        otherParam: data.item.stockname,
+                        // eslint-disable-next-line react/prop-types
+                        price: data.item.stockpricewhenuseraddedit,
+                        // eslint-disable-next-line react/prop-types
+                        trigger: data.item.triggerPrice
+                      })
+                    }}
+                  >
+                    <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular', fontSize: 14, letterSpacing: 1 }]}>$
+                      {
+                        data.item.triggerPrice
+                      }
+                    </Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            </TouchableHighlight>
+          </View>
+        : null
+    )
+  }
+  const renderItem = (data, rowMap) => {
+    return (
+      <VisibleItem data= { data }/>
+    )
+  }
+
+  const HiddenItemWithActions = props => {
+    const { onShare, onDelete } = props
+    return (
+      <View style = {[styles.rowBack]}>
+        <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnLeft]} onPress = {onShare}>
+          <Feather
+            name='share' size={22} color = "#FFE6D1" style = {{ paddingLeft: '45%', width: '100%', marginBottom: 5 }}
+          />
+          <Text style = {{ color: '#FFE6D1', fontFamily: 'Lato_400Regular', fontSize: 14 }}>Share</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnRight]} onPress = {onDelete}>
+          <AntDesign
+            name='delete' size={24} color = "#FFE6D1" style = {{ paddingLeft: '38%', width: '100%', marginBottom: 5 }}
+          />
+          <Text style = {{ color: '#FFFFFF', fontFamily: 'Lato_400Regular', fontSize: 14 }} >Delete</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  const renderHiddenItem = (data, rowMap) => {
+    return (
+      <HiddenItemWithActions
+        data = {data}
+        rowMap = {rowMap}
+        onShare = {() => shareRow(rowMap, data.item.stockname, data.item.key)}
+        onDelete = {() => deleteRow(rowMap, data.item.stockname, data.item.key)}
+
+      ></HiddenItemWithActions>
     )
   }
   if (!fontsLoaded) {
@@ -291,13 +422,70 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
                   : null
                 }
                 </View>
-              {(stockDetails.length > 0
+                { stockDetails.length > 0
+                  ? isSubscribed === false
+                    ? stockDetails.map((item, index) => (
+                      index === 0
+                        ? <SwipeListView
+                            data = {stockDetails}
+                            renderItem = {renderItem}
+                            renderHiddenItem = {renderHiddenItem}
+                            // leftOpenValue = {75}
+                            rightOpenValue = {-150}
+                            disableRightSwipe
+                          />
+                        : <StockSectlocked card={item} index={index} key={index} />
+                    ))
+                    : <SwipeListView
+                        data = {stockDetails}
+                        renderItem = {renderItem}
+                        renderHiddenItem = {renderHiddenItem}
+                        // leftOpenValue = {75}
+                        rightOpenValue = {-150}
+                        disableRightSwipe
+                      />
+                  : <View>
+                      <TouchableOpacity
+                        style={{
+                          flexDirection: 'row',
+                          width: '100%',
+                          height: 60,
+                          marginLeft: '0%',
+                          borderBottomWidth: 1,
+                          borderBottomColor: '#e2e3e4',
+                          alignItems: 'left'
+                        }}
+                      >
+                        <View style={{ width: '80%' }}>
+                          <Text style={{ fontSize: 15, color: colors.text, fontFamily: 'Lato_700Bold' }}>
+                            Loookup a Stock
+                          </Text>
+                          <Text style={{ marginTop: 4, fontSize: 13, fontFamily: 'Lato_400Regular', color: colors.text, opacity: 0.7 }}>
+                            Prices updated at market close
+                          </Text>
+                        </View>
+                        <TouchableHighlight style={[styles.Button2, { color: colors.background }]} onPress={() => navigation.navigate('AddStock')} underlayColor='#fff'>
+                          <Text style={styles.ButtonText2}>
+                            Add
+                          </Text>
+                        </TouchableHighlight>
+                      </TouchableOpacity>
+                    </View>
+                }
+              {/* {(stockDetails.length > 0
                 ? stockDetails.map((item, index) => (
                   isSubscribed === false
                     ? index === 0
                       ? <StockSect card={item} index={index} key={index} />
                       : <StockSectlocked card={item} index={index} key={index} />
-                    : <StockSect card={item} index={index} key={index} />
+                    : <SwipeListView
+                        data = {stockDetails}
+                        renderItem = {renderItem}
+                        renderHiddenItem = {renderHiddenItem}
+                        // leftOpenValue = {75}
+                        rightOpenValue = {-150}
+                        disableRightSwipe
+                      />
                 ))
                 : <View>
                 <TouchableOpacity
@@ -326,7 +514,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed) {
                   </TouchableHighlight>
                 </TouchableOpacity>
               </View>
-              )}
+              )} */}
               </View>
           }
         </View>
@@ -599,6 +787,7 @@ function Home () {
         for (let i = 0; i < json.data.length; i++) {
           // console.log("name: "+ json.data[i].stockname)
           stocksArray.push({
+            key: i,
             stockname: json.data[i].stockname,
             stockpricewhenuseraddedit: json.data[i].stockpricewhenuseraddedit,
             triggerPrice: json.data[i].triggerPrice,
@@ -651,6 +840,101 @@ function Home () {
   }, [isFocused, isSubscribed])
 
   const navigation = useNavigation()
+
+  const shareRow = (rowMap, rowName, rowKey) => {
+    if (rowMap[rowKey]) {
+      console.log('shshshsh: ' + rowName)
+      closeRow(rowMap, rowKey)
+    }
+  }
+
+  const closeRow = (rowMap, rowKey) => {
+    if (rowMap[rowKey]) {
+      rowMap[rowKey].closeRow()
+    }
+  }
+
+  const deleteRow = async (rowMap, rowName, rowKey) => {
+    const userid = await firebaseuser()
+    const request = JSON.stringify({
+      userid: userid,
+      stockName: rowName
+    })
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: request
+    }
+    console.log(request)
+    try {
+      const response = await fetch(config.API_URL + 'delData', options)
+      console.log('deleting ..... ')
+      const json = await response.json()
+      console.log(json)
+      onRefresh()
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const VisibleItem = props => {
+    const { data } = props
+    return (
+      <View style={styles.rowFront}>
+        <TouchableHighlight style={styles.rowFrontVisible}>
+          <View>
+            <Text style={styles.title} numberOfLines={1}>
+              {data.item.stockname}
+            </Text>
+            <Text style={styles.title} numberOfLines={1}>
+              {data.item.stockpricewhenuseraddedit}
+            </Text>
+          </View>
+        </TouchableHighlight>
+      </View>
+    )
+  }
+  const renderItem = (data, rowMap) => {
+    return (
+      <VisibleItem data= { data }/>
+    )
+  }
+
+  const HiddenItemWithActions = props => {
+    const { onShare, onDelete } = props
+    return (
+      <View style = {styles.rowBack}>
+        <Text>left</Text>
+        <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnLeft]} onPress = {onShare}>
+          <Feather
+            name='share' size={22} color = "#FFE6D1" style = {{ paddingLeft: '50%', width: '100%', marginBottom: 5 }}
+          />
+          <Text style = {{ color: '#FFE6D1', fontFamily: 'Lato_400Regular', fontSize: 14 }}>Share</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnRight]} onPress = {onDelete}>
+          <AntDesign
+            name='delete' size={24} color = "#FFE6D1" style = {{ paddingLeft: '45%', width: '100%', marginBottom: 5 }}
+          />
+          <Text style = {{ color: '#FFFFFF', fontFamily: 'Lato_400Regular', fontSize: 14 }} >Delete</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  const renderHiddenItem = (data, rowMap) => {
+    return (
+      <HiddenItemWithActions
+        data = {data}
+        rowMap = {rowMap}
+        onShare = {() => shareRow(rowMap, data.item.stockname, data.item.key)}
+        onDelete = {() => deleteRow(rowMap, data.item.stockname, data.item.key)}
+
+      ></HiddenItemWithActions>
+    )
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       {renderHeader(navigation)}
@@ -659,6 +943,14 @@ function Home () {
       >
         {StockList(navigation, stockDetails, loading, slideUp, isSubscribed)}
         {StockMarketsSect(loading, slideUp)}
+        {/* <SwipeListView
+          data = {stockDetails}
+          renderItem = {renderItem}
+          renderHiddenItem = {renderHiddenItem}
+          leftOpenValue = {75}
+          rightOpenValue = {-150}
+          disableRightSwipe
+        /> */}
       </ScrollView>
       {/* shadowOpacity: 1, shadowRadius: 4.65, */}
       <View style={{ marginTop: 10, borderTopWidth: 0.25, borderTopColor: '#e2e3e4', backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
@@ -749,10 +1041,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     marginLeft: '0%',
-    borderBottomWidth: 0.4,
-    borderBottomColor: '#b2b2b2',
-    alignItems: 'flex-start',
-    paddingRight: 25
+    // borderBottomWidth: 0.4,
+    // borderBottomColor: '#b2b2b2',
+    // alignItems: 'flex-start',
+    paddingRight: 5
   },
   diplistStockSect: {
     marginTop: 4,
@@ -776,6 +1068,78 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: 13,
     color: '#b2b2b2'
+  },
+  backTextWhite: {
+    color: '#FFF'
+  },
+  rowFront: {
+    // borderRadius: 5,
+    height: 60,
+    margin: 5,
+    width: '100%',
+    paddingRight: 12,
+    paddingBottom: 70,
+    marginBottom: 15,
+    borderBottomWidth: 0.4,
+    borderBottomColor: '#b2b2b2',
+    alignSelf: 'center',
+    // shadowColor: '#999',
+    // shadowOffset: { width: 0, height: 1 },
+    // shadowOpacity: 0.8,
+    // shadowRadius: 2,
+    elevation: 5
+  },
+  rowFrontVisible: {
+    backgroundColor: '#FFF',
+    borderRadius: 5,
+    height: 60,
+    padding: 10,
+    marginBottom: 15
+  },
+  rowBack: {
+    alignItems: 'center',
+    // backgroundColor: '#DDD',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: '105%',
+    margin: 5,
+    marginBottom: 15,
+    borderRadius: 5
+  },
+  backRightBtn: {
+    alignItems: 'flex-end',
+    bottom: 0,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 0,
+    width: 65,
+    paddingRight: 14
+  },
+  backRightBtnLeft: {
+    backgroundColor: '#2B3033',
+    right: 85
+  },
+  backRightBtnRight: {
+    backgroundColor: '#EB5545',
+    right: 20,
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5
+  },
+  trash: {
+    height: 25,
+    width: 25,
+    marginRight: 7
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    color: '#666'
+  },
+  details: {
+    fontSize: 12,
+    color: '#999'
   }
 })
 
