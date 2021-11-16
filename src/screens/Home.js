@@ -14,7 +14,8 @@ import {
   FlatList
   // Button
 } from 'react-native'
-import Share from 'react-native-share'
+// import Share from 'react-native-share'
+import * as Sharing from 'expo-sharing'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import { Button, Modal } from 'react-native-paper'
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons'
@@ -185,6 +186,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
         </View>
     )
   }
+
   const StockSectlocked = ({ card, index }) => {
     return (
       // flex: 2, height: 80
@@ -234,20 +236,18 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
     )
   }
 
-  const myCustomShare = async () => {
-    const shareOptions = {
-      message: 'share text'
-    }
-    try {
-      const shareResponse = await Share.open(shareOptions)
-    } catch (e) {
-      console.log(e)
-    }
+  const shareOptions = {
+    message: 'share text'
   }
-  const shareRow = (rowMap, rowName, rowKey) => {
+  const shareRow = async (rowMap, rowName, rowKey) => {
     if (rowMap[rowKey]) {
       // console.log('shshshsh: ' + rowName)
-      myCustomShare()
+      // myCustomShare()
+      const share = await Sharing.isAvailableAsync()
+      if (await Sharing.isAvailableAsync()) {
+        console.log('ture: ' + JSON.stringify(share))
+        await Sharing.shareAsync('file://Users/mahmedkhan/Desktop/Frontend-BuyTheDip/buythedip-react/assets/lockforDark.png', shareOptions)
+      }
       closeRow(rowMap, rowKey)
     }
   }
