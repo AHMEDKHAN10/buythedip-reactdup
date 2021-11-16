@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect, useContext } from 'react'
 import {
+  Animated,
   StyleSheet,
   SafeAreaView,
   View, Text,
@@ -10,8 +11,7 @@ import {
   Platform,
   ScrollView,
   Image,
-  RefreshControl,
-  FlatList
+  RefreshControl
   // Button
 } from 'react-native'
 // import Share from 'react-native-share'
@@ -35,6 +35,7 @@ const { width, height } = Dimensions.get('window')
 const premium = require('../../assets/premium.png')
 const lock = require('../../assets/lock.png')
 const lockForDark = require('../../assets/lockforDark.png')
+const applogo = require('../../assets/applogo.jpg')
 
 function renderHeader (navigation) {
   const { colors } = useTheme()
@@ -83,7 +84,6 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
   const [refreshing, setRefreshing] = useState(false)
   useEffect(() => {
     setIsNewlyAdded(false)
-    console.log('deleledel')
   }, [refreshing, setRefreshing])
   // eslint-disable-next-line react/prop-types
   const StockSect = ({ card, index }) => {
@@ -236,6 +236,11 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
     )
   }
 
+  // Sharing.shareAsync(localUrl, {
+  //   mimeType: 'image/jpeg',            // Android
+  //   dialogTitle: 'share-dialog title', // Android and Web
+  //   UTI: 'image/jpeg'                  // iOS
+  // });
   const shareOptions = {
     message: 'share text'
   }
@@ -243,10 +248,11 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
     if (rowMap[rowKey]) {
       // console.log('shshshsh: ' + rowName)
       // myCustomShare()
+      // const exampleImageUri = Image.resolveAssetSource(applogo).uri
       const share = await Sharing.isAvailableAsync()
-      if (await Sharing.isAvailableAsync()) {
-        console.log('ture: ' + JSON.stringify(share))
-        await Sharing.shareAsync('file://Users/mahmedkhan/Desktop/Frontend-BuyTheDip/buythedip-react/assets/lockforDark.png', shareOptions)
+      if (share) {
+        // console.log('ture: ' + JSON.stringify(exampleImageUri))
+        await Sharing.shareAsync('https://google.com/', shareOptions)
       }
       closeRow(rowMap, rowKey)
     }
@@ -254,11 +260,12 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
 
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
+      // console.log('rowMap[rowKey]: ' + JSON.stringify(rowMap))
       rowMap[rowKey].closeRow()
     }
   }
   const deleteRow = async (rowMap, rowName, rowKey) => {
-    console.log('rowName: ' + rowName)
+    // console.log('rowName: ' + JSON.stringify(rowMap[rowKey]))
     const userid = await firebaseuser()
     const request = JSON.stringify({
       userid: userid,
@@ -284,6 +291,23 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
     } catch (e) {
       console.error(e)
     }
+  }
+
+  const onLeftActionStatusChange = rowKey => {
+    console.log('onLeftActionStatusChange', rowKey)
+  }
+
+  const onRightActionStatusChange = rowKey => {
+    console.log('onRightActionStatusChange', rowKey)
+  }
+
+  const onRightAction = (rowKey, rowMap) => {
+    console.log('onRightAction', stockDetails[rowKey])
+    deleteRow(rowMap, stockDetails[rowKey].stockname, rowKey)
+  }
+
+  const onLeftAction = rowKey => {
+    console.log('onLeftAction', rowKey)
   }
 
   const VisibleItem = props => {
@@ -336,33 +360,69 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
   }
 
   const HiddenItemWithActions = props => {
-    const { onShare, onDelete } = props
+    const {
+      swipeAnimatedValue,
+      leftActivationActivated,
+      rightActivationActivated,
+      rowActionAnimatedValue,
+      rowHeightAnimatedValue,
+      onShare,
+      onDelete,
+    } = props
+    if (rightActivationActivated) {
+      Animated.spring(rowActionAnimatedValue, {
+        toValue: 500,
+        useNativeDriver: false
+      }).start()
+      console.log('animation')
+    }
     return (
-      <View style = {[styles.rowBack]}>
+      <View style = {[styles.rowBack, { backgroundColor: '#B81200' }]}>
         <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnLeft]} onPress = {onShare}>
           <Feather
             name='share' size={22} color = "#FFE6D1" style = {{ paddingLeft: '45%', width: '100%', marginBottom: 5 }}
           />
           <Text style = {{ color: '#FFE6D1', fontFamily: 'Lato_400Regular', fontSize: 14 }}>Share</Text>
         </TouchableOpacity>
-        <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnRight]} onPress = {onDelete}>
-          <AntDesign
-            name='delete' size={24} color = "#FFE6D1" style = {{ paddingLeft: '38%', width: '100%', marginBottom: 5 }}
-          />
-          <Text style = {{ color: '#FFFFFF', fontFamily: 'Lato_400Regular', fontSize: 14 }} >Delete</Text>
-        </TouchableOpacity>
+        <Animated.View style = {[styles.backRightBtn, styles.backRightBtnRight, {
+          flex: 1,
+          width: rowActionAnimatedValue
+        }]}>
+          <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnRight]} onPress = {onDelete}>
+            <Animated.View style = {[styles.backRightBtn, styles.backRightBtn, {
+              transform: [
+                {
+                  scale: swipeAnimatedValue.interpolate({
+                    inputRange: [-90, -45],
+                    outputRange: [1, 0],
+                    extrapolate: 'clamp'
+                  })
+                }
+              ]
+            }]}>
+              <AntDesign
+                name='delete' size={24} color = "#FFE6D1" style = {{ paddingLeft: '38%', width: '100%', marginBottom: 5 }}
+              />
+            <Text style = {{ color: '#FFFFFF', fontFamily: 'Lato_400Regular', fontSize: 14 }} >Delete</Text>
+            </Animated.View>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     )
   }
 
   const renderHiddenItem = (data, rowMap) => {
+    const rowActionAnimatedValue = new Animated.Value(75)
+    const rowHeightAnimatedValue = new Animated.Value(60)
     return (
       <HiddenItemWithActions
         data = {data}
         rowMap = {rowMap}
         onShare = {() => shareRow(rowMap, data.item.stockname, data.item.key)}
         onDelete = {() => deleteRow(rowMap, data.item.stockname, data.item.key)}
-
+        // OnRightAction = {() => onRightAction(rowMap, data.item.stockname, data.item.key)}
+        rowActionAnimatedValue = {rowActionAnimatedValue}
+        rowHeightAnimatedValue = {rowHeightAnimatedValue}
       ></HiddenItemWithActions>
     )
   }
@@ -440,6 +500,14 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                             renderHiddenItem = {renderHiddenItem}
                             rightOpenValue = {-150}
                             disableRightSwipe
+                            leftActivationValue={100}
+                            rightActivationValue={-200}
+                            leftActionValue={0}
+                            rightActionValue={-500}
+                            onLeftAction={onLeftAction}
+                            onRightAction={onRightAction}
+                            onLeftActionStatusChange={onLeftActionStatusChange}
+                            onRightActionStatusChange={onRightActionStatusChange}
                           />
                         : <StockSectlocked card={item} index={index} key={index} />
                     ))
@@ -449,6 +517,14 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                         renderHiddenItem = {renderHiddenItem}
                         rightOpenValue = {-150}
                         disableRightSwipe
+                        leftActivationValue={100}
+                        rightActivationValue={-200}
+                        leftActionValue={0}
+                        rightActionValue={-500}
+                        onLeftAction={onLeftAction}
+                        onRightAction={onRightAction}
+                        onLeftActionStatusChange={onLeftActionStatusChange}
+                        onRightActionStatusChange={onRightActionStatusChange}
                       />
                   : <View>
                       <TouchableOpacity
@@ -1022,11 +1098,11 @@ const styles = StyleSheet.create({
   },
   backRightBtnLeft: {
     backgroundColor: '#2B3033',
-    right: 85
+    right: 86
   },
   backRightBtnRight: {
     backgroundColor: '#EB5545',
-    right: 20,
+    right: 11,
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5
   },
@@ -1046,6 +1122,3 @@ const styles = StyleSheet.create({
     color: '#999'
   }
 })
-
-// ToDo
-// when new stock added it shows up on screen with some delay so display shimmer unitl delay gets over
