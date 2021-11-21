@@ -31,6 +31,7 @@ import registerForPushNotificationsAsync from '../services/pushNotification'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black } from '@expo-google-fonts/lato'
 import { Context } from '../context/context'
+import HomeInvite from './reuseable/homeInvite'
 const { width, height } = Dimensions.get('window')
 const premium = require('../../assets/premium.png')
 const lock = require('../../assets/lock.png')
@@ -235,12 +236,6 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
         </View>
     )
   }
-
-  // Sharing.shareAsync(localUrl, {
-  //   mimeType: 'image/jpeg',            // Android
-  //   dialogTitle: 'share-dialog title', // Android and Web
-  //   UTI: 'image/jpeg'                  // iOS
-  // });
   const shareOptions = {
     message: 'share text'
   }
@@ -302,7 +297,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
   }
 
   const onRightAction = (rowKey, rowMap) => {
-    console.log('onRightAction', stockDetails[rowKey])
+    // console.log('onRightAction', stockDetails[rowKey])
     deleteRow(rowMap, stockDetails[rowKey].stockname, rowKey)
   }
 
@@ -367,7 +362,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
       rowActionAnimatedValue,
       rowHeightAnimatedValue,
       onShare,
-      onDelete,
+      onDelete
     } = props
     if (rightActivationActivated) {
       Animated.spring(rowActionAnimatedValue, {
@@ -493,7 +488,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                 { stockDetails.length > 0
                   ? isSubscribed === false
                     ? stockDetails.map((item, index) => (
-                      index === 0
+                      index <= 0
                         ? <SwipeListView
                             data = {[stockDetails[0]]}
                             renderItem = {renderItem}
@@ -511,7 +506,8 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                           />
                         : <StockSectlocked card={item} index={index} key={index} />
                     ))
-                    : <SwipeListView
+                    : <View>
+                      <SwipeListView
                         data = {stockDetails}
                         renderItem = {renderItem}
                         renderHiddenItem = {renderHiddenItem}
@@ -526,6 +522,8 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                         onLeftActionStatusChange={onLeftActionStatusChange}
                         onRightActionStatusChange={onRightActionStatusChange}
                       />
+                        <HomeInvite/>
+                      </View>
                   : <View>
                       <TouchableOpacity
                         style={{
