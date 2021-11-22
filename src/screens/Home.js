@@ -11,7 +11,8 @@ import {
   Platform,
   ScrollView,
   Image,
-  RefreshControl
+  RefreshControl,
+  Share
   // Button
 } from 'react-native'
 // import Share from 'react-native-share'
@@ -89,106 +90,106 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
     setIsNewlyAdded(false)
   }, [refreshing, setRefreshing])
   // eslint-disable-next-line react/prop-types
-  const StockSect = ({ card, index }) => {
-    return (
-      // flex: 2, height: 80
-      slideUp
-        ? <Animatable.View animation='slideInUp' style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
-          <TouchableOpacity
-            style={styles.diplistSect}
-            onPress={() => {
-              navigation.navigate('StockScreenBluePrint', {
-                // eslint-disable-next-line react/prop-types
-                otherParam: card.stockname,
-                // eslint-disable-next-line react/prop-types
-                price: card.stockpricewhenuseraddedit,
-                // eslint-disable-next-line react/prop-types
-                trigger: card.triggerPrice
-              })
-            }}
-          >
-            <View style={{ width: '80%' }}>
-              <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>
-                {
-                  // eslint-disable-next-line react/prop-types
-                  card.stockname
-                }
-              </Text>
-              <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 1, opacity: 0.7 }]}>
-                Last closed ${
-                  // eslint-disable-next-line react/prop-types
-                  (card.stockpricewhenuseraddedit)
-                }
-              </Text>
-            </View>
-            <TouchableHighlight style={[styles.Button, { backgroundColor: card.triggerPrice > card.stockpricewhenuseraddedit ? '#5AC53A' : '#ec5d29' }]} onPress={() => {
-              navigation.navigate('StockScreenBluePrint', {
-                // eslint-disable-next-line react/prop-types
-                otherParam: card.stockname,
-                // eslint-disable-next-line react/prop-types
-                price: card.stockpricewhenuseraddedit,
-                // eslint-disable-next-line react/prop-types
-                trigger: card.triggerPrice
-              })
-            }} underlayColor='#fff'>
-              <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular', fontSize: 14, letterSpacing: 1 }]}>$
-                {
-                  // eslint-disable-next-line react/prop-types
-                  card.triggerPrice
-                }
-              </Text>
-            </TouchableHighlight>
-          </TouchableOpacity>
-        </Animatable.View>
-        : <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
-          <TouchableOpacity
-            style={styles.diplistSect}
-            onPress={() => {
-              navigation.navigate('StockScreenBluePrint', {
-                // eslint-disable-next-line react/prop-types
-                otherParam: card.stockname,
-                // eslint-disable-next-line react/prop-types
-                price: card.stockpricewhenuseraddedit,
-                // eslint-disable-next-line react/prop-types
-                trigger: card.triggerPrice
-              })
-            }}
-          >
-            <View style={{ width: '80%' }}>
-              <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>
-                {
-                  // eslint-disable-next-line react/prop-types
-                  card.stockname
-                }
-              </Text>
-              <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 1, opacity: 0.7 }]}>
-                Last closed ${
-                  // eslint-disable-next-line react/prop-types
-                  (card.stockpricewhenuseraddedit)
-                }
-              </Text>
-            </View>
-            <TouchableHighlight style={[styles.Button, { backgroundColor: card.triggerPrice > card.stockpricewhenuseraddedit ? '#5AC53A' : '#ec5d29' }]} onPress={() => {
-              navigation.navigate('StockScreenBluePrint', {
-                // eslint-disable-next-line react/prop-types
-                otherParam: card.stockname,
-                // eslint-disable-next-line react/prop-types
-                price: card.stockpricewhenuseraddedit,
-                // eslint-disable-next-line react/prop-types
-                trigger: card.triggerPrice
-              })
-            }} underlayColor='#fff'>
-              <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular', fontSize: 14, letterSpacing: 1 }]}>$
-                {
-                  // eslint-disable-next-line react/prop-types
-                  card.triggerPrice
-                }
-              </Text>
-            </TouchableHighlight>
-          </TouchableOpacity>
-        </View>
-    )
-  }
+  // const StockSect = ({ card, index }) => {
+  //   return (
+  //     // flex: 2, height: 80
+  //     slideUp
+  //       ? <Animatable.View animation='slideInUp' style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
+  //         <TouchableOpacity
+  //           style={styles.diplistSect}
+  //           onPress={() => {
+  //             navigation.navigate('StockScreenBluePrint', {
+  //               // eslint-disable-next-line react/prop-types
+  //               otherParam: card.stockname,
+  //               // eslint-disable-next-line react/prop-types
+  //               price: card.stockpricewhenuseraddedit,
+  //               // eslint-disable-next-line react/prop-types
+  //               trigger: card.triggerPrice
+  //             })
+  //           }}
+  //         >
+  //           <View style={{ width: '80%' }}>
+  //             <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>
+  //               {
+  //                 // eslint-disable-next-line react/prop-types
+  //                 card.stockname
+  //               }
+  //             </Text>
+  //             <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 1, opacity: 0.7 }]}>
+  //               Last closed ${
+  //                 // eslint-disable-next-line react/prop-types
+  //                 (card.stockpricewhenuseraddedit)
+  //               }
+  //             </Text>
+  //           </View>
+  //           <TouchableHighlight style={[styles.Button, { backgroundColor: card.triggerPrice > card.stockpricewhenuseraddedit ? '#5AC53A' : '#ec5d29' }]} onPress={() => {
+  //             navigation.navigate('StockScreenBluePrint', {
+  //               // eslint-disable-next-line react/prop-types
+  //               otherParam: card.stockname,
+  //               // eslint-disable-next-line react/prop-types
+  //               price: card.stockpricewhenuseraddedit,
+  //               // eslint-disable-next-line react/prop-types
+  //               trigger: card.triggerPrice
+  //             })
+  //           }} underlayColor='#fff'>
+  //             <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular', fontSize: 14, letterSpacing: 1 }]}>$
+  //               {
+  //                 // eslint-disable-next-line react/prop-types
+  //                 card.triggerPrice
+  //               }
+  //             </Text>
+  //           </TouchableHighlight>
+  //         </TouchableOpacity>
+  //       </Animatable.View>
+  //       : <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
+  //         <TouchableOpacity
+  //           style={styles.diplistSect}
+  //           onPress={() => {
+  //             navigation.navigate('StockScreenBluePrint', {
+  //               // eslint-disable-next-line react/prop-types
+  //               otherParam: card.stockname,
+  //               // eslint-disable-next-line react/prop-types
+  //               price: card.stockpricewhenuseraddedit,
+  //               // eslint-disable-next-line react/prop-types
+  //               trigger: card.triggerPrice
+  //             })
+  //           }}
+  //         >
+  //           <View style={{ width: '80%' }}>
+  //             <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>
+  //               {
+  //                 // eslint-disable-next-line react/prop-types
+  //                 card.stockname
+  //               }
+  //             </Text>
+  //             <Text style={[styles.diplistStockSect, { color: colors.primary, fontFamily: 'Lato_400Regular', fontSize: 13, letterSpacing: 1, opacity: 0.7 }]}>
+  //               Last closed ${
+  //                 // eslint-disable-next-line react/prop-types
+  //                 (card.stockpricewhenuseraddedit)
+  //               }
+  //             </Text>
+  //           </View>
+  //           <TouchableHighlight style={[styles.Button, { backgroundColor: card.triggerPrice > card.stockpricewhenuseraddedit ? '#5AC53A' : '#ec5d29' }]} onPress={() => {
+  //             navigation.navigate('StockScreenBluePrint', {
+  //               // eslint-disable-next-line react/prop-types
+  //               otherParam: card.stockname,
+  //               // eslint-disable-next-line react/prop-types
+  //               price: card.stockpricewhenuseraddedit,
+  //               // eslint-disable-next-line react/prop-types
+  //               trigger: card.triggerPrice
+  //             })
+  //           }} underlayColor='#fff'>
+  //             <Text style={[styles.ButtonText, { fontFamily: 'Lato_400Regular', fontSize: 14, letterSpacing: 1 }]}>$
+  //               {
+  //                 // eslint-disable-next-line react/prop-types
+  //                 card.triggerPrice
+  //               }
+  //             </Text>
+  //           </TouchableHighlight>
+  //         </TouchableOpacity>
+  //       </View>
+  //   )
+  // }
 
   const StockSectlocked = ({ card, index }) => {
     return (
@@ -241,16 +242,44 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
   const shareOptions = {
     message: 'share text'
   }
+
+  const onShare = async (title, msg, url) => {
+    const msgAndURL = msg.concat('\n\n').concat(url)
+    try {
+      const result = await Share.share(
+        {
+          title,
+          message: msgAndURL
+        },
+        {
+          subject: title
+        }
+      )
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message)
+    }
+  }
   const shareRow = async (rowMap, rowName, rowKey) => {
     if (rowMap[rowKey]) {
       // console.log('shshshsh: ' + rowName)
       // myCustomShare()
       // const exampleImageUri = Image.resolveAssetSource(applogo).uri
-      const share = await Sharing.isAvailableAsync()
-      if (share) {
-        // console.log('ture: ' + JSON.stringify(exampleImageUri))
-        await Sharing.shareAsync('https://google.com/', shareOptions)
-      }
+      onShare('My App', 'Hey Checkout this app', 'https://google.com/')
+      // const share = await Sharing.isAvailableAsync()
+      // if (share) {
+      //   // console.log('ture: ' + JSON.stringify(exampleImageUri))
+      //   await Sharing.shareAsync('https://google.com/', shareOptions)
+      // }
+
       closeRow(rowMap, rowKey)
     }
   }
