@@ -31,12 +31,13 @@ import registerForPushNotificationsAsync from '../services/pushNotification'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black } from '@expo-google-fonts/lato'
 import { Context } from '../context/context'
+import { ModalContext } from '../context/modalContext'
 import HomeInvite from './reuseable/homeInvite'
+import LottieInvite from './reuseable/lottieInvite'
 const { width, height } = Dimensions.get('window')
 const premium = require('../../assets/premium.png')
 const lock = require('../../assets/lock.png')
 const lockForDark = require('../../assets/lockforDark.png')
-const applogo = require('../../assets/applogo.jpg')
 
 function renderHeader (navigation) {
   const { colors } = useTheme()
@@ -78,6 +79,7 @@ function renderHeader (navigation) {
 function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, onRefresh) {
   // const { navigation, stockDetails, loading } = props
   const { isNewlyAdded, setIsNewlyAdded } = useContext(Context)
+  const { trialStatus } = useContext(ModalContext)
   const { colors } = useTheme()
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black
@@ -421,10 +423,21 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
       ></HiddenItemWithActions>
     )
   }
+
+  const SkeletonComponent = () => {
+    return (
+      <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
+        <View style={{ width: '80%' }}>
+          <View style={{ width: 50, height: 20, borderRadius: 5 }} />
+          <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
+        </View>
+        <View style={{ width: 75, height: 35, borderRadius: 8 }} />
+      </View>
+    )
+  }
   if (!fontsLoaded) {
     return <AppLoading />
   } else {
-    // console.log('stockDetails[0]: ' +JSON.stringify( stockDetails[0]))
     return (
       // flex:10, flex: 4, height: 300
       <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
@@ -437,34 +450,10 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                   <View style={{ width: '40%', height: 40, borderRadius: 5 }} />
                 </View>
               </View>
-              <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
-                <View style={{ width: '80%' }}>
-                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
-                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
-                </View>
-                <View style={{ width: 75, height: 35, borderRadius: 8 }} />
-              </View>
-              <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
-                <View style={{ width: '80%' }}>
-                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
-                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
-                </View>
-                <View style={{ width: 75, height: 35, borderRadius: 8 }} />
-              </View>
-              <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
-                <View style={{ width: '80%' }}>
-                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
-                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
-                </View>
-                <View style={{ width: 75, height: 35, borderRadius: 8 }} />
-              </View>
-              <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
-                <View style={{ width: '80%' }}>
-                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
-                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
-                </View>
-                <View style={{ width: 75, height: 35, borderRadius: 8 }} />
-              </View>
+              <SkeletonComponent/>
+              <SkeletonComponent/>
+              <SkeletonComponent/>
+              <SkeletonComponent/>
             </SkeletonPlaceholder>
             : <View>
                 <View style={{ width: '100%', height: 50, marginTop: 30, alignItems: 'left' }}>
@@ -489,7 +478,8 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                   ? isSubscribed === false
                     ? stockDetails.map((item, index) => (
                       index <= 0
-                        ? <SwipeListView
+                        ? <View >
+                          <SwipeListView
                             data = {[stockDetails[0]]}
                             renderItem = {renderItem}
                             renderHiddenItem = {renderHiddenItem}
@@ -504,6 +494,11 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                             onLeftActionStatusChange={onLeftActionStatusChange}
                             onRightActionStatusChange={onRightActionStatusChange}
                           />
+                          {!trialStatus
+                            ? <HomeInvite/>
+                            : null
+                          }
+                          </View>
                         : <StockSectlocked card={item} index={index} key={index} />
                     ))
                     : <View>
@@ -522,7 +517,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                         onLeftActionStatusChange={onLeftActionStatusChange}
                         onRightActionStatusChange={onRightActionStatusChange}
                       />
-                        <HomeInvite/>
+                        {/* <HomeInvite/> */}
                       </View>
                   : <View>
                       <TouchableOpacity
@@ -785,7 +780,9 @@ function AddAtockBtn (navigation, isSubscribed, setisSubscribed, stockDetails) {
                 const request = JSON.stringify({
                   pushToken: token,
                   userid: userid,
-                  isSubscribed: true
+                  isSubscribed: true,
+                  trialStatus: false,
+                  trialEndRemainingDays: 30
                 })
                 const options = {
                   method: 'POST',
@@ -836,6 +833,7 @@ function Home () {
   // const { width } = Dimensions.get('window')
 
   const { isSubscribed, setisSubscribed } = useContext(Context)
+  const { setTrialStatus } = useContext(ModalContext)
 
   const isFocused = useIsFocused()
   const { colors } = useTheme()
@@ -903,6 +901,7 @@ function Home () {
     const response = await fetch(config.API_URL + 'GetPushToken', options)
     const json = await response.json()
     setisSubscribed(json.isSubscribed)
+    setTrialStatus(json.trialStatus)
   }
   useEffect(() => {
     fetchData()
@@ -934,6 +933,7 @@ function Home () {
       <View style={{ marginTop: 10, borderTopWidth: 0.25, borderTopColor: '#e2e3e4', backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
         {AddAtockBtn(navigation, isSubscribed, setisSubscribed, stockDetails)}
       </View>
+      <LottieInvite/>
     </SafeAreaView>
   )
 }
