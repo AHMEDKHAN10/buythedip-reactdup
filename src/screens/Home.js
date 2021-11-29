@@ -81,6 +81,8 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
   // const { navigation, stockDetails, loading } = props
   const { isNewlyAdded, setIsNewlyAdded } = useContext(Context)
   const { trialStatus } = useContext(ModalContext)
+  const [isSwiped, setIsSwiped] = useState(false)
+  const [rowKeySwipe, setRowKeySwipe] = useState()
   const { colors } = useTheme()
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black
@@ -193,9 +195,9 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
 
   const StockSectlocked = ({ card, index }) => {
     return (
-      // flex: 2, height: 80
+      // flex: 2, height: 80 (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width)))
       slideUp
-        ? <Animatable.View animation='slideInUp' style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
+        ? <Animatable.View animation='slideInUp' style={{ width: '100%', paddingLeft: '5%', paddingRight: '5%', height: 80 }}>
           <TouchableOpacity
             style={[styles.diplistSect, { borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2' }]}
           >
@@ -216,7 +218,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
             </View>
           </TouchableOpacity>
         </Animatable.View>
-        : <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80 }}>
+        : <View style={{ width: '100%', paddingLeft: '5%', paddingRight: '5%', height: 80 }}>
           <TouchableOpacity
             style={[styles.diplistSect, { borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2' }]}
           >
@@ -270,15 +272,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
   }
   const shareRow = async (rowMap, rowName, rowKey) => {
     if (rowMap[rowKey]) {
-      // console.log('shshshsh: ' + rowName)
-      // myCustomShare()
-      // const exampleImageUri = Image.resolveAssetSource(applogo).uri
       onShare('My App', 'Hey Checkout this app', 'https://google.com/')
-      // const share = await Sharing.isAvailableAsync()
-      // if (share) {
-      //   // console.log('ture: ' + JSON.stringify(exampleImageUri))
-      //   await Sharing.shareAsync('https://google.com/', shareOptions)
-      // }
 
       closeRow(rowMap, rowKey)
     }
@@ -286,12 +280,10 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
 
   const closeRow = (rowMap, rowKey) => {
     if (rowMap[rowKey]) {
-      // console.log('rowMap[rowKey]: ' + JSON.stringify(rowMap))
       rowMap[rowKey].closeRow()
     }
   }
   const deleteRow = async (rowMap, rowName, rowKey) => {
-    // console.log('rowName: ' + JSON.stringify(rowMap[rowKey]))
     const userid = await firebaseuser()
     const request = JSON.stringify({
       userid: userid,
@@ -305,12 +297,9 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
       },
       body: request
     }
-    console.log(request)
     try {
       const response = await fetch(config.API_URL + 'delData', options)
-      console.log('deleting ..... ')
-      const json = await response.json()
-      console.log(json)
+      await response.json()
       onRefresh()
       closeRow(rowMap, rowKey)
       navigation.navigate('Home')
@@ -338,8 +327,19 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
 
   const VisibleItem = props => {
     const { data } = props
+    // useEffect(() => {
+    //   setIsSwiped(false)
+    //   console.log('isSwipedd: ' + isSwiped)
+    // }, [])
     return (
-      <View style={[styles.rowFront, { backgroundColor: colors.background }]}>
+      <View style={[styles.rowFront,
+        {
+          width: isSwiped === true && rowKeySwipe === data.item.key ? '100%' : '90%',
+          backgroundColor: colors.background,
+          paddingLeft: isSwiped === true && rowKeySwipe === data.item.key ? 0 : '0%',
+          paddingRight: isSwiped === true && rowKeySwipe === data.item.key ? 0 : '0%'
+        }
+      ]}>
         <TouchableHighlight style={styles.diplistSect}>
           <View style = {{ flexDirection: 'row' }}>
             <View style={{ width: '76%', alignSelf: 'center' }}>
@@ -379,14 +379,15 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
       </View>
     )
   }
-  const renderItem = (data, rowMap) => {
+  function renderItem (data, rowMap, rowKey) {
     return (
-      <VisibleItem data= { data }/>
+      <VisibleItem data= { data } rowMap = { rowMap } rowKey = { rowKey }/>
     )
   }
 
   const HiddenItemWithActions = props => {
     const {
+      data,
       swipeAnimatedValue,
       leftActivationActivated,
       rightActivationActivated,
@@ -395,18 +396,11 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
       onShare,
       onDelete
     } = props
-    if (rightActivationActivated) {
-      Animated.spring(rowActionAnimatedValue, {
-        toValue: 500,
-        useNativeDriver: false
-      }).start()
-      console.log('animation')
-    }
     return (
-      <View style = {[styles.rowBack, { backgroundColor: '#B81200' }]}>
+      <View style = {[styles.rowBack, { backgroundColor: '#B81200', display: isSwiped === true && rowKeySwipe === data.item.key ? 'flex' : 'none' }]} >
         <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnLeft]} onPress = {onShare}>
           <Feather
-            name='share' size={22} color = "#FFE6D1" style = {{ paddingLeft: '45%', width: '100%', marginBottom: 5 }}
+            name='share' size={20} color = "#FFE6D1" style = {{ textAlign: 'center', width: '70%', marginBottom: 5 }}
           />
           <Text style = {{ color: '#FFE6D1', fontFamily: 'Lato_400Regular', fontSize: 14 }}>Share</Text>
         </TouchableOpacity>
@@ -452,6 +446,13 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
       ></HiddenItemWithActions>
     )
   }
+  function onRowOpen (rowKey) {
+    setIsSwiped(true)
+    setRowKeySwipe(rowKey)
+  }
+  function onRowClose (rowKey) {
+    setIsSwiped(false)
+  }
 
   const SkeletonComponent = () => {
     return (
@@ -468,9 +469,9 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
     return <AppLoading />
   } else {
     return (
-      // flex:10, flex: 4, height: 300
-      <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 'auto' }}>
-        <View style={{ flex: 1, width: '100%', marginLeft: '5%', height: 'auto' }}>
+      // flex:10, flex: 4, height: 300 (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width)))
+      <View style={{ width: '100%', height: 'auto' }}>
+        <View style={{ flex: 1, width: '100%', marginLeft: '0%', height: 'auto' }}>
           {/* <ScrollView style={{ flex: 1, width: '100%', marginLeft: '5%' }}> */}
           {loading
             ? <SkeletonPlaceholder backgroundColor='#E1E9EE' highlightColor='#F2F8FC' speed={800} >
@@ -486,7 +487,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
             </SkeletonPlaceholder>
             : <View>
                 <View style={{ width: '100%', height: 50, marginTop: 30, alignItems: 'left' }}>
-                  <Text style={{ fontSize: 24 }}>
+                  <Text style={{ fontSize: 24, paddingLeft: '5%', paddingRight: '5%' }}>
                     <Text style={{ fontFamily: 'Lato_900Black', letterSpacing: 0.5, color: colors.text }}>DIP</Text>
                     <Text style={{ fontFamily: 'Lato_700Bold', letterSpacing: 0.5, color: colors.text }}>LIST</Text>
                   </Text>
@@ -507,35 +508,47 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                   ? isSubscribed === false
                     ? stockDetails.map((item, index) => (
                       index <= 0
-                        ? <View >
-                          <SwipeListView
-                            data = {[stockDetails[0]]}
-                            renderItem = {renderItem}
-                            renderHiddenItem = {renderHiddenItem}
-                            rightOpenValue = {-150}
-                            disableRightSwipe
-                            leftActivationValue={100}
-                            rightActivationValue={-200}
-                            leftActionValue={0}
-                            rightActionValue={-500}
-                            onLeftAction={onLeftAction}
-                            onRightAction={onRightAction}
-                            onLeftActionStatusChange={onLeftActionStatusChange}
-                            onRightActionStatusChange={onRightActionStatusChange}
-                          />
-                          {!trialStatus
-                            ? <HomeInvite/>
-                            : null
-                          }
+                        ? <View key = {index}>
+                            <SwipeListView
+                              data = {[stockDetails[0]]}
+                              renderItem = {renderItem}
+                              renderHiddenItem = {renderHiddenItem}
+                              rightOpenValue = {-126}
+                              onRowOpen = {onRowOpen}
+                              onRowClose = {onRowClose}
+                              disableRightSwipe
+                              leftActivationValue={100}
+                              rightActivationValue={-200}
+                              leftActionValue={0}
+                              rightActionValue={-500}
+                              onLeftAction={onLeftAction}
+                              onRightAction={onRightAction}
+                              onLeftActionStatusChange={onLeftActionStatusChange}
+                              onRightActionStatusChange={onRightActionStatusChange}
+                              // style = {{ paddingLeft: isSwiped ? 0 : '5%', paddingRight: isSwiped ? 0 : '5%' }}
+                            />
+                            {!trialStatus && stockDetails.length < 1
+                              ? <HomeInvite/>
+                              : null
+                            }
                           </View>
-                        : <StockSectlocked card={item} index={index} key={index} />
+                        : !trialStatus
+                            ? <View>
+                                <StockSectlocked card={item} index={index} key={index} />
+                                <HomeInvite/>
+                              </View>
+                            : <View>
+                                <StockSectlocked card={item} index={index} key={index} />
+                              </View>
                     ))
-                    : <View>
+                    : <View >
                       <SwipeListView
                         data = {stockDetails}
                         renderItem = {renderItem}
                         renderHiddenItem = {renderHiddenItem}
-                        rightOpenValue = {-150}
+                        rightOpenValue = {-126}
+                        onRowOpen = {onRowOpen}
+                        onRowClose = {onRowClose}
                         disableRightSwipe
                         leftActivationValue={100}
                         rightActivationValue={-200}
@@ -545,6 +558,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                         onRightAction={onRightAction}
                         onLeftActionStatusChange={onLeftActionStatusChange}
                         onRightActionStatusChange={onRightActionStatusChange}
+                        // style = {{ paddingLeft: isSwiped ? 0 : '5%', paddingRight: isSwiped ? 0 : '5%' }}
                       />
                         {/* <HomeInvite/> */}
                       </View>
@@ -780,7 +794,7 @@ function AddAtockBtn (navigation, isSubscribed, setisSubscribed, stockDetails) {
   } else {
     // colors.text
     return (
-      <View style={{ width: (Dimensions.get('window').width), height: 'auto', alignContent: 'center', alignItems: 'center', marginTop: 40 }}>
+      <View style={{ width: (Dimensions.get('window').width), height: 30, alignContent: 'center', alignItems: 'center', marginTop: 40 }}>
         <TouchableHighlight style={[styles.ButtonAddStock, { backgroundColor: colors.text }]} onPress={onAddStockBtnClick} underlayColor='#000000'>
           <Text style={[styles.ButtonAddStockText, { color: colors.border, fontFamily: 'Lato_700Bold', lineHeight: 24, letterSpacing: 1 }]}>Add Stock</Text>
         </TouchableHighlight>
@@ -894,7 +908,7 @@ function Home () {
         for (let i = 0; i < json.data.length; i++) {
           // console.log("name: "+ json.data[i].stockname)
           stocksArray.push({
-            key: i,
+            key: i.toString(),
             stockname: json.data[i].stockname,
             stockpricewhenuseraddedit: json.data[i].stockpricewhenuseraddedit,
             triggerPrice: json.data[i].triggerPrice,
@@ -1106,6 +1120,7 @@ const styles = StyleSheet.create({
   rowBack: {
     alignItems: 'center',
     // backgroundColor: '#DDD',
+    width: '100%',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1120,8 +1135,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     top: 0,
-    width: 65,
-    paddingRight: 14
+    width: 64,
+    paddingRight: 12
   },
   backRightBtnLeft: {
     backgroundColor: '#2B3033',

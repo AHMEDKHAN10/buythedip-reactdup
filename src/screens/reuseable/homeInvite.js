@@ -18,7 +18,7 @@ function homeInvite () {
     setInviteModal(!inviteModal)
   }
   return (
-    <View >
+    <View style={{paddingLeft: '5%', paddingRight: '5%',}}>
       <TouchableHighlight style={[styles.diplistSect, {
         shadowColor: '#ffff',
         shadowOffset: { width: 1, height: 1 },
