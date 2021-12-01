@@ -14,21 +14,22 @@ import config from '../../../config'
 import { useTheme } from '@react-navigation/native'
 
 function LottieInvite () {
-  const { isSubscribed } = useContext(Context)
-  const { inviteModal, setInviteModal, setTrialStatus } = useContext(ModalContext)
+  const { isSubscribed, setisSubscribed } = useContext(Context)
+  const { inviteModal, setInviteModal, setTrialStatus, trialStatus } = useContext(ModalContext)
   const { width, height } = Dimensions.get('window')
   const { colors } = useTheme()
   const onPressTrial = async () => {
     const userid = await firebaseuser()
     const token = registerForPushNotificationsAsync()
+    setisSubscribed(true)
+    setTrialStatus(true)
     const request = JSON.stringify({
       pushToken: token,
       userid: userid,
-      isSubscribed: isSubscribed,
+      isSubscribed: true,
       trialStatus: true,
       trialEndRemainingDays: 30
     })
-    setTrialStatus(true)
     const options = {
       method: 'POST',
       headers: {

@@ -16,7 +16,7 @@ import {
   // Button
 } from 'react-native'
 // import Share from 'react-native-share'
-import * as Sharing from 'expo-sharing'
+// import * as Sharing from 'expo-sharing'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import { Button, Modal } from 'react-native-paper'
 import { Ionicons, Feather, AntDesign } from '@expo/vector-icons'
@@ -241,9 +241,9 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
         </View>
     )
   }
-  const shareOptions = {
-    message: 'share text'
-  }
+  // const shareOptions = {
+  //   message: 'share text'
+  // }
 
   const onShare = async (title, msg, url) => {
     const msgAndURL = msg.concat('\n\n').concat(url)
@@ -389,10 +389,10 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
     const {
       data,
       swipeAnimatedValue,
-      leftActivationActivated,
-      rightActivationActivated,
+      // leftActivationActivated,
+      // rightActivationActivated,
       rowActionAnimatedValue,
-      rowHeightAnimatedValue,
+      // rowHeightAnimatedValue,
       onShare,
       onDelete
     } = props
@@ -527,7 +527,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                               onRightActionStatusChange={onRightActionStatusChange}
                               // style = {{ paddingLeft: isSwiped ? 0 : '5%', paddingRight: isSwiped ? 0 : '5%' }}
                             />
-                            {!trialStatus && stockDetails.length < 1
+                            {!trialStatus && stockDetails.length < 2
                               ? <HomeInvite/>
                               : null
                             }
@@ -535,7 +535,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                         : !trialStatus
                             ? <View>
                                 <StockSectlocked card={item} index={index} key={index} />
-                                <HomeInvite/>
+                                {/* <HomeInvite/> */}
                               </View>
                             : <View>
                                 <StockSectlocked card={item} index={index} key={index} />
@@ -558,7 +558,6 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                         onRightAction={onRightAction}
                         onLeftActionStatusChange={onLeftActionStatusChange}
                         onRightActionStatusChange={onRightActionStatusChange}
-                        // style = {{ paddingLeft: isSwiped ? 0 : '5%', paddingRight: isSwiped ? 0 : '5%' }}
                       />
                         {/* <HomeInvite/> */}
                       </View>

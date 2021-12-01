@@ -14,7 +14,9 @@ const storeToken = async (expoPushToken) => {
   const request = JSON.stringify({
     pushToken: expoPushToken,
     userid: userid,
-    isSubscribed: isSubscribed
+    isSubscribed: isSubscribed,
+    trialStatus: false,
+    trialEndRemainingDays: 30
   })
   const options = {
     method: 'POST',
