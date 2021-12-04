@@ -82,6 +82,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
   const { isNewlyAdded, setIsNewlyAdded } = useContext(Context)
   const { trialStatus } = useContext(ModalContext)
   const [isSwiped, setIsSwiped] = useState(false)
+  const [rowDelete, setIsRowDelete] = useState(false)
   const [rowKeySwipe, setRowKeySwipe] = useState()
   const { colors } = useTheme()
   const [fontsLoaded] = useFonts({
@@ -284,6 +285,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
     }
   }
   const deleteRow = async (rowMap, rowName, rowKey) => {
+    setIsRowDelete(true)
     const userid = await firebaseuser()
     const request = JSON.stringify({
       userid: userid,
@@ -303,6 +305,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
       onRefresh()
       closeRow(rowMap, rowKey)
       navigation.navigate('Home')
+      setIsRowDelete(false)
     } catch (e) {
       console.error(e)
     }
@@ -398,7 +401,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
     } = props
     return (
       <View style = {[styles.rowBack, { backgroundColor: '#B81200', display: isSwiped === true && rowKeySwipe === data.item.key ? 'flex' : 'none' }]} >
-        <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnLeft]} onPress = {onShare}>
+        <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnLeft, { display: rowDelete ? 'none' : 'flex' }]} onPress = {onShare}>
           <Feather
             name='share' size={20} color = "#FFE6D1" style = {{ textAlign: 'center', width: '70%', marginBottom: 5 }}
           />
@@ -406,7 +409,8 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
         </TouchableOpacity>
         <Animated.View style = {[styles.backRightBtn, styles.backRightBtnRight, {
           flex: 1,
-          width: rowActionAnimatedValue
+          width: rowActionAnimatedValue,
+          display: rowDelete ? 'none' : 'flex'
         }]}>
           <TouchableOpacity style = {[styles.backRightBtn, styles.backRightBtnRight]} onPress = {onDelete}>
             <Animated.View style = {[styles.backRightBtn, styles.backRightBtn, {
@@ -456,7 +460,7 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
 
   const SkeletonComponent = () => {
     return (
-      <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
+      <View style={{ width: '90%', height: 80, flexDirection: 'row' }}>
         <View style={{ width: '80%' }}>
           <View style={{ width: 50, height: 20, borderRadius: 5 }} />
           <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
@@ -475,22 +479,46 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
           {/* <ScrollView style={{ flex: 1, width: '100%', marginLeft: '5%' }}> */}
           {loading
             ? <SkeletonPlaceholder backgroundColor='#E1E9EE' highlightColor='#F2F8FC' speed={800} >
-              <View style={{ width: '90%', height: 80 }}>
+              <View style={{ width: '90%', height: 80, marginLeft: '5%' }}>
                 <View style={{ width: '100%' }}>
                   <View style={{ width: '40%', height: 40, borderRadius: 5 }} />
                 </View>
               </View>
-              <SkeletonComponent/>
-              <SkeletonComponent/>
-              <SkeletonComponent/>
-              <SkeletonComponent/>
+              <View style={{ width: '90%', height: 80, flexDirection: 'row', marginLeft: '5%' }}>
+                <View style={{ width: '80%' }}>
+                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
+                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
+                </View>
+                <View style={{ width: 75, height: 35, borderRadius: 8 }} />
+              </View>
+              <View style={{ width: '90%', height: 80, flexDirection: 'row', marginLeft: '5%' }}>
+                <View style={{ width: '80%' }}>
+                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
+                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
+                </View>
+                <View style={{ width: 75, height: 35, borderRadius: 8 }} />
+              </View>
+              <View style={{ width: '90%', height: 80, flexDirection: 'row', marginLeft: '5%' }}>
+                <View style={{ width: '80%' }}>
+                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
+                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
+                </View>
+                <View style={{ width: 75, height: 35, borderRadius: 8 }} />
+              </View>
+              <View style={{ width: '90%', height: 80, flexDirection: 'row', marginLeft: '5%' }}>
+                <View style={{ width: '80%' }}>
+                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
+                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
+                </View>
+                <View style={{ width: 75, height: 35, borderRadius: 8 }} />
+              </View>
             </SkeletonPlaceholder>
             : <View>
-                <View style={{ width: '100%', height: 50, marginTop: 30, alignItems: 'left' }}>
-                  <Text style={{ fontSize: 24, paddingLeft: '5%', paddingRight: '5%' }}>
+                <View style={{ width: '100%', height: 50, marginTop: -10, alignItems: 'left' }}>
+                  {/* <Text style={{ fontSize: 24, paddingLeft: '5%', paddingRight: '5%' }}>
                     <Text style={{ fontFamily: 'Lato_900Black', letterSpacing: 0.5, color: colors.text }}>DIP</Text>
                     <Text style={{ fontFamily: 'Lato_700Bold', letterSpacing: 0.5, color: colors.text }}>LIST</Text>
-                  </Text>
+                  </Text> */}
                 {isNewlyAdded
                   ? <LottieView
                       autoPlay
@@ -702,7 +730,7 @@ function StockMarketsSect (loading, slideUp) {
                       <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 29,891</Text>
                     </View>
                     <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                      <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Set</Text>
+                      <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Add</Text>
                     </TouchableOpacity>
                   </View>
                   <View style={styles.indicesSect}>
@@ -711,7 +739,7 @@ function StockMarketsSect (loading, slideUp) {
                       <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 30,000</Text>
                     </View>
                     <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                      <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Set</Text>
+                      <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Add</Text>
                     </TouchableOpacity>
                   </View>
                   <View style={styles.indicesSect}>
@@ -720,7 +748,7 @@ function StockMarketsSect (loading, slideUp) {
                       <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 15,029</Text>
                     </View>
                     <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                      <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Set</Text>
+                      <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Add</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -740,7 +768,7 @@ function StockMarketsSect (loading, slideUp) {
                     <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 29,891</Text>
                   </View>
                   <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                    <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Set</Text>
+                    <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Add</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.indicesSect}>
@@ -749,7 +777,7 @@ function StockMarketsSect (loading, slideUp) {
                     <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 30,000</Text>
                   </View>
                   <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                    <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Set</Text>
+                    <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Add</Text>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.indicesSect}>
@@ -758,7 +786,7 @@ function StockMarketsSect (loading, slideUp) {
                     <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed 15,029</Text>
                   </View>
                   <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
-                    <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Set</Text>
+                    <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Add</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -809,7 +837,7 @@ function AddAtockBtn (navigation, isSubscribed, setisSubscribed, stockDetails) {
               source={require('../../assets/lottie_assets/padlock.json')}
               autoPlay
             />
-            <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center', fontFamily: 'Lato_700Bold', letterSpacing: 2, color: colors.text }} > Unlock your limits</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: 24, textAlign: 'center', fontFamily: 'Lato_700Bold', letterSpacing: 2, color: colors.text }} > Unlock your limits</Text>
             <Text style={{ fontSize: 14, textAlign: 'left', paddingLeft: 24, paddingRight: 24, fontFamily: 'Lato_400Regular', marginTop: 20, letterSpacing: 1, color: colors.text, lineHeight: 26 }} >Rest easy knowing you’ll never miss a buying opportunity during a dip. Like last time...</Text>
 
             <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 30, borderWidth: 1, borderColor: '#FFB801', alignSelf: 'center', backgroundColor: '#FFB801' }}

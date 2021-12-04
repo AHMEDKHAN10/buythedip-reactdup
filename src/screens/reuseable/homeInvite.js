@@ -30,7 +30,7 @@ function homeInvite () {
           <View style={{ width: '20%', alignSelf: 'center' }}>
             <Image source={moneyBag} style={{ width: '60%', height: 50 }}/>
           </View>
-          <View style={{ width: '55%', alignSelf: 'center' }}>
+          <View style={{ width: '55%', alignSelf: 'center', marginLeft: -10 }}>
             <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]} numberOfLines={1}>
               Invite a friend
             </Text>
@@ -38,7 +38,7 @@ function homeInvite () {
               Get 30 days of premium
             </Text>
           </View>
-          <View style={{ alignSelf: 'center' }}>
+          <View style={{ alignSelf: 'center', marginLeft: 13 }}>
             <TouchableHighlight
               style={[styles.Button]}
               underlayColor='#ffb38a'
@@ -51,40 +51,6 @@ function homeInvite () {
           </View>
         </View>
       </TouchableHighlight>
-      {/* <Modal
-          visible={modal}
-          contentContainerStyle={{ position: 'absolute' }}
-          onDismiss={() => setModal(false)}
-        >
-          <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', height: height * 2 }}>
-          <View style={{ paddingBottom: 20, backgroundColor: colors.card, borderRadius: 50, height: 370, bottom: '-30%' }}>
-            <LottieView
-              style={{ height: width, width: width, marginTop: -80, marginBottom: -220 }}
-              source={require('../../../assets/lottie_assets/padlock.json')}
-              autoPlay
-            />
-            <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center', fontFamily: 'Lato_700Bold', letterSpacing: 2, color: colors.text }} > Unlock your limits</Text>
-            <Text style={{ fontSize: 14, textAlign: 'left', paddingLeft: 24, paddingRight: 24, fontFamily: 'Lato_400Regular', marginTop: 20, letterSpacing: 1, color: colors.text, lineHeight: 26 }} >Rest easy knowing you’ll never miss a buying opportunity during a dip. Like last time...</Text>
-
-            <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 30, borderWidth: 1, borderColor: '#FFB801', alignSelf: 'center', backgroundColor: '#FFB801' }}
-              labelStyle={{ fontWeight: 'bold', color: '#000000', fontFamily: 'Lato_700Bold' }}
-              uppercase = {false}
-            >
-              $9.99 Monthly
-            </Button>
-            <Button style={{ width: '80%', borderRadius: 30, padding: 10, marginTop: 10, alignSelf: 'center' }}
-              labelStyle={{ color: colors.text }}
-              uppercase = {false}
-              onPress={async () => {
-                setModal(false)
-              }}
-            >
-              Maybe Later
-            </Button>
-            <Text style={{ fontSize: 8, textAlign: 'left', paddingLeft: 24, paddingRight: 24, marginTop: -2, letterSpacing: 0.5, color: colors.text }}>Your iTunes Account will be charged at confirmation of purchase. Subscription will be auto-renewed. Your account will be charged $2.99 US dollars for renewall within 24-hours before current period ends. You can manage subscription & turn-off in Account Settings.</Text>
-          </View>
-          </View>
-        </Modal> */}
     </View>
   )
 }
