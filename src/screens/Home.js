@@ -29,6 +29,7 @@ import * as Animatable from 'react-native-animatable'
 import { EventRegister } from 'react-native-event-listeners'
 import LottieView from 'lottie-react-native'
 import registerForPushNotificationsAsync from '../services/pushNotification'
+import Communitypicks from './reuseable/communitypicks'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold, Lato_900Black } from '@expo-google-fonts/lato'
 import { Context } from '../context/context'
@@ -458,17 +459,6 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
     setIsSwiped(false)
   }
 
-  const SkeletonComponent = () => {
-    return (
-      <View style={{ width: '90%', height: 80, flexDirection: 'row' }}>
-        <View style={{ width: '80%' }}>
-          <View style={{ width: 50, height: 20, borderRadius: 5 }} />
-          <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
-        </View>
-        <View style={{ width: 75, height: 35, borderRadius: 8 }} />
-      </View>
-    )
-  }
   if (!fontsLoaded) {
     return <AppLoading />
   } else {
@@ -483,20 +473,6 @@ function StockList (navigation, stockDetails, loading, slideUp, isSubscribed, on
                 <View style={{ width: '100%' }}>
                   <View style={{ width: '40%', height: 40, borderRadius: 5 }} />
                 </View>
-              </View>
-              <View style={{ width: '90%', height: 80, flexDirection: 'row', marginLeft: '5%' }}>
-                <View style={{ width: '80%' }}>
-                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
-                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
-                </View>
-                <View style={{ width: 75, height: 35, borderRadius: 8 }} />
-              </View>
-              <View style={{ width: '90%', height: 80, flexDirection: 'row', marginLeft: '5%' }}>
-                <View style={{ width: '80%' }}>
-                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
-                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
-                </View>
-                <View style={{ width: 75, height: 35, borderRadius: 8 }} />
               </View>
               <View style={{ width: '90%', height: 80, flexDirection: 'row', marginLeft: '5%' }}>
                 <View style={{ width: '80%' }}>
@@ -997,6 +973,7 @@ function Home () {
         refreshControl={<RefreshControl tintColor = {colors.text} refreshing={refreshing} onRefresh={onRefresh} />}
       >
         {StockList(navigation, stockDetails, loading, slideUp, isSubscribed, onRefresh)}
+        <Communitypicks/>
         {StockMarketsSect(loading, slideUp)}
       </ScrollView>
       {/* shadowOpacity: 1, shadowRadius: 4.65, */}
