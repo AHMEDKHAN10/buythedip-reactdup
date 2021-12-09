@@ -12,39 +12,29 @@ import AppLoading from 'expo-app-loading'
 import LottieView from 'lottie-react-native'
 // eslint-disable-next-line camelcase
 import { useFonts, Lato_300Light, Lato_400Regular, Lato_700Bold } from '@expo-google-fonts/lato'
+import { View } from 'react-native-animatable'
 
 const SplashScreen = () => {
   const { colors } = useTheme()
   const [fontsLoaded] = useFonts({
     Lato_300Light, Lato_400Regular, Lato_700Bold
   })
-  // useEffect(() => {
-  //   const today = new Date()
-  //   const time = today.getHours() + ':' + today.getMinutes()
-  //   console.log('time: ' + time)
-  //   if (time >= '18:25' && time <= '6:55') {
-  //     // setDarkMode(true)
-  //     EventRegister.emit('themeListener', true)
-  //   } else {
-  //     // setDarkMode(false)
-  //     EventRegister.emit('themeListener', false)
-  //   }
-  // }, [])
   // eslint-disable-next-line no-unused-vars
   const { height, width } = Dimensions.get('window')
   if (!fontsLoaded) {
     return <AppLoading/>
   } else {
     return (
-      <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <SafeAreaView style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
+        <View style={{ height: '100%', width: '100%' }}>
         <Text
           style={{
             padding: 10,
             textAlign: 'center',
             width: '100%',
             fontSize: 23,
-            height: 50
-            // backgroundColor: colors.background
+            height: 50,
+            backgroundColor: colors.background
           }}
         >
           <Text style={{
@@ -56,10 +46,11 @@ const SplashScreen = () => {
         </Text>
         {/* <Image style={{ marginTop: 40 }} source={logo}/> */}
         <LottieView
-          style={{ height: width, width: width, marginTop: 20, marginBottom: -width / 2 }}
+          style={{ height: width, width: width, marginTop: 20, marginBottom: -width / 2, backgroundColor: colors.background }}
           source={require('../../assets/lottie_assets/Bell_new_shadow.json')}
           autoPlay
         />
+        </View>
       </SafeAreaView>
     )
   }

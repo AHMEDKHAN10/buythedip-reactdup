@@ -952,16 +952,16 @@ function Home () {
   useEffect(() => {
     fetchData()
     getSubscribed()
-    const today = new Date()
-    const time = today.getHours() + ':' + today.getMinutes()
-    // console.log('isSubscribed: ' + isSubscribed)
-    if (time >= '18:25' && time <= '6:55') {
-      // setDarkMode(true)
-      EventRegister.emit('themeListener', true)
-    } else {
-      // setDarkMode(false)
-      EventRegister.emit('themeListener', false)
-    }
+    // const today = new Date()
+    // const time = today.getHours() + ':' + today.getMinutes()
+    // // console.log('isSubscribed: ' + isSubscribed)
+    // if (time >= '18:25' && time <= '6:55') {
+    //   // setDarkMode(true)
+    //   EventRegister.emit('themeListener', true)
+    // } else {
+    //   // setDarkMode(false)
+    //   EventRegister.emit('themeListener', false)
+    // }
   }, [isFocused, isSubscribed])
 
   const navigation = useNavigation()
@@ -973,7 +973,41 @@ function Home () {
         refreshControl={<RefreshControl tintColor = {colors.text} refreshing={refreshing} onRefresh={onRefresh} />}
       >
         {StockList(navigation, stockDetails, loading, slideUp, isSubscribed, onRefresh)}
-        <Communitypicks/>
+        {loading
+          ? <View style={{ marginLeft: '5%' }}>
+            <SkeletonPlaceholder backgroundColor='#E1E9EE' highlightColor='#F2F8FC' speed={800}>
+              <View style={{ width: '90%', height: 80 }}>
+                <View style={{ width: '100%' }}>
+                  <View style={{ width: '40%', height: 40, borderRadius: 5 }} />
+                  <View style={{ width: '100%', height: 25, marginTop: 10, borderRadius: 5 }} />
+                  <View style={{ width: '100%', height: 25, marginTop: 5, borderRadius: 5 }} />
+                </View>
+              </View>
+              <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, marginTop: 50, flexDirection: 'row' }}>
+                <View style={{ width: '80%' }}>
+                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
+                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
+                </View>
+                {/* <View style={{ width: 75, height: 35, borderRadius: 8 }} /> */}
+              </View>
+              <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
+                <View style={{ width: '80%' }}>
+                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
+                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
+                </View>
+                {/* <View style={{ width: 75, height: 35, borderRadius: 8 }} /> */}
+              </View>
+              <View style={{ width: (Dimensions.get('window').width - (0.1 * (Dimensions.get('window').width))), height: 80, flexDirection: 'row' }}>
+                <View style={{ width: '80%' }}>
+                  <View style={{ width: 50, height: 20, borderRadius: 5 }} />
+                  <View style={{ width: 100, height: 20, marginTop: 5, borderRadius: 5 }} />
+                </View>
+                {/* <View style={{ width: 75, height: 35, borderRadius: 8 }} /> */}
+              </View>
+            </SkeletonPlaceholder>
+          </View>
+          : <Communitypicks/>
+        }
         {StockMarketsSect(loading, slideUp)}
       </ScrollView>
       {/* shadowOpacity: 1, shadowRadius: 4.65, */}

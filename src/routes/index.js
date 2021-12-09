@@ -9,15 +9,18 @@ import Settings from '../screens/settings'
 import StockScreen from '../screens/stockScreenBluePrint'
 import AddStock from '../screens/AddStock'
 import AddStockScreen from '../screens/AddStockScreen'
+import CommuinityGroup from '../screens/reuseable/commuinityGroups'
 import firebaseuser from '../firebase/firebaseconfig'
 import configg from '../../config'
 import { faClosedCaptioning } from '@fortawesome/free-solid-svg-icons'
 import { EventRegister } from 'react-native-event-listeners'
+import SplashScreen from '../screens/SplashScreen'
 
 const Stack = createStackNavigator()
 
 export default function Routes () {
   const [route, setroute] = useState(faClosedCaptioning)
+  const [darkMode, setDarkMode] = useState(false)
   useEffect(() => {
     async function check () {
       const userid = await firebaseuser()
@@ -41,19 +44,29 @@ export default function Routes () {
       setroute(false)
     }
     check()
-    const eventListener = EventRegister.addEventListener(
-      'themeListener',
-      data => {
-        setDarkApp(data)
-      }
-    )
+    const today = new Date()
+    const time = today.getHours() + ':' + today.getMinutes()
+    // console.log('isSubscribed: ' + isSubscribed)
+    if (time >= '18:25' && time <= '6:55') {
+      setDarkApp(true)
+      // EventRegister.emit('themeListener', true)
+    } else {
+      setDarkApp(false)
+      // EventRegister.emit('themeListener', false)
+    }
+    // const eventListener = EventRegister.addEventListener(
+    //   'themeListener',
+    //   data => {
+    //     setDarkApp(data)
+    //   }
+    // )
     return () => {
-      EventRegister.removeEventListener(eventListener)
+      // EventRegister.removeEventListener(eventListener)
     }
     // console.log('route: ' + route)
   }, [])
   const MyDarkTheme = {
-    dark: false,
+    dark: true,
     colors: {
       primary: '#ffffff',
       background: '#000000',
@@ -78,17 +91,19 @@ export default function Routes () {
   const [darkApp, setDarkApp] = useState(false)
   const appTheme = darkApp ? MyDarkTheme : MyTheme
   return (
-    <NavigationContainer theme={appTheme}>
+    // <NavigationContainer theme={appTheme}>
       <Stack.Navigator initialRouteName={route ? 'Home' : 'FirstScreen'} screenOptions={{ headerShown: false }}>
+        {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
         <Stack.Screen name="FirstScreen" component={FirstScreen} />
         <Stack.Screen name="AddStockScreen" component={AddStockScreen} />
         <Stack.Screen name="AddStock" component={AddStock} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="SetAlert" component={SetAlert} />
         <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="CommunityGroup" component={CommuinityGroup} />
         <Stack.Screen name="StockScreenBluePrint" component={StockScreen} />
       </Stack.Navigator>
-    </NavigationContainer>
+    // </NavigationContainer>
   )
 }
 // options={{ headerLeft: null}}

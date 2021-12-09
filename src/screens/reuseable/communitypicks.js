@@ -3,19 +3,23 @@ import {
   StyleSheet,
   View,
   Text,
-  Image,
-  TouchableOpacity, TouchableHighlight
+  TouchableOpacity
 } from 'react-native'
 import { Avatar } from 'react-native-paper'
 import { ModalContext } from '../../context/modalContext'
-import { useTheme } from '@react-navigation/native'
+import { useNavigation, useTheme } from '@react-navigation/native'
 import moneyBag from '../../../assets/money_bag.png'
 
 function Communitypicks () {
   const { colors } = useTheme()
-
+  const navigation = useNavigation()
   function CommunityComponent (props) {
     return (
+      <TouchableOpacity onPress=
+      {() => navigation.navigate('CommunityGroup', {
+        groupName: props.name,
+        groupDesc: props.desc
+      })}>
       <View
         style={{
           marginTop: props.marginTop,
@@ -35,6 +39,7 @@ function Communitypicks () {
           <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>{props.desc}</Text>
         </View>
       </View>
+      </TouchableOpacity>
     )
   }
   return (
