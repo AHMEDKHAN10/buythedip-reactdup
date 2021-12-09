@@ -952,16 +952,6 @@ function Home () {
   useEffect(() => {
     fetchData()
     getSubscribed()
-    // const today = new Date()
-    // const time = today.getHours() + ':' + today.getMinutes()
-    // // console.log('isSubscribed: ' + isSubscribed)
-    // if (time >= '18:25' && time <= '6:55') {
-    //   // setDarkMode(true)
-    //   EventRegister.emit('themeListener', true)
-    // } else {
-    //   // setDarkMode(false)
-    //   EventRegister.emit('themeListener', false)
-    // }
   }, [isFocused, isSubscribed])
 
   const navigation = useNavigation()
