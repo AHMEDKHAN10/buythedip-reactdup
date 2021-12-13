@@ -36,6 +36,7 @@ import { Context } from '../context/context'
 import { ModalContext } from '../context/modalContext'
 import HomeInvite from './reuseable/homeInvite'
 import LottieInvite from './reuseable/lottieInvite'
+import { set } from 'react-native-reanimated'
 const { width, height } = Dimensions.get('window')
 const premium = require('../../assets/premium.png')
 const lock = require('../../assets/lock.png')
@@ -872,6 +873,7 @@ const wait = timeout => {
 
 function Home () {
   const [stockDetails, setStockDetails] = useState([])
+  const [communityPicksGroups, setCommunityPicksGroups] = useState([])
   const [loading, setloading] = useState(true)
   const [slideUp, setSlideUp] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
@@ -920,6 +922,16 @@ function Home () {
         }
       }
       setStockDetails(stocksArray)
+      const requestOptions = {
+        method: 'GET',
+        body: '',
+        redirect: 'follow'
+      }
+      fetch(config.API_URL + 'getCommunityPicks', requestOptions)
+        .then(response => response.json())
+        .then(result => setCommunityPicksGroups(result))
+      // console.log('CommunityPicks: ' + JSON.stringify(communityPicksData.json()))
+      // setCommunityPicksGroups(communityPicksData.json())
       if (loading) {
         setloading(false)
         setSlideUp(true)
@@ -996,12 +1008,12 @@ function Home () {
               </View>
             </SkeletonPlaceholder>
           </View>
-          : <Communitypicks/>
+          : <Communitypicks data = {communityPicksGroups}/>
         }
         {StockMarketsSect(loading, slideUp)}
       </ScrollView>
-      {/* shadowOpacity: 1, shadowRadius: 4.65, */}
-      <View style={{ marginTop: 10, borderTopWidth: 0.25, borderTopColor: '#e2e3e4', backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
+      {/* shadowOpacity: 1, shadowRadius: 4.65,  borderTopWidth: 0.25, */}
+      <View style={{ marginTop: 10, borderTopColor: '#e2e3e4', backgroundColor: '#fffff', shadowOffset: { height: 0, width: 0 } }}>
         {AddAtockBtn(navigation, isSubscribed, setisSubscribed, stockDetails)}
       </View>
       <LottieInvite/>

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   StyleSheet,
   View,
@@ -6,23 +7,33 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { Avatar } from 'react-native-paper'
-import { ModalContext } from '../../context/modalContext'
 import { useNavigation, useTheme } from '@react-navigation/native'
 import moneyBag from '../../../assets/money_bag.png'
-
-function Communitypicks () {
+Communitypicks.propTypes = {
+  data: PropTypes.array.isRequired
+}
+function Communitypicks ({ data }) {
   const { colors } = useTheme()
   const navigation = useNavigation()
-  function CommunityComponent (props) {
+
+  CommunityComponent.propTypes = {
+    item: PropTypes.object.isRequired,
+    img: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    desc: PropTypes.string.isRequired,
+    marginTop: PropTypes.number.isRequired
+  }
+  function CommunityComponent ({ item, img, name, desc, marginTop }) {
     return (
       <TouchableOpacity onPress=
       {() => navigation.navigate('CommunityGroup', {
-        groupName: props.name,
-        groupDesc: props.desc
+        groupName: name,
+        groupDesc: desc,
+        stocks: item
       })}>
       <View
         style={{
-          marginTop: props.marginTop,
+          marginTop: marginTop,
           flexDirection: 'row',
           width: '100%',
           height: 60,
@@ -32,11 +43,11 @@ function Communitypicks () {
           alignItems: 'left'
         }}>
         <View style={{ width: '20%' }}>
-          <Avatar.Image size={44} source={props.img} style={{ backgroundColor: 'white' }}/>
+          <Avatar.Image size={44} source={img} style={{ backgroundColor: 'white' }}/>
         </View>
         <View style={{ width: '70%' }}>
-          <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>{props.name}</Text>
-          <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>{props.desc}</Text>
+          <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>{name}</Text>
+          <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>{desc}</Text>
         </View>
       </View>
       </TouchableOpacity>
@@ -52,10 +63,17 @@ function Communitypicks () {
           <Text style={{ fontFamily: 'Lato_400Regular', color: colors.text, lineHeight: 20, letterSpacing: 1 }}>Lists are created from users, to help you discover trending stocks & investing strategies.</Text>
         </Text>
       </View>
-      <CommunityComponent img={moneyBag} name='Meet Kevin’s Favs' desc='High conviction stocks' marginTop= {50}/>
+      {
+        data.map((item, index) => (
+          index === 0
+            ? <CommunityComponent item = {item} img={moneyBag} name = { item.stockName} desc = {item.desc} key = {index} marginTop= {50}/>
+            : <CommunityComponent item = {item} img={moneyBag} name = { item.stockName} desc = {item.desc} key = {index} marginTop= {20}/>
+        ))
+      }
+      {/* <CommunityComponent img={moneyBag} name='Meet Kevin’s Favs' desc='High conviction stocks' marginTop= {50}/>
       <CommunityComponent img={moneyBag} name='Invest like Ramit Sethi ' desc='Low-cost index funds' marginTop={20}/>
       <CommunityComponent img={moneyBag} name='Chamath Palihapitiya' desc='Focusing on positive social impact' marginTop={20}/>
-      <CommunityComponent img={moneyBag} name='Momentum Stocks' desc='Memes, high risk and speculation' marginTop={20}/>
+      <CommunityComponent img={moneyBag} name='Momentum Stocks' desc='Memes, high risk and speculation' marginTop={20}/> */}
     </View>
   )
 }

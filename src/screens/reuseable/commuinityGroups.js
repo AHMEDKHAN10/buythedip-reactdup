@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigation, useTheme } from '@react-navigation/native'
+import PropTypes from 'prop-types'
 import {
   StyleSheet,
   View,
@@ -12,11 +13,15 @@ import ToggleSwitch from 'toggle-switch-react-native'
 const backButton = require('../../../assets/backButton.png')
 const backButtonDark = require('../../../assets/backButtonDark.png')
 
+CommuinityGroups.propTypes = {
+  route: PropTypes.string.isRequired
+}
 function CommuinityGroups ({ route }) {
   const { colors } = useTheme()
   const navigation = useNavigation()
-  const { groupName, groupDesc } = route.params
-
+  const { groupName, groupDesc, stocks } = route.params
+  // console.log(Object.keys(stocks.stocks), Object.values(stocks.stocks))
+  // console.log(Object.keys(stocks.stocks).length)
   function RenderHeader () {
     return (
       <View style={{
@@ -52,7 +57,7 @@ function CommuinityGroups ({ route }) {
   }
   function GroupContent () {
     const [isEnabled, setIsEnabled] = useState(false)
-    const [darkMode, setDarkMode] = useState(false)
+    const [darkMode] = useState(false)
     const toggleSwitch = async () => {
       setIsEnabled(previousState => !previousState)
       console.log('toggle switch')
@@ -89,12 +94,13 @@ function CommuinityGroups ({ route }) {
       </View>
     )
   }
-  function StocksList () {
+
+  function StocksList ({ stockName, lastClose, marginTop }) {
     return (
-      <View style={{ marginTop: 50, flexDirection: 'row', width: '90%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
+      <View style={{ marginTop: marginTop, flexDirection: 'row', width: '90%', height: 60, marginLeft: '5%', borderBottomWidth: 0.4, borderBottomColor: '#b2b2b2', alignItems: 'left' }}>
         <View style={{ width: '50%' }}>
-          <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>AFRM</Text>
-          <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>Last closed $100.65</Text>
+          <Text style={[styles.dns, { color: colors.text, fontFamily: 'Lato_700Bold', fontSize: 15, letterSpacing: 1 }]}>{stockName}</Text>
+          <Text style={[styles.lastClose, { color: colors.text, fontSize: 13, fontFamily: 'Lato_400Regular', opacity: 0.7 }]}>{lastClose}</Text>
         </View>
         <TouchableOpacity style={[styles.ButtonSet, { backgroundColor: colors.card }]} onPress={() => console.log('Button Tapped')} underlayColor='#fff'>
           <Text style={[styles.ButtonSetText, { color: colors.text, fontFamily: 'Lato_400Regular', fontSize: 14 }]}>Add</Text>
@@ -102,13 +108,25 @@ function CommuinityGroups ({ route }) {
       </View>
     )
   }
+  StocksList.propTypes = {
+    stockName: PropTypes.string.isRequired,
+    lastClose: PropTypes.number.isRequired,
+    marginTop: PropTypes.number.isRequired
+  }
+
   return (
     <View >
       <View style={{ borderBottomWidth: 2, borderBottomColor: '#FFB801', paddingBottom: '2%' }}>
-        {<RenderHeader/>}
+        <RenderHeader/>
         <GroupContent/>
       </View>
-      <StocksList/>
+      {
+        Object.keys(stocks.stocks).map((key, i) => (
+          i === 0
+            ? <StocksList stockName = { key } lastClose = {stocks.stocks[key]} marginTop = {50} key = {i}/>
+            : <StocksList stockName = { key } lastClose = {stocks.stocks[key]} marginTop = {20} key = {i}/>
+        ))
+      }
     </View>
   )
 }

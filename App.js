@@ -32,7 +32,8 @@ export default function App () {
   }
 
   const [darkApp, setDarkApp] = useState(false)
-  const appTheme = darkApp ? MyDarkTheme : MyTheme
+  // const appTheme = darkApp ? MyDarkTheme : MyTheme
+  const appTheme = MyTheme
   useEffect(() => {
     const today = new Date()
     const time = today.getHours() + ':' + today.getMinutes()
